@@ -17,9 +17,14 @@ opplistingssider.
 
 ```bash
 pnpm install
-cp .env.example .env.local   # fyll inn Supabase URL + anon key
+cp .env.example .env.local   # fyll inn Supabase URL + publishable key
 pnpm dev                     # http://localhost:3000
 ```
+
+Miljøvariabler (se `.env.example`): `NEXT_PUBLIC_SUPABASE_URL` og
+`NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` brukes av både nettleser- og
+server-klienten. `SUPABASE_SECRET_KEY` er kun server-side (aldri eksponert) og
+trengs bare for admin-skriving/skript som omgår RLS.
 
 Uten Supabase-variabler kjører appen fortsatt, men viser en
 "ikke konfigurert"-melding i stedet for data.
