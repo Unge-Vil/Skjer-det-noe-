@@ -32,6 +32,7 @@ export default function RootLayout({
     <html
       lang="nb"
       data-theme="auto"
+      suppressHydrationWarning
       className={`${schibsted.variable} ${splineMono.variable} h-full antialiased`}
     >
       <head>
