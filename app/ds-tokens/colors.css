@@ -1,0 +1,198 @@
+/* ── Skjer det noe? · Colour tokens ─────────────────────────────────────────
+   Accessible-first palette. Every text/UI pairing below is chosen to meet
+   WCAG 2.1/2.2 AA. Solid buttons use the -600 step for white text (≥4.5:1).
+   Meaning is NEVER carried by colour alone — every status & category token
+   is paired with an icon + text label in the components.
+
+   Brand story:  FJORD (deep petrol teal)  = trust, calm, Norwegian nature
+                 CORAL (warm sunset)        = energy, youth, "do something"
+                 SOL   (sun yellow)         = highlight, free, optimism
+                 SAND  (warm paper)         = friendly, open, not clinical
+--------------------------------------------------------------------------- */
+
+:root {
+  /* ----- Brand · Fjord (primary) ----- */
+  --fjord-50:  #E6F3F2;
+  --fjord-100: #C6E5E3;
+  --fjord-200: #99D2CF;
+  --fjord-300: #5DB6B2;
+  --fjord-400: #299490;
+  --fjord-500: #0E7472;   /* brand reference colour */
+  --fjord-600: #0A5C5B;   /* solid button bg — white text ≈ 6.6:1 */
+  --fjord-700: #084746;   /* hover/press, on-light text ≈ 8.5:1 */
+  --fjord-800: #063433;
+  --fjord-900: #042423;
+
+  /* ----- Brand · Coral (accent / energy) ----- */
+  --coral-50:  #FFEDE7;
+  --coral-100: #FFD7CB;
+  --coral-200: #FFB6A2;
+  --coral-300: #FF8C6E;
+  --coral-400: #F4582F;
+  --coral-500: #DE441C;   /* white text ≈ 4.6:1 (large/UI) */
+  --coral-600: #BF360F;   /* solid button bg — white text ≈ 5.9:1 */
+  --coral-700: #97290B;
+  --coral-800: #6F1E08;
+
+  /* ----- Brand · Sol (sunny highlight — DARK text only) ----- */
+  --sol-100: #FFF1CC;
+  --sol-200: #FFE299;
+  --sol-300: #FFD45E;
+  --sol-400: #FFC233;   /* reference */
+  --sol-500: #F2A900;
+  --sol-600: #C98A00;
+
+  /* ----- Neutrals · warm Stone (slight green-grey, friendlier than cold grey) ----- */
+  --stone-0:   #FFFFFF;
+  --sand-50:   #FBF8F2;   /* app background — warm paper */
+  --stone-50:  #F4F1EA;
+  --stone-100: #EAE5DB;
+  --stone-200: #DAD4C7;
+  --stone-300: #C2BBAB;
+  --stone-400: #948C7B;
+  --stone-500: #6B6456;   /* muted text on white ≈ 5.4:1 (AA) */
+  --stone-600: #514B3F;
+  --stone-700: #3A3529;
+  --ink-900:   #16201D;   /* primary text ≈ 14.5:1 on white */
+
+  /* ----- Semantic status ----- */
+  --success-50:  #E2F3E9;
+  --success-500: #1E7D4F;   /* white text ≈ 4.7:1 */
+  --success-600: #156B42;
+  --warning-50:  #FBEFD6;
+  --warning-500: #9A6B00;   /* on light tint, AA */
+  --warning-600: #7E5700;
+  --danger-50:   #FBE7E2;
+  --danger-500:  #C8341F;   /* white text ≈ 4.8:1 */
+  --danger-600:  #A82817;
+  --info-50:     var(--fjord-50);
+  --info-500:    var(--fjord-600);
+
+  /* ----- Category colours (fg = strong text/icon, bg = soft tint chip) -----
+     Each is always paired with an icon + label so colour is never the only cue. */
+  --cat-gaming-fg:  #3B3FB6;  --cat-gaming-bg:  #E7E8FB;
+  --cat-music-fg:   #B12A7B;  --cat-music-bg:   #FCE5F1;
+  --cat-film-fg:    #6A37C2;  --cat-film-bg:    #EEE6FB;
+  --cat-sports-fg:  #1F7A43;  --cat-sports-bg:  #E2F3E8;
+  --cat-outdoor-fg: #3C6A28;  --cat-outdoor-bg: #EAF3E0;
+  --cat-creative-fg:#B5560A;  --cat-creative-bg:#FBEDDB;
+  --cat-social-fg:  #BF360F;  --cat-social-bg:  #FFE6DF;
+  --cat-courses-fg: #1E5FA8;  --cat-courses-bg: #E3EEFA;
+  --cat-club-fg:    #0A5C5B;  --cat-club-bg:    #DBEFEE;
+
+  /* ───────────────── Semantic aliases (use these in components) ───────────── */
+  color-scheme: light;
+
+  --bg-app:        var(--sand-50);
+  --bg-elevated:   var(--stone-0);
+  --surface-card:  var(--stone-0);
+  --surface-sunk:  var(--stone-50);
+  --surface-brand: var(--fjord-600);
+  --surface-brand-soft: var(--fjord-50);
+  --surface-overlay: rgba(251, 248, 242, 0.85);  /* frosted sticky header */
+
+  /* Brand fills & interactive brand text — theme-aware (flip in dark) */
+  --surface-brand-strong:       var(--fjord-600);  /* primary button fill */
+  --surface-brand-strong-hover: var(--fjord-700);
+  --text-brand:        var(--fjord-700);  /* brand-coloured text/icons on surfaces */
+  --brand-hover-soft:  var(--fjord-50);   /* subtle hover fill */
+  --focus-glow:        var(--fjord-50);   /* soft glow on focused inputs */
+
+  --text-strong:   var(--ink-900);
+  --text-body:     #2A332F;          /* ≈ 11:1 on white */
+  --text-muted:    var(--stone-500);
+  --text-on-brand: #FFFFFF;
+  --text-on-coral: #FFFFFF;
+  --text-link:     var(--fjord-700);
+
+  --border-subtle: var(--stone-200);
+  --border-strong: var(--stone-300);
+  --border-brand:  var(--fjord-600);
+
+  --accent:        var(--coral-600);
+  --accent-soft:   var(--coral-50);
+  --highlight:     var(--sol-400);
+
+  /* Focus ring — high contrast, never colour-only (always a visible outline). */
+  --focus-ring:        var(--fjord-700);
+  --focus-ring-offset: var(--sand-50);
+}
+
+/* ════════════════════ Dark theme ════════════════════════════════════════════
+   Warm fjord-ink dark — not pure black. Only the SEMANTIC aliases flip; the
+   raw scales stay put, so soft category/status chips (light bg + dark fg) keep
+   working on dark surfaces. All pairings re-checked for AA. Apply with
+   <html data-theme="dark"> (or "light" to force light); the @media block below
+   makes it automatic when the OS is dark and nothing is forced. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg-app:        #0E1A18;
+  --bg-elevated:   #1B2725;
+  --surface-card:  #16211F;
+  --surface-sunk:  #111C1A;
+  --surface-brand: var(--fjord-500);
+  --surface-brand-soft: #12302E;
+  --surface-overlay: rgba(14, 26, 24, 0.82);
+
+  --surface-brand-strong:       var(--fjord-500);  /* brighter fill for separation on dark */
+  --surface-brand-strong-hover: var(--fjord-400);
+  --text-brand:        var(--fjord-300);  /* light teal — ≈ 7:1 on cards */
+  --brand-hover-soft:  #12302E;
+  --focus-glow:        #0F2E2C;
+
+  --text-strong:   #F2F5F3;
+  --text-body:     #D4DDDA;            /* ≈ 12:1 on cards */
+  --text-muted:    #9DABA6;            /* ≈ 6.6:1 on cards */
+  --text-on-brand: #FFFFFF;
+  --text-on-coral: #FFFFFF;
+  --text-link:     var(--fjord-300);
+
+  --border-subtle: #2A3633;
+  --border-strong: #3C4945;
+  --border-brand:  var(--fjord-400);
+
+  --accent:        var(--coral-400);   /* brighter coral pops on dark */
+  --accent-soft:   #3A1A12;
+  --highlight:     var(--sol-400);
+
+  --focus-ring:        var(--fjord-300);
+  --focus-ring-offset: #0E1A18;
+
+  /* tinted dark elevation — lighter shadows read better on dark */
+  --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-sm:  0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+  --shadow-md:  0 2px 4px rgba(0, 0, 0, 0.35), 0 8px 20px rgba(0, 0, 0, 0.45);
+  --shadow-lg:  0 4px 8px rgba(0, 0, 0, 0.4), 0 16px 36px rgba(0, 0, 0, 0.5);
+  --shadow-xl:  0 8px 16px rgba(0, 0, 0, 0.45), 0 28px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* Automatic dark when the OS prefers it — opt in with <html data-theme="auto">. */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="auto"] {
+    color-scheme: dark;
+    --bg-app:        #0E1A18;
+    --bg-elevated:   #1B2725;
+    --surface-card:  #16211F;
+    --surface-sunk:  #111C1A;
+    --surface-brand: var(--fjord-500);
+    --surface-brand-soft: #12302E;
+    --surface-overlay: rgba(14, 26, 24, 0.82);
+    --surface-brand-strong:       var(--fjord-500);
+    --surface-brand-strong-hover: var(--fjord-400);
+    --text-brand:        var(--fjord-300);
+    --brand-hover-soft:  #12302E;
+    --focus-glow:        #0F2E2C;
+    --text-strong:   #F2F5F3;
+    --text-body:     #D4DDDA;
+    --text-muted:    #9DABA6;
+    --text-link:     var(--fjord-300);
+    --border-subtle: #2A3633;
+    --border-strong: #3C4945;
+    --border-brand:  var(--fjord-400);
+    --accent:        var(--coral-400);
+    --accent-soft:   #3A1A12;
+    --focus-ring:        var(--fjord-300);
+    --focus-ring-offset: #0E1A18;
+  }
+}

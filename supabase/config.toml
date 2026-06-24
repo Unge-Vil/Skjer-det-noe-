@@ -1,0 +1,12 @@
+# Supabase local/project config.
+# Link to your remote project with: supabase link --project-ref <ref>
+# (which fills in project_id). The remote project is connected to this GitHub
+# repo, so migrations under supabase/migrations are applied on push.
+project_id = "skjer-det-noe"
+
+[db]
+major_version = 17
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]

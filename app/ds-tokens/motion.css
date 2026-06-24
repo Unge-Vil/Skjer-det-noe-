@@ -1,0 +1,36 @@
+/* ── Skjer det noe? · Motion tokens ─────────────────────────────────────────
+   Subtle, quick, purposeful. Animation is never required to understand
+   content. Everything below collapses to ~0 under prefers-reduced-motion.
+--------------------------------------------------------------------------- */
+
+:root {
+  --dur-fast:   120ms; /* @kind other */
+  --dur-base:   180ms; /* @kind other */
+  --dur-slow:   280ms; /* @kind other */
+  --dur-slower: 420ms; /* @kind other */
+
+  /* friendly, slightly springy ease for enter; calm ease for exit */
+  --ease-enter: cubic-bezier(0.22, 1, 0.36, 1); /* @kind other */
+  --ease-exit:  cubic-bezier(0.4, 0, 1, 1); /* @kind other */
+  --ease-soft:  cubic-bezier(0.4, 0, 0.2, 1); /* @kind other */
+
+  --lift: translateY(-2px); /* @kind other */
+  --press: scale(0.97); /* @kind other */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast:   1ms; /* @kind other */
+    --dur-base:   1ms; /* @kind other */
+    --dur-slow:   1ms; /* @kind other */
+    --dur-slower: 1ms; /* @kind other */
+    --lift: none; /* @kind other */
+    --press: none; /* @kind other */
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

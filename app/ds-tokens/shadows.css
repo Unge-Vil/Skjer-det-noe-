@@ -1,0 +1,25 @@
+/* ── Skjer det noe? · Elevation tokens ──────────────────────────────────────
+   Soft, low, layered shadows tinted with the brand ink (warm-cool neutral) —
+   friendly elevation, never harsh black drop shadows. Borders carry most of
+   the separation; shadow signals "liftable / tappable".
+--------------------------------------------------------------------------- */
+
+:root {
+  /* tinted with deep fjord ink so shadows feel part of the palette */
+  --shadow-xs:  0 1px 2px rgba(8, 52, 51, 0.06);
+  --shadow-sm:  0 1px 2px rgba(8, 52, 51, 0.06),
+                0 2px 6px rgba(8, 52, 51, 0.05);
+  --shadow-md:  0 2px 4px rgba(8, 52, 51, 0.05),
+                0 8px 20px rgba(8, 52, 51, 0.08);
+  --shadow-lg:  0 4px 8px rgba(8, 52, 51, 0.06),
+                0 16px 36px rgba(8, 52, 51, 0.12);
+  --shadow-xl:  0 8px 16px rgba(8, 52, 51, 0.08),
+                0 28px 60px rgba(8, 52, 51, 0.16);
+
+  /* Coloured glow for brand/coral CTAs on press/hover (subtle) */
+  --shadow-brand: 0 6px 18px rgba(10, 92, 91, 0.28);
+  --shadow-coral: 0 6px 18px rgba(191, 54, 15, 0.26);
+
+  /* Focus ring composite (3px high-contrast outline + soft offset) */
+  --ring: 0 0 0 3px var(--focus-ring-offset), 0 0 0 6px var(--focus-ring);
+}
