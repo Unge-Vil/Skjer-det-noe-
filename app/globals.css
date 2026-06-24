@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Skjer det noe? design-system tokens (fonts wired via next/font below). */
+@import "./ds-tokens/colors.css";
+@import "./ds-tokens/typography.css";
+@import "./ds-tokens/spacing.css";
+@import "./ds-tokens/radius.css";
+@import "./ds-tokens/shadows.css";
+@import "./ds-tokens/motion.css";
+@import "./ds-tokens/base.css";
+
+@import "leaflet/dist/leaflet.css";
+
+/* Point the design's font tokens at the next/font families loaded in layout. */
+:root {
+  --font-display: var(--font-schibsted), "Segoe UI", system-ui, sans-serif;
+  --font-sans: var(--font-schibsted), "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-spline), ui-monospace, "SFMono-Regular", monospace;
+}
+
+/* A few Tailwind theme aliases so utilities can reach the brand tokens. */
+@theme inline {
+  --color-app: var(--bg-app);
+  --color-card: var(--surface-card);
+  --color-brand: var(--surface-brand-strong);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* Keep Leaflet tiles below sticky UI; match the app's rounded, calm chrome. */
+.leaflet-container {
+  font: inherit;
+  z-index: 0;
+  background: var(--surface-sunk);
+}
+.leaflet-popup-content-wrapper {
+  border-radius: var(--radius-md);
+}

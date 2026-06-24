@@ -1,0 +1,14 @@
+/* ── Skjer det noe? · Radius tokens ─────────────────────────────────────────
+   Friendly, generous corners — warm and modern, never childish. Pills for
+   filters/tags/labels; rounded cards; gently rounded controls.
+--------------------------------------------------------------------------- */
+
+:root {
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   14px;   /* inputs, buttons */
+  --radius-lg:   18px;   /* cards */
+  --radius-xl:   24px;   /* feature cards, sheets */
+  --radius-2xl:  32px;   /* hero panels, swipe cards */
+  --radius-pill: 999px;  /* tags, filter chips, status labels, avatars */
+}
