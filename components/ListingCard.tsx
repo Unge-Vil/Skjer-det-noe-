@@ -93,6 +93,7 @@ export function ListingCard({
   listing,
   active,
   saved = false,
+  showDistance = true,
   onHover,
   onSelect,
   onToggleSave,
@@ -100,6 +101,7 @@ export function ListingCard({
   listing: Listing;
   active?: boolean;
   saved?: boolean;
+  showDistance?: boolean;
   onHover?: (id: string | null) => void;
   onSelect?: (id: string) => void;
   onToggleSave?: (id: string) => void;
@@ -184,7 +186,7 @@ export function ListingCard({
           <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 14px" }}>
             <MetaRow icon="clock" text={time} />
             {placeText && <MetaRow icon="map-pin" text={placeText} />}
-            <MetaRow icon="locate-fixed" text={distance} />
+            {showDistance && <MetaRow icon="locate-fixed" text={distance} />}
           </div>
           {statuses.length > 0 && (
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 2 }}>
@@ -250,7 +252,7 @@ export function ListingCard({
         <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
           {scheduleText && <MetaRow icon="clock" text={scheduleText} />}
           {placeText && <MetaRow icon="map-pin" text={placeText} />}
-          <MetaRow icon="locate-fixed" text={distance} />
+          {showDistance && <MetaRow icon="locate-fixed" text={distance} />}
         </div>
         {statuses.length > 0 && (
           <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 2 }}>

@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { SiteHeader } from "@/components/SiteHeader";
+import { MobileTabBar } from "@/components/MobileTabBar";
 
 const schibsted = Schibsted_Grotesk({
   variable: "--font-schibsted",
@@ -21,6 +22,18 @@ export const metadata: Metadata = {
   title: "Skjer det noe?",
   description:
     "Finn faste aktiviteter, arrangementer og organisasjoner i nærheten av deg.",
+  appleWebApp: {
+    capable: true,
+    title: "Skjer det noe?",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#FBF8F2" },
+    { media: "(prefers-color-scheme: dark)", color: "#0E1A18" },
+  ],
 };
 
 // Set the theme before paint so there's no flash. Defaults to "auto".
@@ -52,6 +65,7 @@ export default async function RootLayout({
           <div className="flex min-h-screen flex-col" style={{ background: "var(--bg-app)" }}>
             <SiteHeader />
             {children}
+            <MobileTabBar />
           </div>
         </LocaleProvider>
       </body>

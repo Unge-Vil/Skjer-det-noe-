@@ -6,7 +6,13 @@ export const nb = {
     tagline: "Faste aktiviteter og arrangementer i nærheten av deg.",
     home: "Hjem",
     explore: "Utforsk",
+    saved: "Lagret",
     login: "Logg inn",
+  },
+  saved: {
+    title: "Lagret",
+    onDevice: "Lagret kun på din enhet – ingen innlogging.",
+    empty: "Trykk på hjertet for å lagre det du vil huske.",
   },
   hero: {
     eyebrowNear: "Aktiviteter nær deg",

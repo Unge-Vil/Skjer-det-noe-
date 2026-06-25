@@ -8,7 +8,13 @@ export const en: Dictionary = {
     tagline: "Recurring activities and events near you.",
     home: "Home",
     explore: "Explore",
+    saved: "Saved",
     login: "Log in",
+  },
+  saved: {
+    title: "Saved",
+    onDevice: "Saved on your device only – no login.",
+    empty: "Tap the heart to save things you want to remember.",
   },
   hero: {
     eyebrowNear: "Activities near you",
