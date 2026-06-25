@@ -1,0 +1,55 @@
+import { notFound, redirect } from "next/navigation";
+import { getUser } from "@/lib/auth";
+import { getMyOrg } from "@/lib/org";
+import { createClient } from "@/lib/supabase/server";
+import { DEFAULT_CENTER } from "@/lib/listings";
+import { getDictionary, getLocale } from "@/lib/i18n/server";
+import { EventForm, type EventInitial } from "@/components/admin/EventForm";
+
+export const dynamic = "force-dynamic";
+
+export default async function EventFormPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const user = await getUser();
+  if (!user) redirect("/logg-inn");
+  const org = await getMyOrg();
+  if (!org) redirect("/registrer");
+
+  const supabase = await createClient();
+  const { data: cats } = await supabase.from("categories").select("id,name").order("sort_order");
+
+  let initial: EventInitial | null = null;
+  if (id !== "ny") {
+    const { data } = await supabase
+      .from("events")
+      .select(
+        "id,title,description,category_id,municipality_id,address,starts_at,ends_at,age_min,age_max,price,image_url,status",
+      )
+      .eq("id", id)
+      .maybeSingle();
+    if (!data) notFound();
+    initial = data as EventInitial;
+  }
+
+  const locale = await getLocale();
+  const t = getDictionary(locale);
+
+  return (
+    <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
+      <h1 style={{ margin: "0 0 20px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>
+        {id === "ny" ? t.form.createEvent : t.form.editEvent}
+      </h1>
+      <EventForm
+        orgId={org.id}
+        categories={cats ?? []}
+        municipalities={org.municipalities}
+        defaultCenter={DEFAULT_CENTER}
+        initial={initial}
+      />
+    </main>
+  );
+}

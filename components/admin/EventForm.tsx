@@ -1,0 +1,205 @@
+"use client";
+
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { makeSlug, pointEwkt } from "@/lib/slug";
+import { Button } from "@/components/ds/Button";
+import { useI18n } from "@/components/i18n/LocaleProvider";
+import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
+
+const LocationPicker = dynamic(() => import("./LocationPicker"), { ssr: false });
+
+interface Option {
+  id: string;
+  name: string;
+}
+
+export interface EventInitial {
+  id: string;
+  title: string;
+  description: string | null;
+  category_id: string | null;
+  municipality_id: string | null;
+  address: string | null;
+  starts_at: string;
+  ends_at: string | null;
+  age_min: number | null;
+  age_max: number | null;
+  price: string | null;
+  image_url: string | null;
+  status: string;
+}
+
+/** ISO timestamp -> value for <input type="datetime-local"> in local time. */
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+export function EventForm({
+  orgId,
+  categories,
+  municipalities,
+  defaultCenter,
+  initial,
+}: {
+  orgId: string;
+  categories: Option[];
+  municipalities: Option[];
+  defaultCenter: { lat: number; lng: number };
+  initial?: EventInitial | null;
+}) {
+  const { t } = useI18n();
+  const router = useRouter();
+  const supabase = createClient();
+
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [description, setDescription] = useState(initial?.description ?? "");
+  const [categoryId, setCategoryId] = useState(initial?.category_id ?? "");
+  const [municipalityId, setMunicipalityId] = useState(initial?.municipality_id ?? "");
+  const [address, setAddress] = useState(initial?.address ?? "");
+  const [startsAt, setStartsAt] = useState(toLocalInput(initial?.starts_at ?? null));
+  const [endsAt, setEndsAt] = useState(toLocalInput(initial?.ends_at ?? null));
+  const [ageMin, setAgeMin] = useState(initial?.age_min?.toString() ?? "");
+  const [ageMax, setAgeMax] = useState(initial?.age_max?.toString() ?? "");
+  const [price, setPrice] = useState(initial?.price ?? "");
+  const [imageUrl, setImageUrl] = useState(initial?.image_url ?? "");
+  const [status, setStatus] = useState(initial?.status ?? "draft");
+  const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
+
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!title.trim() || !startsAt || (!initial && !loc)) {
+      setError(t.form.required);
+      return;
+    }
+    setBusy(true);
+
+    const payload: Record<string, unknown> = {
+      title: title.trim(),
+      description: description || null,
+      category_id: categoryId || null,
+      municipality_id: municipalityId || null,
+      address: address || null,
+      starts_at: new Date(startsAt).toISOString(),
+      ends_at: endsAt ? new Date(endsAt).toISOString() : null,
+      age_min: ageMin ? Number(ageMin) : null,
+      age_max: ageMax ? Number(ageMax) : null,
+      price: price || null,
+      image_url: imageUrl || null,
+      status,
+    };
+    if (loc) payload.location = pointEwkt(loc.lat, loc.lng);
+
+    const { error } = initial
+      ? await supabase.from("events").update(payload).eq("id", initial.id)
+      : await supabase
+          .from("events")
+          .insert({ ...payload, slug: makeSlug(title), organization_id: orgId });
+
+    setBusy(false);
+    if (error) {
+      console.error(error);
+      setError(t.form.saveError);
+      return;
+    }
+    router.push("/admin");
+    router.refresh();
+  };
+
+  return (
+    <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div>
+        <label htmlFor="title" style={labelStyle}>{t.form.title}</label>
+        <input id="title" required value={title} onChange={(e) => setTitle(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
+        <label htmlFor="desc" style={labelStyle}>{t.form.description}</label>
+        <textarea id="desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} style={textareaStyle} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="cat" style={labelStyle}>{t.form.category}</label>
+          <select id="cat" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} style={inputStyle}>
+            <option value="">{t.form.chooseCategory}</option>
+            {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="muni" style={labelStyle}>{t.form.municipality}</label>
+          <select id="muni" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} style={inputStyle}>
+            <option value="">{t.form.chooseMunicipality}</option>
+            {municipalities.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="sa" style={labelStyle}>{t.form.startsAt}</label>
+          <input id="sa" type="datetime-local" required value={startsAt} onChange={(e) => setStartsAt(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="ea" style={labelStyle}>{t.form.endsAt}</label>
+          <input id="ea" type="datetime-local" value={endsAt} onChange={(e) => setEndsAt(e.target.value)} style={inputStyle} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div>
+          <label htmlFor="amin" style={labelStyle}>{t.form.ageMin}</label>
+          <input id="amin" type="number" min={0} value={ageMin} onChange={(e) => setAgeMin(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="amax" style={labelStyle}>{t.form.ageMax}</label>
+          <input id="amax" type="number" min={0} value={ageMax} onChange={(e) => setAgeMax(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="price" style={labelStyle}>{t.form.price}</label>
+          <input id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder={t.form.pricePlaceholder} style={inputStyle} />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="addr" style={labelStyle}>{t.form.address}</label>
+        <input id="addr" value={address} onChange={(e) => setAddress(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
+        <label style={labelStyle}>{t.form.location}</label>
+        <p style={{ margin: "0 0 8px", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.form.locationHint}</p>
+        <LocationPicker value={loc} center={defaultCenter} onChange={(lat, lng) => setLoc({ lat, lng })} />
+      </div>
+
+      <div>
+        <label htmlFor="img" style={labelStyle}>{t.form.imageUrl}</label>
+        <input id="img" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
+        <label htmlFor="status" style={labelStyle}>{t.form.status}</label>
+        <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} style={inputStyle}>
+          <option value="draft">{t.form.statusDraftOption}</option>
+          <option value="published">{t.form.statusPublishedOption}</option>
+        </select>
+      </div>
+
+      {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <Button type="submit" loading={busy}>{busy ? t.form.saving : t.form.save}</Button>
+        <Button type="button" variant="ghost" onClick={() => router.push("/admin")}>{t.form.cancel}</Button>
+      </div>
+    </form>
+  );
+}

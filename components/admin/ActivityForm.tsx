@@ -1,0 +1,217 @@
+"use client";
+
+import { useState } from "react";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
+import { makeSlug, pointEwkt } from "@/lib/slug";
+import { weekdayName } from "@/lib/format";
+import { Button } from "@/components/ds/Button";
+import { useI18n } from "@/components/i18n/LocaleProvider";
+import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
+
+const LocationPicker = dynamic(() => import("./LocationPicker"), { ssr: false });
+
+interface Option {
+  id: string;
+  slug?: string;
+  name: string;
+}
+
+export interface ActivityInitial {
+  id: string;
+  title: string;
+  description: string | null;
+  category_id: string | null;
+  municipality_id: string | null;
+  address: string | null;
+  weekday: number | null;
+  start_time: string | null;
+  end_time: string | null;
+  recurrence_note: string | null;
+  age_min: number | null;
+  age_max: number | null;
+  price: string | null;
+  image_url: string | null;
+  status: string;
+}
+
+export function ActivityForm({
+  orgId,
+  categories,
+  municipalities,
+  defaultCenter,
+  initial,
+}: {
+  orgId: string;
+  categories: Option[];
+  municipalities: Option[];
+  defaultCenter: { lat: number; lng: number };
+  initial?: ActivityInitial | null;
+}) {
+  const { t, locale } = useI18n();
+  const router = useRouter();
+  const supabase = createClient();
+
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [description, setDescription] = useState(initial?.description ?? "");
+  const [categoryId, setCategoryId] = useState(initial?.category_id ?? "");
+  const [municipalityId, setMunicipalityId] = useState(initial?.municipality_id ?? "");
+  const [address, setAddress] = useState(initial?.address ?? "");
+  const [weekday, setWeekday] = useState<string>(initial?.weekday?.toString() ?? "");
+  const [startTime, setStartTime] = useState(initial?.start_time?.slice(0, 5) ?? "");
+  const [endTime, setEndTime] = useState(initial?.end_time?.slice(0, 5) ?? "");
+  const [recurrenceNote, setRecurrenceNote] = useState(initial?.recurrence_note ?? "");
+  const [ageMin, setAgeMin] = useState(initial?.age_min?.toString() ?? "");
+  const [ageMax, setAgeMax] = useState(initial?.age_max?.toString() ?? "");
+  const [price, setPrice] = useState(initial?.price ?? "");
+  const [imageUrl, setImageUrl] = useState(initial?.image_url ?? "");
+  const [status, setStatus] = useState(initial?.status ?? "draft");
+  const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
+
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    if (!title.trim() || (!initial && !loc)) {
+      setError(t.form.required);
+      return;
+    }
+    setBusy(true);
+
+    const payload: Record<string, unknown> = {
+      title: title.trim(),
+      description: description || null,
+      category_id: categoryId || null,
+      municipality_id: municipalityId || null,
+      address: address || null,
+      weekday: weekday === "" ? null : Number(weekday),
+      start_time: startTime || null,
+      end_time: endTime || null,
+      recurrence_note: recurrenceNote || null,
+      age_min: ageMin ? Number(ageMin) : null,
+      age_max: ageMax ? Number(ageMax) : null,
+      price: price || null,
+      image_url: imageUrl || null,
+      status,
+    };
+    if (loc) payload.location = pointEwkt(loc.lat, loc.lng);
+
+    const { error } = initial
+      ? await supabase.from("activities").update(payload).eq("id", initial.id)
+      : await supabase
+          .from("activities")
+          .insert({ ...payload, slug: makeSlug(title), organization_id: orgId });
+
+    setBusy(false);
+    if (error) {
+      console.error(error);
+      setError(t.form.saveError);
+      return;
+    }
+    router.push("/admin");
+    router.refresh();
+  };
+
+  return (
+    <form onSubmit={submit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+      <div>
+        <label htmlFor="title" style={labelStyle}>{t.form.title}</label>
+        <input id="title" required value={title} onChange={(e) => setTitle(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
+        <label htmlFor="desc" style={labelStyle}>{t.form.description}</label>
+        <textarea id="desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} style={textareaStyle} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="cat" style={labelStyle}>{t.form.category}</label>
+          <select id="cat" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} style={inputStyle}>
+            <option value="">{t.form.chooseCategory}</option>
+            {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="muni" style={labelStyle}>{t.form.municipality}</label>
+          <select id="muni" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} style={inputStyle}>
+            <option value="">{t.form.chooseMunicipality}</option>
+            {municipalities.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+          </select>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div>
+          <label htmlFor="weekday" style={labelStyle}>{t.form.weekday}</label>
+          <select id="weekday" value={weekday} onChange={(e) => setWeekday(e.target.value)} style={inputStyle}>
+            <option value="">{t.form.chooseWeekday}</option>
+            {[1, 2, 3, 4, 5, 6, 0].map((d) => <option key={d} value={d}>{weekdayName(d, locale)}</option>)}
+          </select>
+        </div>
+        <div>
+          <label htmlFor="st" style={labelStyle}>{t.form.startTime}</label>
+          <input id="st" type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="et" style={labelStyle}>{t.form.endTime}</label>
+          <input id="et" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} style={inputStyle} />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="rec" style={labelStyle}>{t.form.recurrenceNote}</label>
+        <input id="rec" value={recurrenceNote} onChange={(e) => setRecurrenceNote(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <div>
+          <label htmlFor="amin" style={labelStyle}>{t.form.ageMin}</label>
+          <input id="amin" type="number" min={0} value={ageMin} onChange={(e) => setAgeMin(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="amax" style={labelStyle}>{t.form.ageMax}</label>
+          <input id="amax" type="number" min={0} value={ageMax} onChange={(e) => setAgeMax(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="price" style={labelStyle}>{t.form.price}</label>
+          <input id="price" value={price} onChange={(e) => setPrice(e.target.value)} placeholder={t.form.pricePlaceholder} style={inputStyle} />
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="addr" style={labelStyle}>{t.form.address}</label>
+        <input id="addr" value={address} onChange={(e) => setAddress(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
+        <label style={labelStyle}>{t.form.location}</label>
+        <p style={{ margin: "0 0 8px", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.form.locationHint}</p>
+        <LocationPicker value={loc} center={defaultCenter} onChange={(lat, lng) => setLoc({ lat, lng })} />
+      </div>
+
+      <div>
+        <label htmlFor="img" style={labelStyle}>{t.form.imageUrl}</label>
+        <input id="img" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
+        <label htmlFor="status" style={labelStyle}>{t.form.status}</label>
+        <select id="status" value={status} onChange={(e) => setStatus(e.target.value)} style={inputStyle}>
+          <option value="draft">{t.form.statusDraftOption}</option>
+          <option value="published">{t.form.statusPublishedOption}</option>
+        </select>
+      </div>
+
+      {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+
+      <div style={{ display: "flex", gap: 10 }}>
+        <Button type="submit" loading={busy}>{busy ? t.form.saving : t.form.save}</Button>
+        <Button type="button" variant="ghost" onClick={() => router.push("/admin")}>{t.form.cancel}</Button>
+      </div>
+    </form>
+  );
+}
