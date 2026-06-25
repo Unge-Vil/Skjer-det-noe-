@@ -3,9 +3,15 @@ import {
   activityToListing,
   eventToListing,
   type Listing,
+  type ListingKind,
   type NearbyActivity,
   type NearbyEvent,
 } from "./types";
+
+/** Public detail route for a listing. */
+export function listingHref(kind: ListingKind, slug: string): string {
+  return kind === "event" ? `/arrangement/${slug}` : `/aktivitet/${slug}`;
+}
 
 /** Default map center: Karmøy. */
 export const DEFAULT_CENTER = { lat: 59.2792, lng: 5.3015 };

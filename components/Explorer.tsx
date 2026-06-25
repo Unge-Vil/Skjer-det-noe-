@@ -336,7 +336,6 @@ export function Explorer({
               active={l.id === activeId}
               saved={saved.includes(l.id)}
               onHover={setActiveId}
-              onSelect={setActiveId}
               onToggleSave={toggleSave}
             />
           ))}

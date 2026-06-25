@@ -12,6 +12,20 @@ export const en: Dictionary = {
     saved: "Saved",
     login: "Log in",
   },
+  detail: {
+    back: "Back",
+    time: "Time",
+    place: "Place",
+    price: "Price",
+    age: "Age",
+    organiser: "Organiser",
+    website: "Visit website",
+    onMap: "See on map",
+    newHere: "New here?",
+    newHereBody:
+      "You don't need any experience. Just show up – you're welcome.",
+    free: "Free",
+  },
   swipe: {
     title: "Discover something new",
     subtitle: "Swipe or use the buttons – your call.",

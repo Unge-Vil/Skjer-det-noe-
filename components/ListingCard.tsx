@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import type { Listing } from "@/lib/types";
+import { listingHref } from "@/lib/listings";
 import { formatDistance, formatTimeRange, weekdayName } from "@/lib/format";
 import { Icon, type IconName } from "@/components/ds/Icon";
 import { CategoryPill } from "@/components/ds/CategoryPill";
@@ -95,7 +97,6 @@ export function ListingCard({
   saved = false,
   showDistance = true,
   onHover,
-  onSelect,
   onToggleSave,
 }: {
   listing: Listing;
@@ -103,10 +104,11 @@ export function ListingCard({
   saved?: boolean;
   showDistance?: boolean;
   onHover?: (id: string | null) => void;
-  onSelect?: (id: string) => void;
   onToggleSave?: (id: string) => void;
 }) {
   const { t, locale } = useI18n();
+  const router = useRouter();
+  const href = listingHref(listing.kind, listing.slug);
   const [hover, setHover] = useState(false);
   const cat = categoryDef(listing.categorySlug);
 
@@ -132,6 +134,8 @@ export function ListingCard({
   };
 
   const handlers = {
+    role: "link",
+    tabIndex: 0,
     onMouseEnter: () => {
       setHover(true);
       onHover?.(listing.id);
@@ -140,7 +144,10 @@ export function ListingCard({
       setHover(false);
       onHover?.(null);
     },
-    onClick: () => onSelect?.(listing.id),
+    onClick: () => router.push(href),
+    onKeyDown: (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") router.push(href);
+    },
   };
 
   // ── Event: horizontal card led by a date block ──

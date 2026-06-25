@@ -2,8 +2,10 @@
 
 import { useEffect } from "react";
 import L from "leaflet";
+import Link from "next/link";
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet";
 import type { Listing } from "@/lib/types";
+import { listingHref } from "@/lib/listings";
 import { categoryDef } from "@/components/ds/categories";
 
 function pinIcon(color: string, active: boolean) {
@@ -85,7 +87,9 @@ export default function ListingMap({
             }}
           >
             <Popup>
-              <strong>{l.title}</strong>
+              <Link href={listingHref(l.kind, l.slug)} style={{ color: "var(--text-link)", fontWeight: 700 }}>
+                {l.title}
+              </Link>
               {l.organizationName && <div>{l.organizationName}</div>}
             </Popup>
           </Marker>

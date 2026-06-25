@@ -10,6 +10,20 @@ export const nb = {
     saved: "Lagret",
     login: "Logg inn",
   },
+  detail: {
+    back: "Tilbake",
+    time: "Tid",
+    place: "Sted",
+    price: "Pris",
+    age: "Alder",
+    organiser: "Arrangør",
+    website: "Se nettside",
+    onMap: "Se på kart",
+    newHere: "Ny her?",
+    newHereBody:
+      "Du trenger ikke kunne noe fra før. Bare møt opp – vi tar imot deg.",
+    free: "Gratis",
+  },
   swipe: {
     title: "Oppdag noe nytt",
     subtitle: "Sveip eller bruk knappene – du bestemmer.",

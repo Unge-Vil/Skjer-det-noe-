@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import type { Listing } from "@/lib/types";
+import { listingHref } from "@/lib/listings";
 import { formatDistance, formatEventDate, formatTimeRange, weekdayName } from "@/lib/format";
 import { categoryDef } from "@/components/ds/categories";
 import { CategoryPill } from "@/components/ds/CategoryPill";
@@ -261,7 +262,7 @@ export function SwipeDeck({ listings }: { listings: Listing[] }) {
         <ActionBtn
           icon="info"
           label={t.swipe.info}
-          onClick={() => (current.url ? window.open(current.url, "_blank", "noopener") : router.push("/kart"))}
+          onClick={() => router.push(listingHref(current.kind, current.slug))}
           fg="var(--text-brand)"
           border="var(--border-strong)"
         />

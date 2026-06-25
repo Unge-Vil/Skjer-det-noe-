@@ -1,5 +1,6 @@
 import {
   Accessibility,
+  ArrowLeft,
   ArrowRight,
   Ban,
   CalendarDays,
@@ -40,6 +41,7 @@ import {
 
 const REGISTRY = {
   accessibility: Accessibility,
+  "arrow-left": ArrowLeft,
   "arrow-right": ArrowRight,
   ban: Ban,
   "calendar-days": CalendarDays,
