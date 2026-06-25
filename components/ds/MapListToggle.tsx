@@ -2,12 +2,13 @@
 
 import type { CSSProperties } from "react";
 import { Icon, type IconName } from "./Icon";
+import { useI18n } from "@/components/i18n/LocaleProvider";
 
 export type MapListView = "list" | "map";
 
-const OPTS: { value: MapListView; label: string; icon: IconName }[] = [
-  { value: "list", label: "Liste", icon: "list" },
-  { value: "map", label: "Kart", icon: "map" },
+const OPTS: { value: MapListView; icon: IconName }[] = [
+  { value: "list", icon: "list" },
+  { value: "map", icon: "map" },
 ];
 
 /** Mandatory list/map pairing — a map view always offers a list alternative. */
@@ -20,10 +21,11 @@ export function MapListToggle({
   onChange?: (v: MapListView) => void;
   style?: CSSProperties;
 }) {
+  const { t } = useI18n();
   return (
     <div
       role="group"
-      aria-label="Velg visning"
+      aria-label={`${t.view.list} / ${t.view.map}`}
       style={{
         display: "inline-flex",
         gap: 4,
@@ -61,7 +63,7 @@ export function MapListToggle({
             }}
           >
             <Icon name={o.icon} size={17} />
-            {o.label}
+            {t.view[o.value]}
           </button>
         );
       })}

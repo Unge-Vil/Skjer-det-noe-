@@ -3,20 +3,29 @@
 import { useState } from "react";
 import Image from "next/image";
 import type { Listing } from "@/lib/types";
-import {
-  formatAge,
-  formatDistance,
-  formatTimeRange,
-  weekdayName,
-} from "@/lib/format";
+import { formatDistance, formatTimeRange, weekdayName } from "@/lib/format";
 import { Icon, type IconName } from "@/components/ds/Icon";
 import { CategoryPill } from "@/components/ds/CategoryPill";
 import { StatusLabel, type StatusKind } from "@/components/ds/StatusLabel";
 import { categoryDef } from "@/components/ds/categories";
+import { useI18n } from "@/components/i18n/LocaleProvider";
+import { fmt, INTL_LOCALE } from "@/lib/i18n/config";
+import type { Dictionary } from "@/lib/i18n/dictionaries/nb";
 
 function priceStatus(price: string | null): StatusKind | null {
   if (!price) return null;
-  return /gratis/i.test(price) ? "free" : "paid";
+  return /gratis|free/i.test(price) ? "free" : "paid";
+}
+
+function ageLabel(
+  min: number | null,
+  max: number | null,
+  t: Dictionary,
+): string | null {
+  if (min != null && max != null) return fmt(t.card.ageRange, { min, max });
+  if (min != null) return fmt(t.card.ageFrom, { min });
+  if (max != null) return fmt(t.card.ageTo, { max });
+  return null;
 }
 
 function MetaRow({ icon, text }: { icon: IconName; text: string }) {
@@ -95,17 +104,18 @@ export function ListingCard({
   onSelect?: (id: string) => void;
   onToggleSave?: (id: string) => void;
 }) {
+  const { t, locale } = useI18n();
   const [hover, setHover] = useState(false);
   const cat = categoryDef(listing.categorySlug);
 
   const statuses: { kind?: StatusKind; icon?: IconName; label?: string }[] = [];
   const ps = priceStatus(listing.price);
   if (ps) statuses.push({ kind: ps });
-  const age = formatAge(listing.ageMin, listing.ageMax);
+  const age = ageLabel(listing.ageMin, listing.ageMax, t);
   if (age) statuses.push({ icon: "users-round", label: age });
 
   const placeText = listing.address || listing.municipalityName || null;
-  const distance = formatDistance(listing.distanceM);
+  const distance = formatDistance(listing.distanceM, locale);
 
   const cardShell = {
     position: "relative" as const,
@@ -134,12 +144,13 @@ export function ListingCard({
   // ── Event: horizontal card led by a date block ──
   if (listing.kind === "event" && listing.startsAt) {
     const d = new Date(listing.startsAt);
-    const day = d.toLocaleDateString("nb-NO", { day: "numeric" });
+    const intl = INTL_LOCALE[locale];
+    const day = d.toLocaleDateString(intl, { day: "numeric" });
     const month = d
-      .toLocaleDateString("nb-NO", { month: "short" })
+      .toLocaleDateString(intl, { month: "short" })
       .replace(".", "")
       .toUpperCase();
-    const time = d.toLocaleTimeString("nb-NO", { hour: "2-digit", minute: "2-digit" });
+    const time = d.toLocaleTimeString(intl, { hour: "2-digit", minute: "2-digit" });
 
     return (
       <article {...handlers} style={{ ...cardShell, display: "flex", gap: 14, padding: 14 }}>
@@ -190,7 +201,10 @@ export function ListingCard({
   }
 
   // ── Activity: vertical card with media header ──
-  const schedule = [weekdayName(listing.weekday), formatTimeRange(listing.startTime, listing.endTime)]
+  const schedule = [
+    weekdayName(listing.weekday, locale),
+    formatTimeRange(listing.startTime, listing.endTime),
+  ]
     .filter(Boolean)
     .join(" · ");
   const scheduleText = schedule || listing.recurrenceNote || null;

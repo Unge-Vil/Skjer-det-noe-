@@ -1,5 +1,8 @@
+"use client";
+
 import type { CSSProperties } from "react";
 import { Icon, type IconName } from "./Icon";
+import { useI18n } from "@/components/i18n/LocaleProvider";
 
 type Tone = "sol" | "brand" | "neutral" | "success" | "danger";
 
@@ -10,20 +13,19 @@ export type StatusKind =
   | "registration"
   | "beginners"
   | "accessible"
-  | "age"
   | "full"
   | "cancelled";
 
-const PRESETS: Record<StatusKind, { icon: IconName; label: string; tone: Tone }> = {
-  free: { icon: "tag", label: "Gratis", tone: "sol" },
-  paid: { icon: "wallet", label: "Koster", tone: "neutral" },
-  dropin: { icon: "door-open", label: "Stikk innom", tone: "brand" },
-  registration: { icon: "clipboard-list", label: "Påmelding", tone: "neutral" },
-  beginners: { icon: "sparkles", label: "Nybegynnere velkommen", tone: "success" },
-  accessible: { icon: "accessibility", label: "Universelt utformet", tone: "brand" },
-  age: { icon: "users-round", label: "13–18 år", tone: "neutral" },
-  full: { icon: "user-x", label: "Fullt", tone: "danger" },
-  cancelled: { icon: "ban", label: "Avlyst", tone: "danger" },
+// Icon + tone per kind; the visible label is localized from the dictionary.
+const PRESETS: Record<StatusKind, { icon: IconName; tone: Tone }> = {
+  free: { icon: "tag", tone: "sol" },
+  paid: { icon: "wallet", tone: "neutral" },
+  dropin: { icon: "door-open", tone: "brand" },
+  registration: { icon: "clipboard-list", tone: "neutral" },
+  beginners: { icon: "sparkles", tone: "success" },
+  accessible: { icon: "accessibility", tone: "brand" },
+  full: { icon: "user-x", tone: "danger" },
+  cancelled: { icon: "ban", tone: "danger" },
 };
 
 const TONES: Record<Tone, { bg: string; fg: string }> = {
@@ -50,9 +52,10 @@ export function StatusLabel({
   size?: "sm" | "md";
   style?: CSSProperties;
 }) {
+  const { t } = useI18n();
   const preset = kind ? PRESETS[kind] : null;
   const _icon = icon || preset?.icon;
-  const _label = label || preset?.label;
+  const _label = label || (kind ? t.status[kind] : undefined);
   const _tone = TONES[tone || preset?.tone || "neutral"];
   const dims =
     size === "sm"

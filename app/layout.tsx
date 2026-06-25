@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
+import { getDictionary, getLocale } from "@/lib/i18n/server";
+import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 
 const schibsted = Schibsted_Grotesk({
   variable: "--font-schibsted",
@@ -23,14 +25,17 @@ export const metadata: Metadata = {
 // Set the theme before paint so there's no flash. Defaults to "auto".
 const themeInit = `(function(){try{var t=localStorage.getItem("sdn-theme")||"auto";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","auto");}})();`;
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const dict = getDictionary(locale);
+
   return (
     <html
-      lang="nb"
+      lang={locale}
       data-theme="auto"
       suppressHydrationWarning
       className={`${schibsted.variable} ${splineMono.variable} h-full antialiased`}
@@ -39,10 +44,12 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
       </head>
       <body className="min-h-full">
-        <a href="#main" className="skip-link">
-          Hopp til innhold
-        </a>
-        {children}
+        <LocaleProvider locale={locale} dict={dict}>
+          <a href="#main" className="skip-link">
+            {dict.nav.skipToContent}
+          </a>
+          {children}
+        </LocaleProvider>
       </body>
     </html>
   );

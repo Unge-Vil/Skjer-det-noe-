@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import { Icon, type IconName } from "./Icon";
+import { useI18n } from "@/components/i18n/LocaleProvider";
 
 type Theme = "auto" | "light" | "dark";
 
-const OPTS: { value: Theme; label: string; icon: IconName }[] = [
-  { value: "auto", label: "Auto", icon: "monitor" },
-  { value: "light", label: "Lyst", icon: "sun" },
-  { value: "dark", label: "Mørkt", icon: "moon" },
+const OPTS: { value: Theme; icon: IconName }[] = [
+  { value: "auto", icon: "monitor" },
+  { value: "light", icon: "sun" },
+  { value: "dark", icon: "moon" },
 ];
 
 /** Auto / Lyst / Mørkt theme switch — writes data-theme + persists to localStorage. */
 export function ThemeToggle() {
+  const { t } = useI18n();
   const [theme, setTheme] = useState<Theme>("auto");
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export function ThemeToggle() {
   return (
     <div
       role="group"
-      aria-label="Tema"
+      aria-label={t.theme.label}
       style={{
         display: "inline-flex",
         gap: 2,
@@ -48,13 +50,14 @@ export function ThemeToggle() {
     >
       {OPTS.map((o) => {
         const active = o.value === theme;
+        const label = t.theme[o.value];
         return (
           <button
             key={o.value}
             type="button"
             aria-pressed={active}
-            aria-label={o.label}
-            title={o.label}
+            aria-label={label}
+            title={label}
             onClick={() => apply(o.value)}
             style={{
               display: "inline-flex",

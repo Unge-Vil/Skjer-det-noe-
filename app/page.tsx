@@ -8,6 +8,7 @@ import type { Category, Listing, Municipality } from "@/lib/types";
 import { Explorer } from "@/components/Explorer";
 import { Wordmark } from "@/components/ds/Wordmark";
 import { ThemeToggle } from "@/components/ds/ThemeToggle";
+import { LanguageToggle } from "@/components/i18n/LanguageToggle";
 
 // Listings are data-driven; render per request for now.
 export const dynamic = "force-dynamic";
@@ -57,7 +58,10 @@ export default async function Home() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <Wordmark size={20} withMark />
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
         </div>
       </header>
 

@@ -23,6 +23,8 @@ import { SearchBar } from "@/components/ds/SearchBar";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
 import { MapListToggle, type MapListView } from "@/components/ds/MapListToggle";
+import { useI18n } from "@/components/i18n/LocaleProvider";
+import { fmt } from "@/lib/i18n/config";
 import { ListingCard } from "./ListingCard";
 
 const ListingMap = dynamic(() => import("./ListingMap"), {
@@ -66,6 +68,7 @@ export function Explorer({
   municipalities: Municipality[];
   configured: boolean;
 }) {
+  const { t } = useI18n();
   const supabase = useMemo(() => (configured ? createClient() : null), [configured]);
 
   const [center, setCenter] = useState(DEFAULT_CENTER);
@@ -132,7 +135,7 @@ export function Explorer({
   const useMyLocation = useCallback(() => {
     setGeoError(null);
     if (!("geolocation" in navigator)) {
-      setGeoError("Posisjon støttes ikke i denne nettleseren.");
+      setGeoError(t.explorer.geoUnsupported);
       return;
     }
     navigator.geolocation.getCurrentPosition(
@@ -140,9 +143,9 @@ export function Explorer({
         setMunicipality(null);
         setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
       },
-      () => setGeoError("Fikk ikke tilgang til posisjonen din."),
+      () => setGeoError(t.explorer.geoDenied),
     );
-  }, []);
+  }, [t]);
 
   const onMunicipalityChange = useCallback(
     (kommunenummer: string) => {
@@ -154,8 +157,8 @@ export function Explorer({
     [municipalities],
   );
 
-  const scopeName =
-    municipalities.find((m) => m.kommunenummer === municipality)?.name ?? "nær deg";
+  const municipalityName =
+    municipalities.find((m) => m.kommunenummer === municipality)?.name ?? null;
 
   // Client-side text search over the fetched set.
   const visible = useMemo(() => {
@@ -182,7 +185,9 @@ export function Explorer({
             color: "var(--accent)",
           }}
         >
-          Aktiviteter {scopeName === "nær deg" ? "nær deg" : `i ${scopeName}`}
+          {municipalityName
+            ? fmt(t.hero.eyebrowIn, { place: municipalityName })
+            : t.hero.eyebrowNear}
         </p>
         <h1
           style={{
@@ -198,8 +203,8 @@ export function Explorer({
         <SearchBar
           value={query}
           onChange={setQuery}
-          scope={scopeName !== "nær deg" ? scopeName : undefined}
-          placeholder="Søk etter aktiviteter…"
+          scope={municipalityName ?? undefined}
+          placeholder={t.hero.searchPlaceholder}
           style={{ maxWidth: 620 }}
         />
       </section>
@@ -210,7 +215,7 @@ export function Explorer({
         style={{ display: "flex", gap: 8, overflowX: "auto", padding: "8px 16px", scrollbarWidth: "none" }}
       >
         <FilterChip selected={category === null} onClick={() => setCategory(null)}>
-          Alle
+          {t.explorer.all}
         </FilterChip>
         {categories.map((c) => {
           const selected = category === c.slug;
@@ -222,7 +227,7 @@ export function Explorer({
               onClick={() => setCategory(selected ? null : c.slug)}
               style={{ flex: "none", border: "none", background: "transparent", padding: 0, cursor: "pointer" }}
             >
-              <CategoryPill category={c.slug} label={c.name} solid={selected} />
+              <CategoryPill category={c.slug} solid={selected} />
             </button>
           );
         })}
@@ -232,16 +237,16 @@ export function Explorer({
       <div className="mx-auto w-full max-w-6xl px-4 py-2">
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="coral" size="sm" leadingIcon="locate-fixed" onClick={useMyLocation}>
-            Nær meg
+            {t.explorer.nearMe}
           </Button>
 
           <select
             value={municipality ?? ""}
             onChange={(e) => onMunicipalityChange(e.target.value)}
             style={selectStyle}
-            aria-label="Kommune"
+            aria-label={t.explorer.allMunicipalities}
           >
-            <option value="">Alle kommuner</option>
+            <option value="">{t.explorer.allMunicipalities}</option>
             {municipalities.map((m) => (
               <option key={m.id} value={m.kommunenummer}>
                 {m.name}
@@ -253,18 +258,20 @@ export function Explorer({
             value={radiusM}
             onChange={(e) => setRadiusM(Number(e.target.value))}
             style={selectStyle}
-            aria-label="Radius"
+            aria-label={fmt(t.explorer.within, { km: "" }).trim()}
           >
             {RADIUS_OPTIONS.map((v) => (
               <option key={v} value={v}>
-                Innen {v / 1000} km
+                {fmt(t.explorer.within, { km: v / 1000 })}
               </option>
             ))}
           </select>
 
           <div className="ml-auto flex items-center gap-3">
             <span style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
-              {loading ? "Laster…" : `${visible.length} treff`}
+              {loading
+                ? t.explorer.loading
+                : fmt(t.explorer.results, { count: visible.length })}
             </span>
             <div className="lg:hidden">
               <MapListToggle value={view} onChange={setView} />
@@ -292,8 +299,7 @@ export function Explorer({
                 fontSize: "var(--fs-sm)",
               }}
             >
-              Supabase er ikke konfigurert ennå. Legg inn <code>NEXT_PUBLIC_SUPABASE_URL</code> og{" "}
-              <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> i <code>.env.local</code>.
+              {t.explorer.notConfigured}
             </div>
           )}
           {configured && visible.length === 0 && !loading && (
@@ -309,9 +315,7 @@ export function Explorer({
               }}
             >
               <Icon name="search" size={28} color="var(--stone-300)" />
-              <p style={{ margin: "8px 0 0" }}>
-                Ingen treff her. Prøv å øke radius eller endre filter.
-              </p>
+              <p style={{ margin: "8px 0 0" }}>{t.explorer.empty}</p>
             </div>
           )}
           {visible.map((l) => (

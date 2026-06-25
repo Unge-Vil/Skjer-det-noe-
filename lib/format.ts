@@ -1,16 +1,17 @@
-const WEEKDAYS_NB = [
-  "Søndag",
-  "Mandag",
-  "Tirsdag",
-  "Onsdag",
-  "Torsdag",
-  "Fredag",
-  "Lørdag",
-];
+import { INTL_LOCALE, type Locale } from "./i18n/config";
 
-export function weekdayName(weekday: number | null | undefined): string | null {
+/** Localized weekday name for 0=Sunday..6=Saturday, capitalized. */
+export function weekdayName(
+  weekday: number | null | undefined,
+  locale: Locale,
+): string | null {
   if (weekday == null) return null;
-  return WEEKDAYS_NB[weekday] ?? null;
+  // 2024-01-07 is a Sunday → add `weekday` days for the right name.
+  const d = new Date(Date.UTC(2024, 0, 7 + weekday));
+  const name = new Intl.DateTimeFormat(INTL_LOCALE[locale], {
+    weekday: "long",
+  }).format(d);
+  return name.charAt(0).toUpperCase() + name.slice(1);
 }
 
 /** "17:30:00" -> "17:30" */
@@ -29,31 +30,19 @@ export function formatTimeRange(
   return s ?? null;
 }
 
-const dateFmt = new Intl.DateTimeFormat("nb-NO", {
-  weekday: "short",
-  day: "numeric",
-  month: "short",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
-export function formatEventDate(iso: string): string {
-  return dateFmt.format(new Date(iso));
+export function formatEventDate(iso: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(INTL_LOCALE[locale], {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(new Date(iso));
 }
 
-export function formatDistance(meters: number): string {
+export function formatDistance(meters: number, locale: Locale): string {
   if (meters < 1000) return `${Math.round(meters)} m`;
-  return `${(meters / 1000).toLocaleString("nb-NO", {
+  return `${(meters / 1000).toLocaleString(INTL_LOCALE[locale], {
     maximumFractionDigits: 1,
   })} km`;
-}
-
-export function formatAge(
-  min: number | null | undefined,
-  max: number | null | undefined,
-): string | null {
-  if (min != null && max != null) return `${min}–${max} år`;
-  if (min != null) return `Fra ${min} år`;
-  if (max != null) return `Opptil ${max} år`;
-  return null;
 }
