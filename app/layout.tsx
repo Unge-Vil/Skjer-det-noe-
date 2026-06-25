@@ -3,6 +3,7 @@ import { Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
+import { SiteHeader } from "@/components/SiteHeader";
 
 const schibsted = Schibsted_Grotesk({
   variable: "--font-schibsted",
@@ -48,7 +49,10 @@ export default async function RootLayout({
           <a href="#main" className="skip-link">
             {dict.nav.skipToContent}
           </a>
-          {children}
+          <div className="flex min-h-screen flex-col" style={{ background: "var(--bg-app)" }}>
+            <SiteHeader />
+            {children}
+          </div>
         </LocaleProvider>
       </body>
     </html>

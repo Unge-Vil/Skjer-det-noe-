@@ -62,20 +62,31 @@ export function Explorer({
   categories,
   municipalities,
   configured,
+  initialQuery = "",
+  initialCategory = null,
+  initialMunicipality = null,
 }: {
   initialListings: Listing[];
   categories: Category[];
   municipalities: Municipality[];
   configured: boolean;
+  initialQuery?: string;
+  initialCategory?: string | null;
+  initialMunicipality?: string | null;
 }) {
   const { t } = useI18n();
   const supabase = useMemo(() => (configured ? createClient() : null), [configured]);
 
-  const [center, setCenter] = useState(DEFAULT_CENTER);
+  const initialCenter = useMemo(() => {
+    const m = municipalities.find((x) => x.kommunenummer === initialMunicipality);
+    return m?.lat != null && m?.lng != null ? { lat: m.lat, lng: m.lng } : DEFAULT_CENTER;
+  }, [municipalities, initialMunicipality]);
+
+  const [center, setCenter] = useState(initialCenter);
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
-  const [category, setCategory] = useState<string | null>(null);
-  const [municipality, setMunicipality] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<string | null>(initialCategory);
+  const [municipality, setMunicipality] = useState<string | null>(initialMunicipality);
+  const [query, setQuery] = useState(initialQuery);
   const [view, setView] = useState<MapListView>("list");
   const [listings, setListings] = useState<Listing[]>(initialListings);
   const [activeId, setActiveId] = useState<string | null>(null);

@@ -4,11 +4,35 @@ export const nb = {
   nav: {
     skipToContent: "Hopp til innhold",
     tagline: "Faste aktiviteter og arrangementer i nærheten av deg.",
+    home: "Hjem",
+    explore: "Utforsk",
+    login: "Logg inn",
   },
   hero: {
     eyebrowNear: "Aktiviteter nær deg",
     eyebrowIn: "Aktiviteter i {place}",
     searchPlaceholder: "Søk etter aktiviteter…",
+    tagline:
+      "Finn noe å gjøre nær deg. Gratis, lavterskel og åpent for alle – uten innlogging.",
+  },
+  landing: {
+    thisWeek: "Skjer denne uka",
+    thisWeekSub: "Arrangementer du kan bli med på",
+    allEvents: "Alle arrangementer",
+    nearby: "Aktiviteter nær deg",
+    nearbySub: "Faste tilbud i nærområdet",
+    seeMap: "Se på kart",
+    empty: "Ingenting her ennå.",
+  },
+  cta: {
+    title: "Er du en kommune eller organisasjon?",
+    body: "Gjør det enkelt for innbyggerne å finne aktiviteter. Få din egen lokale portal.",
+    forMunicipalities: "For kommuner",
+    forOrganisations: "For organisasjoner",
+  },
+  footer: {
+    tagline:
+      "Et initiativ fra Unge Vil · skjerdetnoe.no · Tilgjengelig for alle (WCAG 2.2 AA)",
   },
   explorer: {
     nearMe: "Nær meg",
