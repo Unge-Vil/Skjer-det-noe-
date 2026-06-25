@@ -26,7 +26,12 @@ export function MobileTabBar() {
   }, [pathname]);
 
   // Hide the tab bar inside the admin areas (own chrome).
-  if (pathname.startsWith("/admin") || pathname.startsWith("/kommune")) return null;
+  if (
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/kommune") ||
+    pathname.startsWith("/plattform")
+  )
+    return null;
 
   const tabs: { href: string; label: string; icon: IconName; badge?: number }[] = [
     { href: "/", label: t.nav.home, icon: "house" },

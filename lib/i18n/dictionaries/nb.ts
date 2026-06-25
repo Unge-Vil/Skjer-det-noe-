@@ -122,6 +122,18 @@ export const nb = {
     volunteer: "Frivillig org.",
     orgNumber: "Org.nr",
   },
+  platform: {
+    title: "Plattform-admin",
+    subtitle: "Administrer kommuner og organisasjoner for hele tjenesten.",
+    noAccess: "Du har ikke tilgang til plattform-admin.",
+    allOrgs: "Alle organisasjoner",
+    muniAdmins: "Kommune-admins",
+    addAdmin: "Legg til kommune-admin",
+    add: "Legg til",
+    remove: "Fjern",
+    noAdmins: "Ingen kommune-admins ennå.",
+    addError: "Kunne ikke legge til. Finnes brukeren (registrert e-post)?",
+  },
   form: {
     createActivity: "Ny aktivitet",
     editActivity: "Rediger aktivitet",

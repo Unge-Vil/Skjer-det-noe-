@@ -119,6 +119,18 @@ export const en: Dictionary = {
     volunteer: "Volunteer org.",
     orgNumber: "Org. no.",
   },
+  platform: {
+    title: "Platform admin",
+    subtitle: "Manage municipalities and organisations across the service.",
+    noAccess: "You don't have platform-admin access.",
+    allOrgs: "All organisations",
+    muniAdmins: "Municipality admins",
+    addAdmin: "Add municipality admin",
+    add: "Add",
+    remove: "Remove",
+    noAdmins: "No municipality admins yet.",
+    addError: "Couldn't add. Does the user exist (registered email)?",
+  },
   form: {
     createActivity: "New activity",
     editActivity: "Edit activity",
