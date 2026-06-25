@@ -101,7 +101,7 @@ export function LandingSections({
         {events.length === 0 ? (
           empty
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="sdn-stagger grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {events.map((e) => (
               <ListingCard key={e.id} listing={e} saved={saved.includes(e.id)} onToggleSave={toggleSave} />
             ))}
@@ -118,7 +118,7 @@ export function LandingSections({
         {activities.length === 0 ? (
           empty
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="sdn-stagger grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {activities.map((a) => (
               <ListingCard key={a.id} listing={a} saved={saved.includes(a.id)} onToggleSave={toggleSave} />
             ))}

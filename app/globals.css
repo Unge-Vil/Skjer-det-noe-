@@ -28,6 +28,44 @@
   --font-mono: var(--font-mono);
 }
 
+/* ── Motion: route transitions + entrance animations ─────────────────────────
+   Subtle, quick, purposeful. The header stays put; page content rises + fades
+   in on each navigation, list/grid items stagger in. All of this collapses
+   under prefers-reduced-motion (also enforced globally by ds-tokens/motion.css). */
+@keyframes sdn-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sdn-page-enter {
+  animation: sdn-rise var(--dur-slow) var(--ease-enter) both;
+}
+
+/* Stagger direct children (cards in a grid/list). */
+.sdn-stagger > * {
+  animation: sdn-rise var(--dur-slow) var(--ease-enter) both;
+}
+.sdn-stagger > *:nth-child(1) { animation-delay: 30ms; }
+.sdn-stagger > *:nth-child(2) { animation-delay: 70ms; }
+.sdn-stagger > *:nth-child(3) { animation-delay: 110ms; }
+.sdn-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.sdn-stagger > *:nth-child(5) { animation-delay: 190ms; }
+.sdn-stagger > *:nth-child(6) { animation-delay: 230ms; }
+.sdn-stagger > *:nth-child(n + 7) { animation-delay: 270ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sdn-page-enter,
+  .sdn-stagger > * {
+    animation: none !important;
+  }
+}
+
 /* Keep Leaflet tiles below sticky UI; match the app's rounded, calm chrome. */
 .leaflet-container {
   font: inherit;

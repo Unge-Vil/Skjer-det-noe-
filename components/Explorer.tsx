@@ -297,7 +297,7 @@ export function Explorer({
       {/* List + map */}
       <div className="mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-0 px-2 pb-6 lg:grid-cols-[minmax(0,440px)_1fr] lg:gap-4 lg:px-4">
         <div
-          className={`${view === "map" ? "hidden" : "block"} space-y-3 p-2 lg:block lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto`}
+          className={`sdn-stagger ${view === "map" ? "hidden" : "block"} space-y-3 p-2 lg:block lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto`}
         >
           {!configured && (
             <div
