@@ -35,7 +35,8 @@ export function MobileTabBar() {
 
   const tabs: { href: string; label: string; icon: IconName; badge?: number }[] = [
     { href: "/", label: t.nav.home, icon: "house" },
-    { href: "/utforsk", label: t.nav.explore, icon: "map" },
+    { href: "/utforsk", label: t.nav.explore, icon: "sparkles" },
+    { href: "/kart", label: t.nav.map, icon: "map" },
     { href: "/lagret", label: t.nav.saved, icon: "heart", badge: savedCount },
   ];
 

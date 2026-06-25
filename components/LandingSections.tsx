@@ -96,7 +96,7 @@ export function LandingSections({
         title={t.landing.thisWeek}
         sub={t.landing.thisWeekSub}
         actionLabel={t.landing.allEvents}
-        actionHref="/utforsk"
+        actionHref="/kart"
       >
         {events.length === 0 ? (
           empty
@@ -113,7 +113,7 @@ export function LandingSections({
         title={t.landing.nearby}
         sub={t.landing.nearbySub}
         actionLabel={t.landing.seeMap}
-        actionHref="/utforsk"
+        actionHref="/kart"
       >
         {activities.length === 0 ? (
           empty

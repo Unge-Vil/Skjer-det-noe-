@@ -15,6 +15,7 @@ export function SiteHeader() {
   const links = [
     { href: "/", label: t.nav.home },
     { href: "/utforsk", label: t.nav.explore },
+    { href: "/kart", label: t.nav.map },
   ];
 
   return (

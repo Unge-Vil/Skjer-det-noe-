@@ -16,7 +16,7 @@ export function LandingHero({ categories }: { categories: Category[] }) {
 
   const search = () => {
     const q = query.trim();
-    router.push(q ? `/utforsk?q=${encodeURIComponent(q)}` : "/utforsk");
+    router.push(q ? `/kart?q=${encodeURIComponent(q)}` : "/kart");
   };
 
   return (
@@ -31,7 +31,7 @@ export function LandingHero({ categories }: { categories: Category[] }) {
       </div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center" }}>
         {categories.slice(0, 7).map((c) => (
-          <Link key={c.id} href={`/utforsk?kategori=${c.slug}`} style={{ textDecoration: "none" }}>
+          <Link key={c.id} href={`/kart?kategori=${c.slug}`} style={{ textDecoration: "none" }}>
             <CategoryPill category={c.slug} />
           </Link>
         ))}
