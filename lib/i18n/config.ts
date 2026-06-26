@@ -23,3 +23,13 @@ export function fmt(
     k in vars ? String(vars[k]) : `{${k}}`,
   );
 }
+
+/** Pick a plural form by locale and interpolate {count}. */
+export function plural(
+  locale: Locale,
+  count: number,
+  forms: { one: string; other: string },
+): string {
+  const rule = new Intl.PluralRules(INTL_LOCALE[locale]).select(count);
+  return fmt(rule === "one" ? forms.one : forms.other, { count });
+}

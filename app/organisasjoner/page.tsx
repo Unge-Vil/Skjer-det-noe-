@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
-import { fmt } from "@/lib/i18n/config";
+import { plural } from "@/lib/i18n/config";
 import { fetchOrganisations, type OrgSummary } from "@/lib/organisations";
 import { OrganisationCard } from "@/components/OrganisationCard";
 
@@ -46,7 +46,7 @@ export default async function OrganisationsPage() {
               place={o.municipalityName}
               countLabel={
                 o.activityCount > 0
-                  ? fmt(t.landing.activityCount, { count: o.activityCount })
+                  ? plural(locale, o.activityCount, t.landing.activityCount)
                   : null
               }
             />

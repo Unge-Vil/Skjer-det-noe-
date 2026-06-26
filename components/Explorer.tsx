@@ -24,7 +24,7 @@ import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
 import { MapListToggle, type MapListView } from "@/components/ds/MapListToggle";
 import { useI18n } from "@/components/i18n/LocaleProvider";
-import { fmt } from "@/lib/i18n/config";
+import { fmt, plural } from "@/lib/i18n/config";
 import { ListingCard } from "./ListingCard";
 
 const ListingMap = dynamic(() => import("./ListingMap"), {
@@ -74,7 +74,7 @@ export function Explorer({
   initialCategory?: string | null;
   initialMunicipality?: string | null;
 }) {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const supabase = useMemo(() => (configured ? createClient() : null), [configured]);
 
   const initialCenter = useMemo(() => {
@@ -282,7 +282,7 @@ export function Explorer({
             <span style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
               {loading
                 ? t.explorer.loading
-                : fmt(t.explorer.results, { count: visible.length })}
+                : plural(locale, visible.length, t.explorer.results)}
             </span>
             <div className="lg:hidden">
               <MapListToggle value={view} onChange={setView} />

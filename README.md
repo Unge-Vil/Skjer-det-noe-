@@ -66,6 +66,36 @@ pnpm cf:deploy    # bygg + deploy (krever wrangler-innlogging)
 Sett Supabase-variablene som Worker-secrets:
 `wrangler secret put NEXT_PUBLIC_SUPABASE_URL` osv.
 
+## PWA & offline
+
+Appen er en installerbar PWA (`app/manifest.ts` + ikoner). En enkel service
+worker (`public/sw.js`) registreres i produksjon (`ServiceWorkerRegister`):
+
+- Navigasjoner: network-first med cache-fallback, til slutt `/offline`-siden.
+- Statiske assets: cache-first. Eksterne kall (Supabase, kart-fliser, Brønnøysund)
+  røres ikke. Lagrede favoritter ligger i localStorage og virker offline uansett.
+
+## Native app (Capacitor)
+
+Appen er server-rendret, så den native skallet laster den hostede URL-en (ikke
+en statisk eksport). I `capacitor.config.ts`: sett `server.url` til
+produksjons-URL-en, så:
+
+```bash
+pnpm cap:sync
+npx cap add ios       # krever Xcode
+npx cap add android   # krever Android Studio
+npx cap open ios|android
+```
+
+De native prosjektene (`/ios`, `/android`) genereres lokalt og er gitignorert.
+
+## Test­brukere
+
+Kjør `node --env-file=.env scripts/seed-test-users.mjs` (idempotent) for å
+opprette demo-brukere (passord `demo`): plattform-admin, organisasjon og
+kommune-admin. Se skriptet for detaljer.
+
 ## Designsystem
 
 UI-en følger **«Skjer det noe?»-designsystemet** (Fjord/Coral/Sol/Sand-palett,

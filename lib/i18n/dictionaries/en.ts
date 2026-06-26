@@ -46,6 +46,11 @@ export const en: Dictionary = {
     onDevice: "Saved on your device only – no login.",
     empty: "Tap the heart to save things you want to remember.",
   },
+  offline: {
+    title: "You're offline",
+    body: "Check your connection and try again. Saved favourites are still available.",
+    retry: "Try again",
+  },
   hero: {
     eyebrowNear: "Activities near you",
     eyebrowIn: "Activities in {place}",
@@ -63,7 +68,7 @@ export const en: Dictionary = {
     organisations: "Organisations",
     organisationsSub: "Clubs and associations with open activities",
     allOrganisations: "All organisations",
-    activityCount: "{count} activities",
+    activityCount: { one: "{count} activity", other: "{count} activities" },
     empty: "Nothing here yet.",
   },
   cta: {
@@ -205,7 +210,7 @@ export const en: Dictionary = {
     allMunicipalities: "All municipalities",
     allCategories: "All categories",
     within: "Within {km} km",
-    results: "{count} results",
+    results: { one: "{count} result", other: "{count} results" },
     loading: "Loading…",
     all: "All",
     empty: "No results here. Try increasing the radius or changing filters.",

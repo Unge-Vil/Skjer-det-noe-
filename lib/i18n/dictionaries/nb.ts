@@ -44,6 +44,11 @@ export const nb = {
     onDevice: "Lagret kun på din enhet – ingen innlogging.",
     empty: "Trykk på hjertet for å lagre det du vil huske.",
   },
+  offline: {
+    title: "Du er offline",
+    body: "Sjekk nettforbindelsen og prøv igjen. Lagrede favoritter er fortsatt tilgjengelig.",
+    retry: "Prøv igjen",
+  },
   hero: {
     eyebrowNear: "Aktiviteter nær deg",
     eyebrowIn: "Aktiviteter i {place}",
@@ -61,7 +66,7 @@ export const nb = {
     organisations: "Organisasjoner",
     organisationsSub: "Lag og foreninger med åpne aktiviteter",
     allOrganisations: "Alle organisasjoner",
-    activityCount: "{count} aktiviteter",
+    activityCount: { one: "{count} aktivitet", other: "{count} aktiviteter" },
     empty: "Ingenting her ennå.",
   },
   cta: {
@@ -208,7 +213,7 @@ export const nb = {
     allMunicipalities: "Alle kommuner",
     allCategories: "Alle kategorier",
     within: "Innen {km} km",
-    results: "{count} treff",
+    results: { one: "{count} treff", other: "{count} treff" },
     loading: "Laster…",
     all: "Alle",
     empty: "Ingen treff her. Prøv å øke radius eller endre filter.",

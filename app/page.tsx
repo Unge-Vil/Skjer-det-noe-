@@ -6,7 +6,7 @@ import {
 } from "@/lib/listings";
 import type { Category, Listing } from "@/lib/types";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
-import { fmt } from "@/lib/i18n/config";
+import { plural } from "@/lib/i18n/config";
 import { fetchOrganisations, type OrgSummary } from "@/lib/organisations";
 import { Wordmark } from "@/components/ds/Wordmark";
 import { Icon } from "@/components/ds/Icon";
@@ -123,7 +123,7 @@ export default async function Home() {
                 href={`/organisasjon/${o.slug}`}
                 place={o.municipalityName}
                 countLabel={
-                  o.activityCount > 0 ? fmt(t.landing.activityCount, { count: o.activityCount }) : null
+                  o.activityCount > 0 ? plural(locale, o.activityCount, t.landing.activityCount) : null
                 }
               />
             ))}
