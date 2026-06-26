@@ -12,6 +12,11 @@ export const en: Dictionary = {
     saved: "Saved",
     login: "Log in",
   },
+  orgpage: {
+    activities: "Activities",
+    events: "Events",
+    empty: "Nothing published yet.",
+  },
   detail: {
     back: "Back",
     time: "Time",

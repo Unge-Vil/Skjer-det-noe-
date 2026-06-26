@@ -10,6 +10,11 @@ export const nb = {
     saved: "Lagret",
     login: "Logg inn",
   },
+  orgpage: {
+    activities: "Aktiviteter",
+    events: "Arrangementer",
+    empty: "Ingenting publisert ennå.",
+  },
   detail: {
     back: "Tilbake",
     time: "Tid",

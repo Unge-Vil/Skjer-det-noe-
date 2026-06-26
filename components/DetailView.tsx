@@ -26,6 +26,7 @@ export interface DetailData {
   title: string;
   description: string | null;
   organizationName: string | null;
+  organizationSlug: string | null;
   categorySlug: string | null;
   municipalityName: string | null;
   municipalityNumber: string | null;
@@ -141,11 +142,19 @@ export function DetailView({ data }: { data: DetailData }) {
           <h1 style={{ margin: "10px 0 6px", fontSize: "var(--fs-h1)", fontWeight: 800, letterSpacing: "-0.01em", lineHeight: 1.15 }}>
             {data.title}
           </h1>
-          {data.organizationName && (
-            <p style={{ margin: 0, fontSize: "var(--fs-body)", color: "var(--text-muted)", fontWeight: 600 }}>
-              {data.organizationName}
-            </p>
-          )}
+          {data.organizationName &&
+            (data.organizationSlug ? (
+              <Link
+                href={`/organisasjon/${data.organizationSlug}`}
+                style={{ fontSize: "var(--fs-body)", color: "var(--text-link)", fontWeight: 600 }}
+              >
+                {data.organizationName}
+              </Link>
+            ) : (
+              <p style={{ margin: 0, fontSize: "var(--fs-body)", color: "var(--text-muted)", fontWeight: 600 }}>
+                {data.organizationName}
+              </p>
+            ))}
         </div>
 
         {statuses.length > 0 && (

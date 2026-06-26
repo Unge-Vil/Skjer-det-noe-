@@ -6,7 +6,7 @@ import { DetailView, type DetailData } from "@/components/DetailView";
 export const dynamic = "force-dynamic";
 
 const SELECT =
-  "id,title,description,address,price,age_min,age_max,url,image_url,starts_at,ends_at,organizations(name),categories(slug),municipalities(name,kommunenummer)";
+  "id,title,description,address,price,age_min,age_max,url,image_url,starts_at,ends_at,organizations(name,slug),categories(slug),municipalities(name,kommunenummer)";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toDetail(row: any): DetailData {
@@ -16,6 +16,7 @@ function toDetail(row: any): DetailData {
     title: row.title,
     description: row.description,
     organizationName: row.organizations?.name ?? null,
+    organizationSlug: row.organizations?.slug ?? null,
     categorySlug: row.categories?.slug ?? null,
     municipalityName: row.municipalities?.name ?? null,
     municipalityNumber: row.municipalities?.kommunenummer ?? null,
