@@ -58,6 +58,10 @@ export const nb = {
     nearby: "Aktiviteter nær deg",
     nearbySub: "Faste tilbud i nærområdet",
     seeMap: "Se på kart",
+    organisations: "Organisasjoner",
+    organisationsSub: "Lag og foreninger med åpne aktiviteter",
+    allOrganisations: "Alle organisasjoner",
+    activityCount: "{count} aktiviteter",
     empty: "Ingenting her ennå.",
   },
   cta: {

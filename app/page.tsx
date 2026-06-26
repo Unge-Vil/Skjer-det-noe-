@@ -6,9 +6,13 @@ import {
 } from "@/lib/listings";
 import type { Category, Listing } from "@/lib/types";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
+import { fmt } from "@/lib/i18n/config";
+import { fetchOrganisations, type OrgSummary } from "@/lib/organisations";
 import { Wordmark } from "@/components/ds/Wordmark";
+import { Icon } from "@/components/ds/Icon";
 import { LandingHero } from "@/components/LandingHero";
 import { LandingSections } from "@/components/LandingSections";
+import { OrganisationCard } from "@/components/OrganisationCard";
 
 export const dynamic = "force-dynamic";
 
@@ -24,21 +28,24 @@ export default async function Home() {
   let categories: Category[] = [];
   let events: Listing[] = [];
   let activities: Listing[] = [];
+  let organisations: OrgSummary[] = [];
 
   if (configured) {
     try {
       const supabase = await createClient();
-      const [catRes, listings] = await Promise.all([
+      const [catRes, listings, orgs] = await Promise.all([
         supabase.from("categories").select("*").order("sort_order"),
         fetchNearbyListings(supabase, {
           lat: DEFAULT_CENTER.lat,
           lng: DEFAULT_CENTER.lng,
           radiusM: 50000,
         }),
+        fetchOrganisations(supabase, 4),
       ]);
       categories = (catRes.data as Category[]) ?? [];
       events = listings.filter((l) => l.kind === "event").slice(0, 3);
       activities = listings.filter((l) => l.kind === "activity").slice(0, 6);
+      organisations = orgs;
     } catch (err) {
       console.error("Landing data load failed", err);
     }
@@ -88,6 +95,41 @@ export default async function Home() {
       </section>
 
       <LandingSections events={events} activities={activities} />
+
+      {/* Organisations band */}
+      {organisations.length > 0 && (
+        <section className="mx-auto w-full max-w-6xl px-4 pt-8">
+          <div className="mb-4 flex items-end justify-between gap-4">
+            <div>
+              <h2 style={{ margin: 0, fontSize: "var(--fs-h2)", fontWeight: 800, letterSpacing: "-0.01em" }}>
+                {t.landing.organisations}
+              </h2>
+              <p style={{ margin: "2px 0 0", fontSize: "var(--fs-body)", color: "var(--text-muted)" }}>
+                {t.landing.organisationsSub}
+              </p>
+            </div>
+            <Link
+              href="/organisasjoner"
+              style={{ display: "inline-flex", alignItems: "center", gap: 6, whiteSpace: "nowrap", fontSize: "var(--fs-sm)", fontWeight: 600, color: "var(--text-brand)", textDecoration: "none" }}
+            >
+              {t.landing.allOrganisations} <Icon name="arrow-right" size={16} />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {organisations.map((o) => (
+              <OrganisationCard
+                key={o.id}
+                name={o.name}
+                href={`/organisasjon/${o.slug}`}
+                place={o.municipalityName}
+                countLabel={
+                  o.activityCount > 0 ? fmt(t.landing.activityCount, { count: o.activityCount }) : null
+                }
+              />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* For municipalities / organisations CTA */}
       <section className="mx-auto mt-10 w-full max-w-6xl px-4">

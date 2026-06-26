@@ -60,6 +60,10 @@ export const en: Dictionary = {
     nearby: "Activities near you",
     nearbySub: "Recurring offers nearby",
     seeMap: "See on map",
+    organisations: "Organisations",
+    organisationsSub: "Clubs and associations with open activities",
+    allOrganisations: "All organisations",
+    activityCount: "{count} activities",
     empty: "Nothing here yet.",
   },
   cta: {
