@@ -12,6 +12,9 @@ export function SiteHeader() {
   const { t } = useI18n();
   const pathname = usePathname();
 
+  // The org dashboard provides its own chrome (AdminShell).
+  if (pathname === "/admin") return null;
+
   const links = [
     { href: "/", label: t.nav.home },
     { href: "/utforsk", label: t.nav.explore },
