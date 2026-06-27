@@ -15,6 +15,7 @@ export interface MyOrg {
   slug: string;
   status: string;
   description: string | null;
+  descriptionEn: string | null;
   website: string | null;
   email: string | null;
   phone: string | null;
@@ -24,7 +25,7 @@ export interface MyOrg {
 }
 
 const ORG_SELECT =
-  "organizations(id, name, slug, status, description, website, email, phone, address, logo_url, organization_municipalities(municipalities(id, name)))";
+  "organizations(id, name, slug, status, description, description_en, website, email, phone, address, logo_url, organization_municipalities(municipalities(id, name)))";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapOrg(org: any): MyOrg {
@@ -34,6 +35,7 @@ function mapOrg(org: any): MyOrg {
     slug: org.slug,
     status: org.status,
     description: org.description ?? null,
+    descriptionEn: org.description_en ?? null,
     website: org.website ?? null,
     email: org.email ?? null,
     phone: org.phone ?? null,

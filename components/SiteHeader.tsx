@@ -13,7 +13,12 @@ export function SiteHeader() {
   const pathname = usePathname();
 
   // Dashboards provide their own chrome (AdminShell).
-  if (pathname === "/admin" || pathname === "/kommune" || pathname === "/plattform")
+  if (
+    pathname === "/admin" ||
+    pathname === "/admin/profil" ||
+    pathname === "/kommune" ||
+    pathname === "/plattform"
+  )
     return null;
 
   const links = [

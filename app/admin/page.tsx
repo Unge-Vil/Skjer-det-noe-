@@ -96,6 +96,7 @@ export default async function AdminPage() {
   const previewHref = `/organisasjon/${org.slug}`;
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
+    { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
     { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
     { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
     { href: previewHref, label: t.orgadmin.preview, icon: "external-link" },
