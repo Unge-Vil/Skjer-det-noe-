@@ -5,6 +5,8 @@ import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { MuniAdminManager } from "@/components/admin/MuniAdminManager";
+import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
+import { ShellIdentity } from "@/components/admin/ShellIdentity";
 
 export const dynamic = "force-dynamic";
 
@@ -65,12 +67,17 @@ export default async function PlatformPage() {
   const statusText = (s: string) =>
     s === "published" ? t.admin.statusPublished : s === "archived" ? t.admin.statusArchived : t.admin.statusDraft;
 
+  const nav: NavItem[] = [
+    { href: "/plattform", label: t.orgadmin.overview, icon: "layout-dashboard" },
+  ];
+
   return (
-    <main id="main" className="mx-auto w-full max-w-4xl flex-1 px-4 py-10">
-      <div className="mb-2 flex items-center justify-between gap-4">
-        <h1 style={{ margin: 0, fontSize: "var(--fs-h1)", fontWeight: 800 }}>{t.platform.title}</h1>
-        <LogoutButton />
-      </div>
+    <AdminShell
+      title={t.platform.title}
+      identity={<ShellIdentity name={t.platform.title} sub={user.email ?? ""} />}
+      nav={nav}
+    >
+      <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>
       <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
         {t.platform.subtitle}
       </p>
@@ -94,6 +101,7 @@ export default async function PlatformPage() {
           ))}
         </div>
       </section>
-    </main>
+      </div>
+    </AdminShell>
   );
 }

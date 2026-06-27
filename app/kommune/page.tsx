@@ -5,6 +5,8 @@ import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon } from "@/components/ds/Icon";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
+import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
+import { ShellIdentity } from "@/components/admin/ShellIdentity";
 
 export const dynamic = "force-dynamic";
 
@@ -77,20 +79,25 @@ export default async function KommunePage() {
   const pending = orgs.filter((o) => o.status === "draft");
   const approved = orgs.filter((o) => o.status === "published");
 
-  return (
-    <main id="main" className="mx-auto w-full max-w-4xl flex-1 px-4 py-10">
-      <div className="mb-2 flex items-center justify-between gap-4">
-        <h1 style={{ margin: 0, fontSize: "var(--fs-h1)", fontWeight: 800 }}>{t.kommune.title}</h1>
-        <LogoutButton />
-      </div>
-      <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
-        {t.kommune.subtitle}
-      </p>
+  const nav: NavItem[] = [
+    { href: "/kommune", label: t.orgadmin.overview, icon: "layout-dashboard" },
+  ];
 
-      <OrgList title={t.kommune.pending} empty={t.kommune.noPending} orgs={pending} t={t} />
-      <div className="h-8" />
-      <OrgList title={t.kommune.approved} empty={t.kommune.noApproved} orgs={approved} t={t} />
-    </main>
+  return (
+    <AdminShell
+      title={t.kommune.title}
+      identity={<ShellIdentity name={t.kommune.title} sub={user.email ?? ""} />}
+      nav={nav}
+    >
+      <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>
+        <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
+          {t.kommune.subtitle}
+        </p>
+        <OrgList title={t.kommune.pending} empty={t.kommune.noPending} orgs={pending} t={t} />
+        <div className="h-8" />
+        <OrgList title={t.kommune.approved} empty={t.kommune.noApproved} orgs={approved} t={t} />
+      </div>
+    </AdminShell>
   );
 }
 

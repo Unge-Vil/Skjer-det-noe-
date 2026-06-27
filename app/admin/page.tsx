@@ -14,7 +14,8 @@ import { IconButton } from "@/components/ds/IconButton";
 import { StatusLabel } from "@/components/ds/StatusLabel";
 import { LogoutButton } from "@/components/LogoutButton";
 import { DeleteButton } from "@/components/admin/DeleteButton";
-import { AdminShell } from "@/components/admin/AdminShell";
+import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
+import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
 import { categoryDef } from "@/components/ds/categories";
 
 export const dynamic = "force-dynamic";
@@ -92,13 +93,31 @@ export default async function AdminPage() {
   ];
   const pct = Math.round((fields.filter((f) => f.done).length / fields.length) * 100);
 
+  const previewHref = `/organisasjon/${org.slug}`;
+  const nav: NavItem[] = [
+    { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
+    { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
+    { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
+    { href: previewHref, label: t.orgadmin.preview, icon: "external-link" },
+  ];
+
   return (
     <AdminShell
-      orgs={orgs}
-      activeOrgId={org.id}
-      previewHref={`/organisasjon/${org.slug}`}
-      activitiesCount={activities.length}
-      eventsCount={events.length}
+      title={t.orgadmin.overview}
+      identity={<OrgSwitcher orgs={orgs} activeId={org.id} />}
+      nav={nav}
+      footerTop={
+        <Link href="/admin/aktivitet/ny">
+          <Button fullWidth leadingIcon="plus">{t.admin.newActivity}</Button>
+        </Link>
+      }
+      headerAction={
+        <a href={previewHref} target="_blank" rel="noopener noreferrer">
+          <Button variant="secondary" size="sm" leadingIcon="external-link">
+            {t.orgadmin.previewPublic}
+          </Button>
+        </a>
+      }
     >
       <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }} className="mx-auto w-full max-w-5xl">
         {org.status === "draft" && (
