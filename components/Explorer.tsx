@@ -127,7 +127,7 @@ export function Explorer({
     }
     let cancelled = false;
     setLoading(true);
-    fetchNearbyListings(supabase, { lat: center.lat, lng: center.lng, radiusM, category, municipality })
+    fetchNearbyListings(supabase, { lat: center.lat, lng: center.lng, radiusM, category, municipality }, locale)
       .then((rows) => {
         if (!cancelled) setListings(rows);
       })
@@ -141,7 +141,7 @@ export function Explorer({
     return () => {
       cancelled = true;
     };
-  }, [supabase, center, radiusM, category, municipality]);
+  }, [supabase, center, radiusM, category, municipality, locale]);
 
   const useMyLocation = useCallback(() => {
     setGeoError(null);

@@ -5,6 +5,7 @@ import {
   fetchNearbyListings,
 } from "@/lib/listings";
 import type { Category, Listing, Municipality } from "@/lib/types";
+import { getLocale } from "@/lib/i18n/server";
 import { Explorer } from "@/components/Explorer";
 
 export const dynamic = "force-dynamic";
@@ -44,13 +45,11 @@ export default async function MapPage({
           ? { lat: m.lat, lng: m.lng }
           : DEFAULT_CENTER;
 
-      initialListings = await fetchNearbyListings(supabase, {
-        lat: center.lat,
-        lng: center.lng,
-        radiusM: DEFAULT_RADIUS_M,
-        category,
-        municipality,
-      });
+      initialListings = await fetchNearbyListings(
+        supabase,
+        { lat: center.lat, lng: center.lng, radiusM: DEFAULT_RADIUS_M, category, municipality },
+        await getLocale(),
+      );
     } catch (err) {
       console.error("Map data load failed", err);
     }

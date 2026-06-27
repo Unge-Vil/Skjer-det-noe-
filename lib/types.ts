@@ -6,6 +6,8 @@
  * `supabase gen types typescript` and replace the hand-written ones here.
  */
 
+import type { Locale } from "./i18n/config";
+
 export type ListingStatus = "draft" | "published" | "archived";
 
 export interface Category {
@@ -30,8 +32,10 @@ export interface Municipality {
 export interface NearbyActivity {
   id: string;
   title: string;
+  title_en: string | null;
   slug: string;
   description: string | null;
+  description_en: string | null;
   organization_name: string | null;
   category_slug: string | null;
   municipality_name: string | null;
@@ -54,8 +58,10 @@ export interface NearbyActivity {
 export interface NearbyEvent {
   id: string;
   title: string;
+  title_en: string | null;
   slug: string;
   description: string | null;
+  description_en: string | null;
   organization_name: string | null;
   category_slug: string | null;
   municipality_name: string | null;
@@ -103,13 +109,18 @@ export interface Listing {
   endsAt?: string | null;
 }
 
-export function activityToListing(a: NearbyActivity): Listing {
+/** Pick the English text when available for the en locale, else Norwegian. */
+function pick(locale: Locale, nb: string | null, en: string | null): string | null {
+  return locale === "en" && en ? en : nb;
+}
+
+export function activityToListing(a: NearbyActivity, locale: Locale): Listing {
   return {
     id: a.id,
     kind: "activity",
-    title: a.title,
+    title: pick(locale, a.title, a.title_en) ?? a.title,
     slug: a.slug,
-    description: a.description,
+    description: pick(locale, a.description, a.description_en),
     organizationName: a.organization_name,
     categorySlug: a.category_slug,
     municipalityName: a.municipality_name,
@@ -129,13 +140,13 @@ export function activityToListing(a: NearbyActivity): Listing {
   };
 }
 
-export function eventToListing(e: NearbyEvent): Listing {
+export function eventToListing(e: NearbyEvent, locale: Locale): Listing {
   return {
     id: e.id,
     kind: "event",
-    title: e.title,
+    title: pick(locale, e.title, e.title_en) ?? e.title,
     slug: e.slug,
-    description: e.description,
+    description: pick(locale, e.description, e.description_en),
     organizationName: e.organization_name,
     categorySlug: e.category_slug,
     municipalityName: e.municipality_name,

@@ -11,7 +11,7 @@ import { ListingCard } from "@/components/ListingCard";
 const SAVED_KEY = "sdn-saved";
 
 export default function SavedPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const supabase = useMemo(
     () =>
       process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
@@ -36,10 +36,10 @@ export default function SavedPage() {
   useEffect(() => {
     if (!supabase) return;
     // Wide radius around the default region; saved items are filtered by id.
-    fetchNearbyListings(supabase, { lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng, radiusM: 300000 })
+    fetchNearbyListings(supabase, { lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng, radiusM: 300000 }, locale)
       .then((rows) => setAll(rows))
       .catch((err) => console.error(err));
-  }, [supabase]);
+  }, [supabase, locale]);
 
   const toggleSave = useCallback((id: string) => {
     setSaved((prev) => {

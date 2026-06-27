@@ -27,7 +27,7 @@ export default async function ActivityFormPage({
     const { data } = await supabase
       .from("activities")
       .select(
-        "id,title,description,category_id,municipality_id,address,weekday,start_time,end_time,recurrence_note,age_min,age_max,price,image_url,status",
+        "id,title,title_en,description,description_en,category_id,municipality_id,address,weekday,start_time,end_time,recurrence_note,age_min,age_max,price,image_url,status",
       )
       .eq("id", id)
       .maybeSingle();

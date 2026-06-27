@@ -24,6 +24,15 @@ export function fmt(
   );
 }
 
+/** Pick localized text: English when present for the en locale, else Norwegian. */
+export function loc(
+  locale: Locale,
+  nb: string | null | undefined,
+  en: string | null | undefined,
+): string | null {
+  return (locale === "en" && en ? en : nb) ?? null;
+}
+
 /** Pick a plural form by locale and interpolate {count}. */
 export function plural(
   locale: Locale,

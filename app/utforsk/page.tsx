@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_CENTER, fetchNearbyListings } from "@/lib/listings";
 import type { Listing } from "@/lib/types";
+import { getLocale } from "@/lib/i18n/server";
 import { SwipeDeck } from "@/components/SwipeDeck";
 
 export const dynamic = "force-dynamic";
@@ -15,11 +16,11 @@ export default async function DiscoverPage() {
   if (configured) {
     try {
       const supabase = await createClient();
-      listings = await fetchNearbyListings(supabase, {
-        lat: DEFAULT_CENTER.lat,
-        lng: DEFAULT_CENTER.lng,
-        radiusM: 100000,
-      });
+      listings = await fetchNearbyListings(
+        supabase,
+        { lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng, radiusM: 100000 },
+        await getLocale(),
+      );
     } catch (err) {
       console.error("Discover data load failed", err);
     }

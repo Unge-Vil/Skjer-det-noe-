@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
+import { loc, type Locale } from "@/lib/i18n/config";
 import type { Listing } from "@/lib/types";
 import { Icon } from "@/components/ds/Icon";
 import { ListingCard } from "@/components/ListingCard";
@@ -13,7 +14,7 @@ async function fetchOrg(slug: string) {
   const { data } = await supabase
     .from("organizations")
     .select(
-      "id,name,description,website,address,organization_municipalities(municipalities(name))",
+      "id,name,description,description_en,website,address,organization_municipalities(municipalities(name))",
     )
     .eq("slug", slug)
     .eq("status", "published")
@@ -34,13 +35,13 @@ export async function generateMetadata({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function activityToListing(row: any, orgName: string): Listing {
+function activityToListing(row: any, orgName: string, locale: Locale): Listing {
   return {
     id: row.id,
     kind: "activity",
-    title: row.title,
+    title: loc(locale, row.title, row.title_en) ?? row.title,
     slug: row.slug,
-    description: row.description,
+    description: loc(locale, row.description, row.description_en),
     organizationName: orgName,
     categorySlug: row.categories?.slug ?? null,
     municipalityName: row.municipalities?.name ?? null,
@@ -61,13 +62,13 @@ function activityToListing(row: any, orgName: string): Listing {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function eventToListing(row: any, orgName: string): Listing {
+function eventToListing(row: any, orgName: string, locale: Locale): Listing {
   return {
     id: row.id,
     kind: "event",
-    title: row.title,
+    title: loc(locale, row.title, row.title_en) ?? row.title,
     slug: row.slug,
-    description: row.description,
+    description: loc(locale, row.description, row.description_en),
     organizationName: orgName,
     categorySlug: row.categories?.slug ?? null,
     municipalityName: row.municipalities?.name ?? null,
@@ -86,7 +87,7 @@ function eventToListing(row: any, orgName: string): Listing {
 }
 
 const LISTING_SELECT =
-  "id,title,slug,description,address,price,age_min,age_max,url,image_url,categories(slug),municipalities(name)";
+  "id,title,title_en,slug,description,description_en,address,price,age_min,age_max,url,image_url,categories(slug),municipalities(name)";
 
 export default async function OrganisationPage({
   params,
@@ -117,8 +118,9 @@ export default async function OrganisationPage({
       .order("starts_at"),
   ]);
 
-  const activities = ((actRes.data as unknown[]) ?? []).map((r) => activityToListing(r, org.name));
-  const events = ((evtRes.data as unknown[]) ?? []).map((r) => eventToListing(r, org.name));
+  const activities = ((actRes.data as unknown[]) ?? []).map((r) => activityToListing(r, org.name, locale));
+  const events = ((evtRes.data as unknown[]) ?? []).map((r) => eventToListing(r, org.name, locale));
+  const orgDescription = loc(locale, org.description, org.description_en);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const municipalities: string[] = ((org as any).organization_municipalities ?? [])
@@ -136,9 +138,9 @@ export default async function OrganisationPage({
             {municipalities.join(", ")}
           </p>
         )}
-        {org.description && (
+        {orgDescription && (
           <p style={{ margin: "0 0 12px", maxWidth: "var(--content-measure)", lineHeight: 1.6, color: "var(--text-body)" }}>
-            {org.description}
+            {orgDescription}
           </p>
         )}
         {org.website && (

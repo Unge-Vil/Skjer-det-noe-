@@ -35,11 +35,11 @@ export default async function Home() {
       const supabase = await createClient();
       const [catRes, listings, orgs] = await Promise.all([
         supabase.from("categories").select("*").order("sort_order"),
-        fetchNearbyListings(supabase, {
-          lat: DEFAULT_CENTER.lat,
-          lng: DEFAULT_CENTER.lng,
-          radiusM: 50000,
-        }),
+        fetchNearbyListings(
+          supabase,
+          { lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng, radiusM: 50000 },
+          locale,
+        ),
         fetchOrganisations(supabase, 4),
       ]);
       categories = (catRes.data as Category[]) ?? [];

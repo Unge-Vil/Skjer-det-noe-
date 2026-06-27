@@ -19,7 +19,9 @@ interface Option {
 export interface EventInitial {
   id: string;
   title: string;
+  title_en: string | null;
   description: string | null;
+  description_en: string | null;
   category_id: string | null;
   municipality_id: string | null;
   address: string | null;
@@ -58,7 +60,9 @@ export function EventForm({
   const supabase = createClient();
 
   const [title, setTitle] = useState(initial?.title ?? "");
+  const [titleEn, setTitleEn] = useState(initial?.title_en ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
+  const [descriptionEn, setDescriptionEn] = useState(initial?.description_en ?? "");
   const [categoryId, setCategoryId] = useState(initial?.category_id ?? "");
   const [municipalityId, setMunicipalityId] = useState(initial?.municipality_id ?? "");
   const [address, setAddress] = useState(initial?.address ?? "");
@@ -85,7 +89,9 @@ export function EventForm({
 
     const payload: Record<string, unknown> = {
       title: title.trim(),
+      title_en: titleEn.trim() || null,
       description: description || null,
+      description_en: descriptionEn || null,
       category_id: categoryId || null,
       municipality_id: municipalityId || null,
       address: address || null,
@@ -123,8 +129,18 @@ export function EventForm({
       </div>
 
       <div>
+        <label htmlFor="title_en" style={labelStyle}>{t.form.titleEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
+        <input id="title_en" value={titleEn} onChange={(e) => setTitleEn(e.target.value)} style={inputStyle} />
+      </div>
+
+      <div>
         <label htmlFor="desc" style={labelStyle}>{t.form.description}</label>
         <textarea id="desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} style={textareaStyle} />
+      </div>
+
+      <div>
+        <label htmlFor="desc_en" style={labelStyle}>{t.form.descriptionEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
+        <textarea id="desc_en" rows={3} value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} style={textareaStyle} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
