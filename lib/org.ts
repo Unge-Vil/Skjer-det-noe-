@@ -1,4 +1,13 @@
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+
+const ACTIVE_ORG_COOKIE = "sdn-active-org";
+
+export interface OrgRef {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 export interface MyOrg {
   id: string;
@@ -14,27 +23,11 @@ export interface MyOrg {
   municipalities: { id: string; name: string }[];
 }
 
-/** The current user's organisation (first membership), with its municipalities. */
-export async function getMyOrg(): Promise<MyOrg | null> {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
+const ORG_SELECT =
+  "organizations(id, name, slug, status, description, website, email, phone, address, logo_url, organization_municipalities(municipalities(id, name)))";
 
-  const { data } = await supabase
-    .from("organization_members")
-    .select(
-      "organizations(id, name, slug, status, description, website, email, phone, address, logo_url, organization_municipalities(municipalities(id, name)))",
-    )
-    .eq("user_id", user.id)
-    .limit(1)
-    .maybeSingle();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const org = (data as any)?.organizations;
-  if (!org) return null;
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function mapOrg(org: any): MyOrg {
   return {
     id: org.id,
     name: org.name,
@@ -52,4 +45,46 @@ export async function getMyOrg(): Promise<MyOrg | null> {
       .filter(Boolean)
       .map((m: { id: string; name: string }) => ({ id: m.id, name: m.name })),
   };
+}
+
+/** All organisations the current user is a member of (for the switcher). */
+export async function getMyOrgs(): Promise<OrgRef[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+  const { data } = await supabase
+    .from("organization_members")
+    .select("organizations(id, name, slug)")
+    .eq("user_id", user.id);
+  return (data ?? [])
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map((r: any) => r.organizations)
+    .filter(Boolean)
+    .map((o: OrgRef) => ({ id: o.id, name: o.name, slug: o.slug }));
+}
+
+/** The active organisation (from the cookie, else the first membership). */
+export async function getMyOrg(): Promise<MyOrg | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data } = await supabase
+    .from("organization_members")
+    .select(ORG_SELECT)
+    .eq("user_id", user.id);
+
+  const orgs = (data ?? [])
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .map((r: any) => r.organizations)
+    .filter(Boolean);
+  if (orgs.length === 0) return null;
+
+  const activeId = (await cookies()).get(ACTIVE_ORG_COOKIE)?.value;
+  const chosen = orgs.find((o: { id: string }) => o.id === activeId) ?? orgs[0];
+  return mapOrg(chosen);
 }

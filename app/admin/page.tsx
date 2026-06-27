@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import { getMyOrg } from "@/lib/org";
+import { getMyOrg, getMyOrgs } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { weekdayName, formatTimeRange, formatEventDate } from "@/lib/format";
@@ -80,6 +80,7 @@ export default async function AdminPage() {
   ]);
   const activities = (actRes.data as Row[]) ?? [];
   const events = (evtRes.data as Row[]) ?? [];
+  const orgs = await getMyOrgs();
 
   // Profile completeness
   const fields = [
@@ -93,7 +94,8 @@ export default async function AdminPage() {
 
   return (
     <AdminShell
-      orgName={org.name}
+      orgs={orgs}
+      activeOrgId={org.id}
       previewHref={`/organisasjon/${org.slug}`}
       activitiesCount={activities.length}
       eventsCount={events.length}

@@ -3,23 +3,26 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Avatar } from "@/components/ds/Avatar";
 import { Wordmark } from "@/components/ds/Wordmark";
 import { Button } from "@/components/ds/Button";
 import { Icon, type IconName } from "@/components/ds/Icon";
 import { ThemeToggle } from "@/components/ds/ThemeToggle";
 import { LanguageToggle } from "@/components/i18n/LanguageToggle";
 import { LogoutButton } from "@/components/LogoutButton";
+import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import type { OrgRef } from "@/lib/org";
 
 export function AdminShell({
-  orgName,
+  orgs,
+  activeOrgId,
   previewHref,
   activitiesCount,
   eventsCount,
   children,
 }: {
-  orgName: string;
+  orgs: OrgRef[];
+  activeOrgId: string;
   previewHref: string;
   activitiesCount: number;
   eventsCount: number;
@@ -50,15 +53,7 @@ export function AdminShell({
       >
         <div style={{ padding: "18px 18px 14px", borderBottom: "1px solid var(--border-subtle)" }}>
           <Wordmark size={16} />
-          <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14 }}>
-            <Avatar name={orgName} size={40} />
-            <div style={{ minWidth: 0, lineHeight: 1.25 }}>
-              <div style={{ fontSize: 14.5, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {orgName}
-              </div>
-              <div style={{ fontSize: 12, color: "var(--text-muted)" }}>{t.orgadmin.organisation}</div>
-            </div>
-          </div>
+          <OrgSwitcher orgs={orgs} activeId={activeOrgId} />
         </div>
 
         <nav aria-label={t.orgadmin.overview} style={{ flex: 1, padding: 12, display: "flex", flexDirection: "column", gap: 2 }}>
