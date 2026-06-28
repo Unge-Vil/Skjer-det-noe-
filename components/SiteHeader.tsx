@@ -16,6 +16,7 @@ export function SiteHeader() {
   if (
     pathname === "/admin" ||
     pathname === "/admin/profil" ||
+    pathname === "/admin/innstillinger" ||
     pathname === "/kommune" ||
     pathname === "/plattform"
   )
