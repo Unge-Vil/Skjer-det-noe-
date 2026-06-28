@@ -82,6 +82,7 @@ export default async function AdminPage() {
   const activities = (actRes.data as Row[]) ?? [];
   const events = (evtRes.data as Row[]) ?? [];
   const orgs = await getMyOrgs();
+  const { data: views } = await supabase.rpc("org_view_count_30d", { p_org: org.id });
 
   // Profile completeness
   const fields = [
@@ -157,7 +158,7 @@ export default async function AdminPage() {
             <div className="grid grid-cols-3 gap-4">
               <MiniStat icon="repeat" value={activities.length} label={t.admin.activities} />
               <MiniStat icon="calendar-days" value={events.length} label={t.admin.events} />
-              <MiniStat icon="eye" value="–" label={t.orgadmin.views} />
+              <MiniStat icon="eye" value={(views as number) ?? 0} label={t.orgadmin.views} />
             </div>
             <div style={{ ...card, padding: 18, flex: 1 }}>
               <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.approvalTitle}</h2>

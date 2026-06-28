@@ -101,6 +101,7 @@ export default async function OrganisationPage({
   const locale = await getLocale();
   const t = getDictionary(locale);
   const supabase = await createClient();
+  await supabase.rpc("log_view", { p_type: "organization", p_id: org.id });
 
   const [actRes, evtRes] = await Promise.all([
     supabase

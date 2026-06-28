@@ -63,5 +63,7 @@ export default async function EventDetailPage({
   const { slug } = await params;
   const [row, locale] = await Promise.all([fetchEvent(slug), getLocale()]);
   if (!row) notFound();
+  const supabase = await createClient();
+  await supabase.rpc("log_view", { p_type: "event", p_id: row.id });
   return <DetailView data={toDetail(row, locale)} />;
 }
