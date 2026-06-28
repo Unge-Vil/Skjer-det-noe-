@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
@@ -14,7 +15,7 @@ async function fetchOrg(slug: string) {
   const { data } = await supabase
     .from("organizations")
     .select(
-      "id,name,description,description_en,website,address,organization_municipalities(municipalities(name))",
+      "id,name,description,description_en,website,address,logo_url,banner_url,organization_municipalities(municipalities(name))",
     )
     .eq("slug", slug)
     .eq("status", "published")
@@ -132,7 +133,19 @@ export default async function OrganisationPage({
   return (
     <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
       <header className="mb-8">
-        <h1 style={{ margin: "0 0 8px", fontSize: "var(--fs-h1)", fontWeight: 800 }}>{org.name}</h1>
+        {org.banner_url && (
+          <div style={{ position: "relative", aspectRatio: "4 / 1", borderRadius: "var(--radius-lg)", overflow: "hidden", marginBottom: 16, background: "var(--fjord-100)" }}>
+            <Image src={org.banner_url} alt="" fill style={{ objectFit: "cover" }} sizes="1100px" />
+          </div>
+        )}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 8 }}>
+          {org.logo_url && (
+            <span style={{ display: "inline-flex", width: 56, height: 56, flex: "none", borderRadius: "var(--radius-md)", overflow: "hidden", border: "1px solid var(--border-subtle)", position: "relative", background: "var(--surface-card)" }}>
+              <Image src={org.logo_url} alt="" fill style={{ objectFit: "cover" }} sizes="56px" />
+            </span>
+          )}
+          <h1 style={{ margin: 0, fontSize: "var(--fs-h1)", fontWeight: 800 }}>{org.name}</h1>
+        </div>
         {municipalities.length > 0 && (
           <p style={{ margin: "0 0 12px", display: "flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
             <Icon name="map-pin" size={15} />

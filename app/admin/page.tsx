@@ -100,6 +100,7 @@ export default async function AdminPage() {
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
     { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
     { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
+    { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
     { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
     { href: previewHref, label: t.orgadmin.preview, icon: "external-link" },
   ];

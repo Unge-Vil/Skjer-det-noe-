@@ -2,18 +2,15 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg, getMyOrgs } from "@/lib/org";
-import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Button } from "@/components/ds/Button";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
-import { OrgMemberManager } from "@/components/admin/OrgMemberManager";
+import { ImageUploader } from "@/components/admin/ImageUploader";
 
 export const dynamic = "force-dynamic";
 
-type Member = { user_id: string; email: string; role: string };
-
-export default async function SettingsPage() {
+export default async function MediaPage() {
   const user = await getUser();
   if (!user) redirect("/logg-inn");
   const org = await getMyOrg();
@@ -21,10 +18,6 @@ export default async function SettingsPage() {
 
   const locale = await getLocale();
   const t = getDictionary(locale);
-  const supabase = await createClient();
-  const { data: memberData } = await supabase.rpc("list_org_members", { p_org: org.id });
-  const members = (memberData as Member[]) ?? [];
-
   const orgs = await getMyOrgs();
   const previewHref = `/organisasjon/${org.slug}`;
   const nav: NavItem[] = [
@@ -37,7 +30,7 @@ export default async function SettingsPage() {
 
   return (
     <AdminShell
-      title={t.orgadmin.settings}
+      title={t.orgadmin.media}
       identity={<OrgSwitcher orgs={orgs} activeId={org.id} />}
       nav={nav}
       footerTop={
@@ -51,11 +44,15 @@ export default async function SettingsPage() {
         </a>
       }
     >
-      <div className="mx-auto w-full max-w-3xl" style={{ padding: 24 }}>
+      <div
+        className="mx-auto w-full max-w-3xl"
+        style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}
+      >
         <section style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: 20 }}>
-          <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.members}</h2>
-          <p style={{ margin: "0 0 16px", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.orgadmin.membersHint}</p>
-          <OrgMemberManager orgId={org.id} members={members} currentUserId={user.id} />
+          <ImageUploader orgId={org.id} column="banner_url" label={t.orgadmin.banner} currentUrl={org.bannerUrl} aspect="3 / 1" />
+        </section>
+        <section style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: 20 }}>
+          <ImageUploader orgId={org.id} column="logo_url" label={t.orgadmin.logo} currentUrl={org.logoUrl} aspect="1 / 1" />
         </section>
       </div>
     </AdminShell>

@@ -211,6 +211,13 @@ export const en: Dictionary = {
     noMembers: "No members.",
     addMemberError: "Couldn't add. Does the user exist (registered email)?",
     you: "you",
+    logo: "Logo",
+    banner: "Banner",
+    upload: "Upload",
+    uploading: "Uploading…",
+    removeImage: "Remove",
+    imageHint: "PNG or JPG.",
+    uploadError: "Upload failed. Try again.",
   },
   form: {
     createActivity: "New activity",

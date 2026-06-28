@@ -21,11 +21,12 @@ export interface MyOrg {
   phone: string | null;
   address: string | null;
   logoUrl: string | null;
+  bannerUrl: string | null;
   municipalities: { id: string; name: string }[];
 }
 
 const ORG_SELECT =
-  "organizations(id, name, slug, status, description, description_en, website, email, phone, address, logo_url, organization_municipalities(municipalities(id, name)))";
+  "organizations(id, name, slug, status, description, description_en, website, email, phone, address, logo_url, banner_url, organization_municipalities(municipalities(id, name)))";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapOrg(org: any): MyOrg {
@@ -41,6 +42,7 @@ function mapOrg(org: any): MyOrg {
     phone: org.phone ?? null,
     address: org.address ?? null,
     logoUrl: org.logo_url ?? null,
+    bannerUrl: org.banner_url ?? null,
     municipalities: (org.organization_municipalities ?? [])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((om: any) => om.municipalities)

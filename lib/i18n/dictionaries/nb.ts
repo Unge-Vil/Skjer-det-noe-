@@ -214,6 +214,13 @@ export const nb = {
     noMembers: "Ingen medlemmer.",
     addMemberError: "Kunne ikke legge til. Finnes brukeren (registrert e-post)?",
     you: "deg",
+    logo: "Logo",
+    banner: "Banner",
+    upload: "Last opp",
+    uploading: "Laster opp…",
+    removeImage: "Fjern",
+    imageHint: "PNG eller JPG.",
+    uploadError: "Opplasting feilet. Prøv igjen.",
   },
   form: {
     createActivity: "Ny aktivitet",
