@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ds/Wordmark";
-import { ThemeToggle } from "@/components/ds/ThemeToggle";
 import { Icon } from "@/components/ds/Icon";
-import { LanguageToggle } from "@/components/i18n/LanguageToggle";
+import { SettingsMenu } from "@/components/SettingsMenu";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 
 export function SiteHeader() {
@@ -68,27 +67,28 @@ export function SiteHeader() {
           })}
         </nav>
 
-        <div className="ml-auto flex items-center gap-2">
-          <LanguageToggle />
-          <ThemeToggle />
+        {/* Settings + login are desktop-only; on mobile settings lives in the
+            bottom tab bar and there is no login. */}
+        <div className="ml-auto hidden items-center gap-2 sm:flex">
+          <SettingsMenu />
           <Link
             href="/logg-inn"
+            aria-label={t.nav.login}
+            title={t.nav.login}
             style={{
               display: "inline-flex",
               alignItems: "center",
-              gap: 6,
-              padding: "8px 14px",
+              justifyContent: "center",
+              width: 40,
+              height: 40,
               borderRadius: "var(--radius-pill)",
               border: "1.5px solid var(--border-strong)",
               background: "var(--surface-card)",
               color: "var(--text-brand)",
-              fontSize: "var(--fs-sm)",
-              fontWeight: 600,
               textDecoration: "none",
             }}
           >
-            <Icon name="door-open" size={16} />
-            <span className="hidden sm:inline">{t.nav.login}</span>
+            <Icon name="door-open" size={18} />
           </Link>
         </div>
       </div>

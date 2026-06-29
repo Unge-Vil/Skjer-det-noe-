@@ -9,6 +9,8 @@ export const nb = {
     map: "Kart",
     saved: "Lagret",
     login: "Logg inn",
+    settings: "Innstillinger",
+    closeSettings: "Lukk innstillinger",
   },
   orgpage: {
     activities: "Aktiviteter",

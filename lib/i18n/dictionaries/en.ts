@@ -11,6 +11,8 @@ export const en: Dictionary = {
     map: "Map",
     saved: "Saved",
     login: "Log in",
+    settings: "Settings",
+    closeSettings: "Close settings",
   },
   orgpage: {
     activities: "Activities",
