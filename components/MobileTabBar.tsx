@@ -27,6 +27,16 @@ export function MobileTabBar() {
     }
   }, [pathname]);
 
+  // Close the settings sheet on Escape (keyboard parity).
+  useEffect(() => {
+    if (!settingsOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSettingsOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [settingsOpen]);
+
   // Hide the tab bar inside the admin areas (own chrome).
   if (
     pathname.startsWith("/admin") ||

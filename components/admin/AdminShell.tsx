@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ds/Wordmark";
@@ -37,6 +37,16 @@ export function AdminShell({
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const closeDrawer = () => setDrawerOpen(false);
+
+  // Close the mobile drawer on Escape (keyboard parity).
+  useEffect(() => {
+    if (!drawerOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setDrawerOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [drawerOpen]);
 
   // Shared sidebar body (used by the desktop rail and the mobile drawer).
   const sidebarBody = (

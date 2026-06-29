@@ -94,9 +94,9 @@ export function CoOrganizerEditor({
                 type="button"
                 onClick={() => remove(o.id)}
                 aria-label={`${t.orgadmin.removeMember}: ${o.name}`}
-                style={{ display: "inline-flex", border: "none", background: "transparent", cursor: "pointer", color: "inherit", padding: 2 }}
+                style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 24, height: 24, border: "none", background: "transparent", cursor: "pointer", color: "inherit", padding: 0 }}
               >
-                <Icon name="x" size={14} />
+                <Icon name="x" size={15} />
               </button>
             </span>
           ))}

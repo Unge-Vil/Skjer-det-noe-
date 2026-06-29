@@ -5,7 +5,12 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Keep keyboard-focused content and anchor targets clear of the sticky
+     header (WCAG 2.2 — 2.4.11 Focus Not Obscured). */
+  scroll-padding-top: 72px;
+}
 
 body {
   margin: 0;
