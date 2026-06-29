@@ -7,6 +7,7 @@ import { Button } from "@/components/ds/Button";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { ShellIdentity } from "@/components/admin/ShellIdentity";
 import { DepartmentForm } from "@/components/admin/DepartmentForm";
+import { DepartmentImages } from "@/components/admin/DepartmentImages";
 import { DepartmentMemberManager } from "@/components/admin/DepartmentMemberManager";
 
 export const dynamic = "force-dynamic";
@@ -65,7 +66,21 @@ export default async function DepartmentEditor({
     >
       <DepartmentForm dept={dept} />
 
-      <div className="mx-auto w-full max-w-3xl" style={{ padding: "0 24px 32px" }}>
+      <div className="mx-auto w-full max-w-3xl" style={{ padding: "0 24px 32px", display: "flex", flexDirection: "column", gap: 20 }}>
+        <section style={{ ...card, display: "flex", flexDirection: "column", gap: 14 }}>
+          <div>
+            <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.media}</h2>
+            <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.orgadmin.departmentsSub}</p>
+          </div>
+          <DepartmentImages
+            deptId={dept.id}
+            logoOverride={dept.override.logoUrl}
+            bannerOverride={dept.override.bannerUrl}
+            logoInherited={dept.master.logoUrl}
+            bannerInherited={dept.master.bannerUrl}
+          />
+        </section>
+
         <section style={{ ...card, display: "flex", flexDirection: "column", gap: 14 }}>
           <div>
             <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.deptMembers}</h2>

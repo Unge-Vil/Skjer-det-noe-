@@ -8,7 +8,9 @@ import { Icon } from "@/components/ds/Icon";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 
 export function ImageUploader({
-  orgId,
+  rowId,
+  table = "organizations",
+  pathPrefix,
   column,
   label,
   currentUrl,
@@ -16,9 +18,13 @@ export function ImageUploader({
   recommended,
   expectedRatio,
 }: {
-  orgId: string;
+  rowId: string;
+  /** Table whose row holds the image column. Defaults to organizations. */
+  table?: "organizations" | "organization_municipalities";
+  /** Storage path prefix; defaults to `org/<rowId>`. */
+  pathPrefix?: string;
   column: "logo_url" | "banner_url";
-  label: string;
+  label?: string;
   currentUrl: string | null;
   aspect?: string;
   /** Display string for recommended pixel size, e.g. "1200 × 400 px". */
@@ -64,11 +70,11 @@ export function ImageUploader({
     setBusy(true);
     try {
       const ext = file.name.split(".").pop() || "jpg";
-      const path = `org/${orgId}/${column}-${Date.now()}.${ext}`;
+      const path = `${pathPrefix ?? `org/${rowId}`}/${column}-${Date.now()}.${ext}`;
       const up = await supabase.storage.from("media").upload(path, file, { upsert: true });
       if (up.error) throw up.error;
       const { data } = supabase.storage.from("media").getPublicUrl(path);
-      const { error } = await supabase.from("organizations").update({ [column]: data.publicUrl }).eq("id", orgId);
+      const { error } = await supabase.from(table).update({ [column]: data.publicUrl }).eq("id", rowId);
       if (error) throw error;
       router.refresh();
     } catch {
@@ -80,14 +86,14 @@ export function ImageUploader({
 
   const removeImage = async () => {
     setBusy(true);
-    await supabase.from("organizations").update({ [column]: null }).eq("id", orgId);
+    await supabase.from(table).update({ [column]: null }).eq("id", rowId);
     setBusy(false);
     router.refresh();
   };
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div style={{ fontSize: "var(--fs-sm)", fontWeight: 600 }}>{label}</div>
+      {label && <div style={{ fontSize: "var(--fs-sm)", fontWeight: 600 }}>{label}</div>}
       <div
         style={{
           aspectRatio: aspect,

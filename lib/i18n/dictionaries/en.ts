@@ -246,6 +246,7 @@ export const en: Dictionary = {
     backToDepartments: "Back to departments",
     openDeptPublic: "Open public page",
     deptProfile: "Department profile",
+    perMunicipalityMoved: "Per-municipality profiles are now edited under “Departments”.",
     name: "Name",
     phone: "Phone",
     save: "Save",

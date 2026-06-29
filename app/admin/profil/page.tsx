@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg, getMyOrgs } from "@/lib/org";
-import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Button } from "@/components/ds/Button";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
@@ -19,20 +18,6 @@ export default async function ProfilePage() {
 
   const locale = await getLocale();
   const t = getDictionary(locale);
-  const supabase = await createClient();
-
-  const { data: ovRows } = await supabase
-    .from("organization_municipalities")
-    .select("municipality_id,description,description_en")
-    .eq("organization_id", org.id);
-
-  const initialOverrides: Record<string, { description: string; description_en: string }> = {};
-  for (const r of ovRows ?? []) {
-    initialOverrides[r.municipality_id as string] = {
-      description: (r.description as string) ?? "",
-      description_en: (r.description_en as string) ?? "",
-    };
-  }
 
   const orgs = await getMyOrgs();
   const previewHref = `/organisasjon/${org.slug}`;
@@ -75,8 +60,6 @@ export default async function ProfilePage() {
           address: org.address ?? "",
           socialLinks: org.socialLinks,
         }}
-        municipalities={org.municipalities}
-        initialOverrides={initialOverrides}
       />
     </AdminShell>
   );

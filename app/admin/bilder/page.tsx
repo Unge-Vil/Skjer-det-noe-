@@ -50,10 +50,10 @@ export default async function MediaPage() {
         style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }}
       >
         <section style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: 20 }}>
-          <ImageUploader orgId={org.id} column="banner_url" label={t.orgadmin.banner} currentUrl={org.bannerUrl} aspect="3 / 1" recommended="1200 × 400 px · 3:1" expectedRatio={3} />
+          <ImageUploader rowId={org.id} column="banner_url" label={t.orgadmin.banner} currentUrl={org.bannerUrl} aspect="3 / 1" recommended="1200 × 400 px · 3:1" expectedRatio={3} />
         </section>
         <section style={{ background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", padding: 20 }}>
-          <ImageUploader orgId={org.id} column="logo_url" label={t.orgadmin.logo} currentUrl={org.logoUrl} aspect="1 / 1" recommended="400 × 400 px · 1:1" expectedRatio={1} />
+          <ImageUploader rowId={org.id} column="logo_url" label={t.orgadmin.logo} currentUrl={org.logoUrl} aspect="1 / 1" recommended="400 × 400 px · 1:1" expectedRatio={1} />
         </section>
       </div>
     </AdminShell>

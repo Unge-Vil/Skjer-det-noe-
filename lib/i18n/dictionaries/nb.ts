@@ -249,6 +249,7 @@ export const nb = {
     backToDepartments: "Tilbake til avdelinger",
     openDeptPublic: "Åpne offentlig side",
     deptProfile: "Avdelingsprofil",
+    perMunicipalityMoved: "Egne profiler per kommune redigeres nå under «Avdelinger».",
     name: "Navn",
     phone: "Telefon",
     save: "Lagre",
