@@ -11,6 +11,8 @@ export const nb = {
     login: "Logg inn",
     settings: "Innstillinger",
     closeSettings: "Lukk innstillinger",
+    menu: "Meny",
+    close: "Lukk",
   },
   orgpage: {
     activities: "Aktiviteter",

@@ -13,6 +13,8 @@ export const en: Dictionary = {
     login: "Log in",
     settings: "Settings",
     closeSettings: "Close settings",
+    menu: "Menu",
+    close: "Close",
   },
   orgpage: {
     activities: "Activities",
