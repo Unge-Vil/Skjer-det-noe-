@@ -8,6 +8,8 @@ import { makeSlug, pointEwkt } from "@/lib/slug";
 import { weekdayName } from "@/lib/format";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { CoOrganizerEditor, type CoOrg } from "./CoOrganizerEditor";
+import { syncCoOrganizers } from "@/lib/coOrganizers";
 import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
 
 const LocationPicker = dynamic(() => import("./LocationPicker"), { ssr: false });
@@ -44,12 +46,19 @@ export function ActivityForm({
   municipalities,
   defaultCenter,
   initial,
+  initialCoOrganizers = [],
+  lockedMunicipality,
+  returnHref = "/admin",
 }: {
   orgId: string;
   categories: Option[];
   municipalities: Option[];
   defaultCenter: { lat: number; lng: number };
   initial?: ActivityInitial | null;
+  initialCoOrganizers?: CoOrg[];
+  /** When set, the municipality is fixed (department-scoped creation). */
+  lockedMunicipality?: { id: string; name: string };
+  returnHref?: string;
 }) {
   const { t, locale } = useI18n();
   const router = useRouter();
@@ -60,7 +69,8 @@ export function ActivityForm({
   const [description, setDescription] = useState(initial?.description ?? "");
   const [descriptionEn, setDescriptionEn] = useState(initial?.description_en ?? "");
   const [categoryId, setCategoryId] = useState(initial?.category_id ?? "");
-  const [municipalityId, setMunicipalityId] = useState(initial?.municipality_id ?? "");
+  const [municipalityId, setMunicipalityId] = useState(initial?.municipality_id ?? lockedMunicipality?.id ?? "");
+  const [coOrgs, setCoOrgs] = useState<CoOrg[]>(initialCoOrganizers);
   const [address, setAddress] = useState(initial?.address ?? "");
   const [weekday, setWeekday] = useState<string>(initial?.weekday?.toString() ?? "");
   const [startTime, setStartTime] = useState(initial?.start_time?.slice(0, 5) ?? "");
@@ -105,11 +115,30 @@ export function ActivityForm({
     };
     if (loc) payload.location = pointEwkt(loc.lat, loc.lng);
 
-    const { error } = initial
-      ? await supabase.from("activities").update(payload).eq("id", initial.id)
-      : await supabase
-          .from("activities")
-          .insert({ ...payload, slug: makeSlug(title), organization_id: orgId });
+    let listingId = initial?.id ?? null;
+    let error;
+    if (initial) {
+      ({ error } = await supabase.from("activities").update(payload).eq("id", initial.id));
+    } else {
+      const res = await supabase
+        .from("activities")
+        .insert({ ...payload, slug: makeSlug(title), organization_id: orgId })
+        .select("id")
+        .single();
+      error = res.error;
+      listingId = (res.data?.id as string) ?? null;
+    }
+
+    if (!error && listingId) {
+      await syncCoOrganizers(
+        supabase,
+        "activity_co_organizers",
+        "activity_id",
+        listingId,
+        initialCoOrganizers.map((o) => o.id),
+        coOrgs.map((o) => o.id),
+      );
+    }
 
     setBusy(false);
     if (error) {
@@ -117,7 +146,7 @@ export function ActivityForm({
       setError(t.form.saveError);
       return;
     }
-    router.push("/admin");
+    router.push(returnHref);
     router.refresh();
   };
 
@@ -153,10 +182,14 @@ export function ActivityForm({
         </div>
         <div>
           <label htmlFor="muni" style={labelStyle}>{t.form.municipality}</label>
-          <select id="muni" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} style={inputStyle}>
-            <option value="">{t.form.chooseMunicipality}</option>
-            {municipalities.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
-          </select>
+          {lockedMunicipality ? (
+            <input id="muni" value={lockedMunicipality.name} disabled style={{ ...inputStyle, color: "var(--text-muted)", background: "var(--surface-sunk)" }} />
+          ) : (
+            <select id="muni" value={municipalityId} onChange={(e) => setMunicipalityId(e.target.value)} style={inputStyle}>
+              <option value="">{t.form.chooseMunicipality}</option>
+              {municipalities.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+            </select>
+          )}
         </div>
       </div>
 
@@ -222,11 +255,17 @@ export function ActivityForm({
         </select>
       </div>
 
+      <div>
+        <label style={labelStyle}>{t.form.coOrganizers}</label>
+        <p style={{ margin: "0 0 8px", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.form.coOrganizersHint}</p>
+        <CoOrganizerEditor value={coOrgs} onChange={setCoOrgs} excludeOrgId={orgId} />
+      </div>
+
       {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       <div style={{ display: "flex", gap: 10 }}>
         <Button type="submit" loading={busy}>{busy ? t.form.saving : t.form.save}</Button>
-        <Button type="button" variant="ghost" onClick={() => router.push("/admin")}>{t.form.cancel}</Button>
+        <Button type="button" variant="ghost" onClick={() => router.push(returnHref)}>{t.form.cancel}</Button>
       </div>
     </form>
   );

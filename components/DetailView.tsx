@@ -42,6 +42,7 @@ export interface DetailData {
   recurrenceNote?: string | null;
   startsAt?: string | null;
   endsAt?: string | null;
+  coOrganizers?: { name: string; slug: string | null }[];
 }
 
 function Fact({ icon, label, value }: { icon: IconName; label: string; value: string }) {
@@ -155,6 +156,23 @@ export function DetailView({ data }: { data: DetailData }) {
                 {data.organizationName}
               </p>
             ))}
+          {data.coOrganizers && data.coOrganizers.length > 0 && (
+            <p style={{ margin: "4px 0 0", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>
+              {t.form.coArranger}:{" "}
+              {data.coOrganizers.map((c, i) => (
+                <span key={`${c.slug ?? c.name}-${i}`}>
+                  {i > 0 && ", "}
+                  {c.slug ? (
+                    <Link href={`/organisasjon/${c.slug}`} style={{ color: "var(--text-link)", fontWeight: 600 }}>
+                      {c.name}
+                    </Link>
+                  ) : (
+                    c.name
+                  )}
+                </span>
+              ))}
+            </p>
+          )}
         </div>
 
         {statuses.length > 0 && (

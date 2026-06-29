@@ -8,7 +8,7 @@ import { DetailView, type DetailData } from "@/components/DetailView";
 export const dynamic = "force-dynamic";
 
 const SELECT =
-  "id,title,title_en,description,description_en,address,price,age_min,age_max,url,image_url,weekday,start_time,end_time,recurrence_note,organizations(name,slug),categories(slug),municipalities(name,kommunenummer)";
+  "id,title,title_en,description,description_en,address,price,age_min,age_max,url,image_url,weekday,start_time,end_time,recurrence_note,organizations(name,slug),categories(slug),municipalities(name,kommunenummer),activity_co_organizers(organizations(name,slug))";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toDetail(row: any, locale: Locale): DetailData {
@@ -32,6 +32,11 @@ function toDetail(row: any, locale: Locale): DetailData {
     startTime: row.start_time,
     endTime: row.end_time,
     recurrenceNote: row.recurrence_note,
+    coOrganizers: (row.activity_co_organizers ?? [])
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .map((c: any) => c.organizations)
+      .filter(Boolean)
+      .map((o: { name: string; slug: string | null }) => ({ name: o.name, slug: o.slug ?? null })),
   };
 }
 

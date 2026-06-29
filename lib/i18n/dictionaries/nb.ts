@@ -312,6 +312,10 @@ export const nb = {
     chooseCategory: "Velg kategori",
     chooseMunicipality: "Velg kommune",
     chooseWeekday: "Velg ukedag",
+    coOrganizers: "Medarrangører",
+    coOrganizersHint: "Søk opp andre organisasjoner og legg dem til som medarrangør.",
+    coOrgSearch: "Søk etter organisasjon…",
+    coArranger: "I samarbeid med",
   },
   explorer: {
     nearMe: "Nær meg",

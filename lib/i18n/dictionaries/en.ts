@@ -309,6 +309,10 @@ export const en: Dictionary = {
     chooseCategory: "Choose category",
     chooseMunicipality: "Choose municipality",
     chooseWeekday: "Choose weekday",
+    coOrganizers: "Co-organisers",
+    coOrganizersHint: "Search for other organisations and add them as co-organisers.",
+    coOrgSearch: "Search for an organisation…",
+    coArranger: "In collaboration with",
   },
   explorer: {
     nearMe: "Near me",
