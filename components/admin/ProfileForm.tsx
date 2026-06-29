@@ -6,14 +6,20 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { SocialLinksEditor } from "./SocialLinksEditor";
+import { RichTextEditor } from "./RichTextEditor";
 import type { SocialLinks } from "@/components/ds/socials";
-import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
+import { docToPlainText, plainTextToDoc, isEmptyDoc } from "@/lib/tiptap";
+import { inputStyle, labelStyle } from "./formStyles";
 
 export interface ProfileInitial {
   id: string;
   name: string;
   description: string;
   descriptionEn: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDoc: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDocEn: any | null;
   website: string;
   email: string;
   phone: string;
@@ -34,8 +40,8 @@ export function ProfileForm({ org }: { org: ProfileInitial }) {
   const supabase = createClient();
 
   const [name, setName] = useState(org.name);
-  const [description, setDescription] = useState(org.description);
-  const [descriptionEn, setDescriptionEn] = useState(org.descriptionEn);
+  const [descDoc, setDescDoc] = useState(() => org.descriptionDoc ?? plainTextToDoc(org.description));
+  const [descDocEn, setDescDocEn] = useState(() => org.descriptionDocEn ?? plainTextToDoc(org.descriptionEn));
   const [website, setWebsite] = useState(org.website);
   const [email, setEmail] = useState(org.email);
   const [phone, setPhone] = useState(org.phone);
@@ -52,12 +58,16 @@ export function ProfileForm({ org }: { org: ProfileInitial }) {
     setDone(false);
     setBusy(true);
 
+    const descText = docToPlainText(descDoc);
+    const descTextEn = docToPlainText(descDocEn);
     const { error: orgErr } = await supabase
       .from("organizations")
       .update({
         name: name.trim(),
-        description: description || null,
-        description_en: descriptionEn || null,
+        description: descText || null,
+        description_en: descTextEn || null,
+        description_doc: isEmptyDoc(descDoc) ? null : descDoc,
+        description_doc_en: isEmptyDoc(descDocEn) ? null : descDocEn,
         website: website || null,
         email: email || null,
         phone: phone || null,
@@ -87,12 +97,12 @@ export function ProfileForm({ org }: { org: ProfileInitial }) {
           <input id="name" required value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
         </div>
         <div>
-          <label htmlFor="desc" style={labelStyle}>{t.form.description}</label>
-          <textarea id="desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} style={textareaStyle} />
+          <label style={labelStyle}>{t.form.description}</label>
+          <RichTextEditor value={descDoc} onChange={setDescDoc} ariaLabel={t.form.description} />
         </div>
         <div>
-          <label htmlFor="desc_en" style={labelStyle}>{t.form.descriptionEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
-          <textarea id="desc_en" rows={3} value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} style={textareaStyle} />
+          <label style={labelStyle}>{t.form.descriptionEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
+          <RichTextEditor value={descDocEn} onChange={setDescDocEn} ariaLabel={t.form.descriptionEn} />
         </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>

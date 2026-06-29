@@ -54,6 +54,8 @@ export default async function ProfilePage() {
           name: org.name,
           description: org.description ?? "",
           descriptionEn: org.descriptionEn ?? "",
+          descriptionDoc: org.descriptionDoc,
+          descriptionDocEn: org.descriptionDocEn,
           website: org.website ?? "",
           email: org.email ?? "",
           phone: org.phone ?? "",

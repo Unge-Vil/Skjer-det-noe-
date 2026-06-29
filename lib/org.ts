@@ -17,6 +17,10 @@ export interface MyOrg {
   status: string;
   description: string | null;
   descriptionEn: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDoc: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDocEn: any | null;
   website: string | null;
   email: string | null;
   phone: string | null;
@@ -28,7 +32,7 @@ export interface MyOrg {
 }
 
 const ORG_SELECT =
-  "organizations(id, name, slug, status, description, description_en, website, email, phone, address, logo_url, banner_url, social_links, organization_municipalities(municipalities(id, name)))";
+  "organizations(id, name, slug, status, description, description_en, description_doc, description_doc_en, website, email, phone, address, logo_url, banner_url, social_links, organization_municipalities(municipalities(id, name)))";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapOrg(org: any): MyOrg {
@@ -39,6 +43,8 @@ function mapOrg(org: any): MyOrg {
     status: org.status,
     description: org.description ?? null,
     descriptionEn: org.description_en ?? null,
+    descriptionDoc: org.description_doc ?? null,
+    descriptionDocEn: org.description_doc_en ?? null,
     website: org.website ?? null,
     email: org.email ?? null,
     phone: org.phone ?? null,

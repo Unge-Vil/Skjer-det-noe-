@@ -8,7 +8,8 @@ import { Button } from "@/components/ds/Button";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { MuniSwitcher } from "@/components/admin/MuniSwitcher";
 import { kommuneNav } from "@/components/admin/kommuneNav";
-import { MuniPageForm, type MuniPageInitial } from "@/components/admin/MuniPageForm";
+import { MuniPageBuilder } from "@/components/admin/MuniPageBuilder";
+import { toPuckData, type PuckRoot } from "@/lib/puck/config";
 
 export const dynamic = "force-dynamic";
 
@@ -28,39 +29,34 @@ export default async function KommunePageEditor({
   const t = getDictionary(locale);
   const supabase = await createClient();
 
-  let initial: MuniPageInitial = {
-    id: null,
-    title: "",
-    titleEn: "",
-    slug: "",
-    content: null,
-    contentEn: null,
-    status: "draft",
-  };
+  let root: PuckRoot = { title: "", titleEn: "", slug: "", status: "draft" };
+  let content: unknown = null;
+  let publicSlug: string | null = null;
+  let published = false;
 
   if (id !== "ny") {
     const { data } = await supabase
       .from("municipality_pages")
-      .select("id,title,title_en,slug,content,content_en,status,municipality_id")
+      .select("title,title_en,slug,content,status")
       .eq("id", id)
       .maybeSingle();
     if (!data) notFound();
-    initial = {
-      id: data.id as string,
+    root = {
       title: (data.title as string) ?? "",
       titleEn: (data.title_en as string) ?? "",
       slug: (data.slug as string) ?? "",
-      content: data.content ?? null,
-      contentEn: data.content_en ?? null,
-      status: (data.status as string) ?? "draft",
+      status: (data.status as "draft" | "published") ?? "draft",
     };
+    content = data.content;
+    publicSlug = (data.slug as string) ?? null;
+    published = data.status === "published";
   }
 
-  const publicHref = initial.id && initial.status === "published" ? `/kommune/${active.slug}/${initial.slug}` : null;
+  const publicHref = published && publicSlug ? `/kommune/${active.slug}/${publicSlug}` : null;
 
   return (
     <AdminShell
-      title={initial.id ? initial.title || t.kommune.pages : t.kommune.newPage}
+      title={id === "ny" ? t.kommune.newPage : root.title || t.kommune.pages}
       identity={<MuniSwitcher munis={munis} activeId={active.id} />}
       nav={kommuneNav(t, "/kommune/sider")}
       headerAction={
@@ -76,7 +72,11 @@ export default async function KommunePageEditor({
         </div>
       }
     >
-      <MuniPageForm municipalityId={active.id} municipalitySlug={active.slug} page={initial} />
+      <MuniPageBuilder
+        municipalityId={active.id}
+        pageId={id === "ny" ? null : id}
+        initialData={toPuckData(content, root)}
+      />
     </AdminShell>
   );
 }

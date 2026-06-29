@@ -3,10 +3,11 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { loc } from "@/lib/i18n/config";
+import { Render } from "@measured/puck/rsc";
 import { Icon } from "@/components/ds/Icon";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
-import { RichTextContent } from "@/components/RichTextContent";
-import { isEmptyDoc } from "@/lib/tiptap";
+import { puckConfig, type PuckProps, type PuckRoot } from "@/lib/puck/config";
+import type { Data } from "@measured/puck";
 
 export const dynamic = "force-dynamic";
 
@@ -56,8 +57,7 @@ export default async function MunicipalityInfoPage({
   const { muni, page: p } = data;
 
   const title = loc(locale, p.title, p.title_en) ?? p.title;
-  // Use the English document only when the locale is English and it has content.
-  const doc = locale === "en" && !isEmptyDoc(p.content_en) ? p.content_en : p.content;
+  const pageData = (p.content ?? { content: [], root: { props: {} } }) as unknown as Data<PuckProps, PuckRoot>;
 
   return (
     <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
@@ -67,8 +67,8 @@ export default async function MunicipalityInfoPage({
       </p>
       <h1 style={{ margin: "0 0 20px", fontSize: "var(--fs-h1)", fontWeight: 800 }}>{title}</h1>
 
-      <article>
-        <RichTextContent doc={doc} />
+      <article className="sdn-puck">
+        <Render config={puckConfig} data={pageData} />
       </article>
 
       <div style={{ marginTop: 28 }}>

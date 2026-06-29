@@ -8,6 +8,8 @@ import type { Listing } from "@/lib/types";
 import { Icon } from "@/components/ds/Icon";
 import { ListingCard } from "@/components/ListingCard";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
+import { RichTextContent } from "@/components/RichTextContent";
+import { isEmptyDoc } from "@/lib/tiptap";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +18,7 @@ async function fetchOrg(slug: string) {
   const { data } = await supabase
     .from("organizations")
     .select(
-      "id,name,description,description_en,website,address,logo_url,banner_url,social_links,organization_municipalities(municipalities(name,slug))",
+      "id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links,organization_municipalities(municipalities(name,slug))",
     )
     .eq("slug", slug)
     .eq("status", "published")
@@ -124,6 +126,12 @@ export default async function OrganisationPage({
   const activities = ((actRes.data as unknown[]) ?? []).map((r) => activityToListing(r, org.name, locale));
   const events = ((evtRes.data as unknown[]) ?? []).map((r) => eventToListing(r, org.name, locale));
   const orgDescription = loc(locale, org.description, org.description_en);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const orgAny = org as any;
+  const descDoc =
+    locale === "en" && !isEmptyDoc(orgAny.description_doc_en)
+      ? orgAny.description_doc_en
+      : orgAny.description_doc;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const municipalities: { name: string; slug: string }[] = ((org as any).organization_municipalities ?? [])
@@ -171,10 +179,16 @@ export default async function OrganisationPage({
             ))}
           </p>
         )}
-        {orgDescription && (
-          <p style={{ margin: "0 0 12px", maxWidth: "var(--content-measure)", lineHeight: 1.6, color: "var(--text-body)" }}>
-            {orgDescription}
-          </p>
+        {!isEmptyDoc(descDoc) ? (
+          <div style={{ maxWidth: "var(--content-measure)", marginBottom: 12 }}>
+            <RichTextContent doc={descDoc} />
+          </div>
+        ) : (
+          orgDescription && (
+            <p style={{ margin: "0 0 12px", maxWidth: "var(--content-measure)", lineHeight: 1.6, color: "var(--text-body)" }}>
+              {orgDescription}
+            </p>
+          )
         )}
         {org.website && (
           <a href={org.website} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-link)", fontWeight: 600, fontSize: "var(--fs-sm)" }}>
