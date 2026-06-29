@@ -127,19 +127,21 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --bg-app:        #0E1A18;
-  --bg-elevated:   #1B2725;
-  --surface-card:  #16211F;
-  --surface-sunk:  #111C1A;
+  /* Near-neutral cool charcoal — only brand elements stay teal, so the UI no
+     longer reads as "all green". Blue ≥ green keeps the green cast off. */
+  --bg-app:        #15181B;
+  --bg-elevated:   #1F2327;
+  --surface-card:  #1A1E22;
+  --surface-sunk:  #131619;
   --surface-brand: var(--fjord-500);
-  --surface-brand-soft: #12302E;
-  --surface-overlay: rgba(14, 26, 24, 0.82);
+  --surface-brand-soft: #163230;
+  --surface-overlay: rgba(21, 24, 27, 0.82);
 
   --surface-brand-strong:       var(--fjord-500);  /* brighter fill for separation on dark */
   --surface-brand-strong-hover: var(--fjord-400);
   --text-brand:        var(--fjord-300);  /* light teal — ≈ 7:1 on cards */
-  --brand-hover-soft:  #12302E;
-  --focus-glow:        #0F2E2C;
+  --brand-hover-soft:  #163230;
+  --focus-glow:        #14302E;
 
   --text-strong:   #F2F5F3;
   --text-body:     #D4DDDA;            /* ≈ 12:1 on cards */
@@ -148,8 +150,8 @@
   --text-on-coral: #FFFFFF;
   --text-link:     var(--fjord-300);
 
-  --border-subtle: #2A3633;
-  --border-strong: #3C4945;
+  --border-subtle: #2B3035;
+  --border-strong: #3C4248;
   --border-brand:  var(--fjord-400);
 
   --accent:        var(--coral-400);   /* brighter coral pops on dark */
@@ -157,7 +159,7 @@
   --highlight:     var(--sol-400);
 
   --focus-ring:        var(--fjord-300);
-  --focus-ring-offset: #0E1A18;
+  --focus-ring-offset: #15181B;
 
   /* tinted dark elevation — lighter shadows read better on dark */
   --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.4);
@@ -171,28 +173,28 @@
 @media (prefers-color-scheme: dark) {
   :root[data-theme="auto"] {
     color-scheme: dark;
-    --bg-app:        #0E1A18;
-    --bg-elevated:   #1B2725;
-    --surface-card:  #16211F;
-    --surface-sunk:  #111C1A;
+    --bg-app:        #15181B;
+    --bg-elevated:   #1F2327;
+    --surface-card:  #1A1E22;
+    --surface-sunk:  #131619;
     --surface-brand: var(--fjord-500);
-    --surface-brand-soft: #12302E;
-    --surface-overlay: rgba(14, 26, 24, 0.82);
+    --surface-brand-soft: #163230;
+    --surface-overlay: rgba(21, 24, 27, 0.82);
     --surface-brand-strong:       var(--fjord-500);
     --surface-brand-strong-hover: var(--fjord-400);
     --text-brand:        var(--fjord-300);
-    --brand-hover-soft:  #12302E;
-    --focus-glow:        #0F2E2C;
+    --brand-hover-soft:  #163230;
+    --focus-glow:        #14302E;
     --text-strong:   #F2F5F3;
     --text-body:     #D4DDDA;
     --text-muted:    #9DABA6;
     --text-link:     var(--fjord-300);
-    --border-subtle: #2A3633;
-    --border-strong: #3C4945;
+    --border-subtle: #2B3035;
+    --border-strong: #3C4248;
     --border-brand:  var(--fjord-400);
     --accent:        var(--coral-400);
     --accent-soft:   #3A1A12;
     --focus-ring:        var(--fjord-300);
-    --focus-ring-offset: #0E1A18;
+    --focus-ring-offset: #15181B;
   }
 }

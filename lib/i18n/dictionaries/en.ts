@@ -84,6 +84,10 @@ export const en: Dictionary = {
   footer: {
     tagline:
       "An initiative from Unge Vil · skjerdetnoe.no · Accessible to all (WCAG 2.2 AA)",
+    privacy: "Privacy",
+    terms: "Terms",
+    backHome: "Back to home",
+    updated: "Last updated",
   },
   auth: {
     loginTitle: "Log in",

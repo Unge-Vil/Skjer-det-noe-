@@ -82,6 +82,10 @@ export const nb = {
   footer: {
     tagline:
       "Et initiativ fra Unge Vil · skjerdetnoe.no · Tilgjengelig for alle (WCAG 2.2 AA)",
+    privacy: "Personvern",
+    terms: "Vilkår",
+    backHome: "Til forsiden",
+    updated: "Sist oppdatert",
   },
   auth: {
     loginTitle: "Logg inn",

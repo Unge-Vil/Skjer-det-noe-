@@ -8,8 +8,8 @@ import type { Category, Listing } from "@/lib/types";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { plural } from "@/lib/i18n/config";
 import { fetchOrganisations, type OrgSummary } from "@/lib/organisations";
-import { Wordmark } from "@/components/ds/Wordmark";
 import { Icon } from "@/components/ds/Icon";
+import { SiteFooter } from "@/components/SiteFooter";
 import { LandingHero } from "@/components/LandingHero";
 import { LandingSections } from "@/components/LandingSections";
 import { OrganisationCard } from "@/components/OrganisationCard";
@@ -182,12 +182,7 @@ export default async function Home() {
         </div>
       </section>
 
-      <footer className="mx-auto mt-10 flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4">
-        <Wordmark size={18} />
-        <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
-          {t.footer.tagline}
-        </span>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
