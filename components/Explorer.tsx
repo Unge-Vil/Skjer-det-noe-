@@ -87,7 +87,9 @@ export function Explorer({
   const [category, setCategory] = useState<string | null>(initialCategory);
   const [municipality, setMunicipality] = useState<string | null>(initialMunicipality);
   const [query, setQuery] = useState(initialQuery);
-  const [view, setView] = useState<MapListView>("list");
+  // Mobile opens map-first (the page is "Kart"); the toggle is mobile-only and
+  // desktop always shows list + map side by side regardless of this value.
+  const [view, setView] = useState<MapListView>("map");
   const [listings, setListings] = useState<Listing[]>(initialListings);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -184,33 +186,36 @@ export function Explorer({
 
   return (
     <main id="main" className="flex min-h-0 flex-1 flex-col">
-      {/* Hero */}
-      <section className="mx-auto w-full max-w-6xl px-4 pt-6 pb-2">
-        <p
-          style={{
-            margin: "0 0 4px",
-            fontSize: "var(--fs-xs)",
-            fontWeight: 700,
-            letterSpacing: "0.04em",
-            textTransform: "uppercase",
-            color: "var(--accent)",
-          }}
-        >
-          {municipalityName
-            ? fmt(t.hero.eyebrowIn, { place: municipalityName })
-            : t.hero.eyebrowNear}
-        </p>
-        <h1
-          style={{
-            margin: "0 0 16px",
-            fontSize: "var(--fs-display-md)",
-            fontWeight: 900,
-            letterSpacing: "-0.02em",
-            lineHeight: 1.05,
-          }}
-        >
-          Skjer det noe<span style={{ color: "var(--accent)" }}>?</span>
-        </h1>
+      {/* Hero — the big title is marketing chrome; hide it on mobile so the map
+          can take over, keep it on desktop. */}
+      <section className="mx-auto w-full max-w-6xl px-4 pt-3 pb-2 lg:pt-6">
+        <div className="hidden lg:block">
+          <p
+            style={{
+              margin: "0 0 4px",
+              fontSize: "var(--fs-xs)",
+              fontWeight: 700,
+              letterSpacing: "0.04em",
+              textTransform: "uppercase",
+              color: "var(--accent)",
+            }}
+          >
+            {municipalityName
+              ? fmt(t.hero.eyebrowIn, { place: municipalityName })
+              : t.hero.eyebrowNear}
+          </p>
+          <h1
+            style={{
+              margin: "0 0 16px",
+              fontSize: "var(--fs-display-md)",
+              fontWeight: 900,
+              letterSpacing: "-0.02em",
+              lineHeight: 1.05,
+            }}
+          >
+            Skjer det noe<span style={{ color: "var(--accent)" }}>?</span>
+          </h1>
+        </div>
         <SearchBar
           value={query}
           onChange={setQuery}
@@ -295,9 +300,9 @@ export function Explorer({
       </div>
 
       {/* List + map */}
-      <div className="mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-0 px-2 pb-6 lg:grid-cols-[minmax(0,440px)_1fr] lg:gap-4 lg:px-4">
+      <div className="mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-0 px-0 pb-0 lg:grid-cols-[minmax(0,440px)_1fr] lg:gap-4 lg:px-4 lg:pb-6">
         <div
-          className={`sdn-stagger ${view === "map" ? "hidden" : "block"} space-y-3 p-2 lg:block lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto`}
+          className={`sdn-stagger ${view === "map" ? "hidden" : "block"} space-y-3 px-3 py-2 lg:block lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:p-2`}
         >
           {!configured && (
             <div
@@ -342,11 +347,10 @@ export function Explorer({
         </div>
 
         <div
-          className={`${view === "list" ? "hidden" : "block"} h-[55vh] overflow-hidden p-2 lg:block lg:h-auto lg:min-h-[70vh] lg:p-0`}
+          className={`${view === "list" ? "hidden" : "block"} h-[calc(100dvh-208px)] min-h-[340px] overflow-hidden p-0 lg:block lg:h-auto lg:min-h-[70vh] lg:p-0`}
         >
           <div
-            className="h-full w-full overflow-hidden"
-            style={{ borderRadius: "var(--radius-lg)", border: "1px solid var(--border-subtle)" }}
+            className="h-full w-full overflow-hidden lg:[border:1px_solid_var(--border-subtle)] lg:[border-radius:var(--radius-lg)]"
           >
             <ListingMap
               center={center}
