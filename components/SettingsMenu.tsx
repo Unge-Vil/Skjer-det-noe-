@@ -53,6 +53,7 @@ export function SettingsMenu() {
       {open && (
         <div
           role="menu"
+          className="sdn-pop"
           style={{
             position: "absolute",
             top: "calc(100% + 8px)",

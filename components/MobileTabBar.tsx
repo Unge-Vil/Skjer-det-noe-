@@ -60,6 +60,7 @@ export function MobileTabBar() {
             type="button"
             aria-label={t.nav.closeSettings}
             onClick={() => setSettingsOpen(false)}
+            className="sdn-backdrop"
             style={{
               position: "fixed",
               inset: 0,
@@ -69,6 +70,7 @@ export function MobileTabBar() {
             }}
           />
           <div
+            className="sdn-sheet"
             style={{
               position: "fixed",
               left: 0,

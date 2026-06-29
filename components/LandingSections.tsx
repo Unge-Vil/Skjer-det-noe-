@@ -24,12 +24,12 @@ function Band({
 }) {
   return (
     <section className="mx-auto w-full max-w-6xl px-4 pt-8">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div>
-          <h2 style={{ margin: 0, fontSize: "var(--fs-h2)", fontWeight: 800, letterSpacing: "-0.01em" }}>
+      <div className="mb-4 flex items-end justify-between gap-3">
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <h2 style={{ margin: 0, fontSize: "var(--fs-h3)", fontWeight: 800, letterSpacing: "-0.01em", textWrap: "pretty" }}>
             {title}
           </h2>
-          <p style={{ margin: "2px 0 0", fontSize: "var(--fs-body)", color: "var(--text-muted)" }}>
+          <p style={{ margin: "2px 0 0", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>
             {sub}
           </p>
         </div>

@@ -113,3 +113,15 @@
 .sdn-richtext a { color: var(--text-link); text-decoration: underline; }
 /* Public article wrapper has no min-height/padding from the editor chrome. */
 article.sdn-richtext { min-height: 0; padding: 0; }
+
+/* ── App-like motion: sheets, drawers, backdrops ───────────────────────────
+   All collapse under prefers-reduced-motion via the motion-token rules. */
+@keyframes sdn-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+@keyframes sdn-drawer-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes sdn-fade { from { opacity: 0; } to { opacity: 1; } }
+
+.sdn-sheet { animation: sdn-sheet-up var(--dur-slow) var(--ease-enter) both; }
+.sdn-drawer { animation: sdn-drawer-in var(--dur-base) var(--ease-enter) both; }
+.sdn-backdrop { animation: sdn-fade var(--dur-base) var(--ease-soft) both; }
+@keyframes sdn-pop { from { opacity: 0; transform: translateY(-4px) scale(0.985); } to { opacity: 1; transform: none; } }
+.sdn-pop { animation: sdn-pop var(--dur-base) var(--ease-enter) both; transform-origin: top right; }

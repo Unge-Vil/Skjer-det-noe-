@@ -121,9 +121,11 @@ export function AdminShell({
             type="button"
             aria-label={t.nav.close}
             onClick={closeDrawer}
+            className="sdn-backdrop"
             style={{ position: "fixed", inset: 0, zIndex: 50, border: "none", background: "rgba(8,52,51,0.35)" }}
           />
           <aside
+            className="sdn-drawer"
             style={{
               position: "fixed",
               top: 0,
