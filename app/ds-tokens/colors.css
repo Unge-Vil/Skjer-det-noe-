@@ -75,7 +75,7 @@
   --cat-film-fg:    #6A37C2;  --cat-film-bg:    #EEE6FB;
   --cat-sports-fg:  #1F7A43;  --cat-sports-bg:  #E2F3E8;
   --cat-outdoor-fg: #3C6A28;  --cat-outdoor-bg: #EAF3E0;
-  --cat-creative-fg:#B5560A;  --cat-creative-bg:#FBEDDB;
+  --cat-creative-fg:#A8500A;  --cat-creative-bg:#FBEDDB;  /* darkened to ≥4.5:1 on its tint */
   --cat-social-fg:  #BF360F;  --cat-social-bg:  #FFE6DF;
   --cat-courses-fg: #1E5FA8;  --cat-courses-bg: #E3EEFA;
   --cat-club-fg:    #0A5C5B;  --cat-club-bg:    #DBEFEE;

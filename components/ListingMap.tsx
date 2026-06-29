@@ -70,7 +70,9 @@ export default function ListingMap({
       />
       <Recenter lat={center.lat} lng={center.lng} />
 
-      <Marker position={[center.lat, center.lng]} icon={userIcon} />
+      {/* Decorative "your location" dot — not interactive, so it stays out of
+          the tab order and the target-size requirement. */}
+      <Marker position={[center.lat, center.lng]} icon={userIcon} interactive={false} keyboard={false} />
 
       {listings.map((l) => {
         const isActive = l.id === activeId;
@@ -79,6 +81,8 @@ export default function ListingMap({
             key={l.id}
             position={[l.lat, l.lng]}
             icon={pinIcon(categoryDef(l.categorySlug).fg, isActive)}
+            title={l.title}
+            alt={l.title}
             zIndexOffset={isActive ? 1000 : 0}
             eventHandlers={{
               mouseover: () => onHover?.(l.id),
