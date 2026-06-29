@@ -3,6 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg, getMyOrgs } from "@/lib/org";
+import { getMyDepartments } from "@/lib/departments";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { weekdayName, formatTimeRange, formatEventDate } from "@/lib/format";
@@ -60,6 +61,9 @@ export default async function AdminPage() {
   const org = await getMyOrg();
 
   if (!org) {
+    // Department-only admins have no master org — send them to their departments.
+    const departments = await getMyDepartments();
+    if (departments.length > 0) redirect("/admin/avdelinger");
     return (
       <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
         <div className="mb-6 flex items-center justify-between">
@@ -98,6 +102,7 @@ export default async function AdminPage() {
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
+    { href: "/admin/avdelinger", label: t.orgadmin.departments, icon: "building-2" },
     { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
     { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
     { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },

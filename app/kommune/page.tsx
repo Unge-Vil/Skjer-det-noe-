@@ -5,8 +5,11 @@ import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon } from "@/components/ds/Icon";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
-import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
+import { AdminShell } from "@/components/admin/AdminShell";
 import { ShellIdentity } from "@/components/admin/ShellIdentity";
+import { MuniSwitcher } from "@/components/admin/MuniSwitcher";
+import { kommuneNav } from "@/components/admin/kommuneNav";
+import { getMyMunicipalities, getActiveMunicipality } from "@/lib/kommune";
 
 export const dynamic = "force-dynamic";
 
@@ -79,14 +82,19 @@ export default async function KommunePage() {
   const pending = orgs.filter((o) => o.status === "draft");
   const approved = orgs.filter((o) => o.status === "published");
 
-  const nav: NavItem[] = [
-    { href: "/kommune", label: t.orgadmin.overview, icon: "layout-dashboard" },
-  ];
+  const [munis, activeMuni] = await Promise.all([getMyMunicipalities(), getActiveMunicipality()]);
+  const nav = kommuneNav(t, "/kommune");
 
   return (
     <AdminShell
       title={t.kommune.title}
-      identity={<ShellIdentity name={t.kommune.title} sub={user.email ?? ""} />}
+      identity={
+        activeMuni ? (
+          <MuniSwitcher munis={munis} activeId={activeMuni.id} />
+        ) : (
+          <ShellIdentity name={t.kommune.title} sub={user.email ?? ""} />
+        )
+      }
       nav={nav}
     >
       <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>

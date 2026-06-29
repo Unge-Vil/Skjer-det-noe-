@@ -5,6 +5,7 @@ import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { MuniAdminManager } from "@/components/admin/MuniAdminManager";
+import { MuniCreateForm } from "@/components/admin/MuniCreateForm";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { ShellIdentity } from "@/components/admin/ShellIdentity";
 
@@ -81,6 +82,13 @@ export default async function PlatformPage() {
       <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
         {t.platform.subtitle}
       </p>
+
+      <section className="mb-10">
+        <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.createMuni}</h2>
+        <div style={cardStyle}>
+          <MuniCreateForm />
+        </div>
+      </section>
 
       <section className="mb-10">
         <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.muniAdmins}</h2>

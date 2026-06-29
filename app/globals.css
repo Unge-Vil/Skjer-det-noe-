@@ -75,3 +75,38 @@
 .leaflet-popup-content-wrapper {
   border-radius: var(--radius-md);
 }
+
+/* Rich-text (Tiptap) content — editor body + public rendering. */
+.sdn-richtext {
+  padding: 14px 16px;
+  min-height: 180px;
+  outline: none;
+  line-height: 1.65;
+  color: var(--text-body);
+}
+.sdn-richtext:focus { outline: none; }
+.sdn-richtext > :first-child { margin-top: 0; }
+.sdn-richtext > :last-child { margin-bottom: 0; }
+.sdn-richtext h2 {
+  font-size: var(--fs-h3);
+  font-weight: 700;
+  margin: 1.2em 0 0.4em;
+}
+.sdn-richtext h3 {
+  font-size: var(--fs-h4);
+  font-weight: 700;
+  margin: 1em 0 0.35em;
+}
+.sdn-richtext p { margin: 0 0 0.8em; }
+.sdn-richtext ul,
+.sdn-richtext ol { margin: 0 0 0.8em; padding-left: 1.4em; }
+.sdn-richtext li { margin: 0.2em 0; }
+.sdn-richtext blockquote {
+  margin: 0 0 0.8em;
+  padding-left: 1em;
+  border-left: 3px solid var(--border-strong, var(--border-subtle));
+  color: var(--text-muted);
+}
+.sdn-richtext a { color: var(--text-link); text-decoration: underline; }
+/* Public article wrapper has no min-height/padding from the editor chrome. */
+article.sdn-richtext { min-height: 0; padding: 0; }

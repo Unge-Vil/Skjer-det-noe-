@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
+import { parseSocialLinks, type SocialLinks } from "@/components/ds/socials";
 
 const ACTIVE_ORG_COOKIE = "sdn-active-org";
 
@@ -22,11 +23,12 @@ export interface MyOrg {
   address: string | null;
   logoUrl: string | null;
   bannerUrl: string | null;
+  socialLinks: SocialLinks;
   municipalities: { id: string; name: string }[];
 }
 
 const ORG_SELECT =
-  "organizations(id, name, slug, status, description, description_en, website, email, phone, address, logo_url, banner_url, organization_municipalities(municipalities(id, name)))";
+  "organizations(id, name, slug, status, description, description_en, website, email, phone, address, logo_url, banner_url, social_links, organization_municipalities(municipalities(id, name)))";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapOrg(org: any): MyOrg {
@@ -43,6 +45,7 @@ function mapOrg(org: any): MyOrg {
     address: org.address ?? null,
     logoUrl: org.logo_url ?? null,
     bannerUrl: org.banner_url ?? null,
+    socialLinks: parseSocialLinks(org.social_links),
     municipalities: (org.organization_municipalities ?? [])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((om: any) => om.municipalities)

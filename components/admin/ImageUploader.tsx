@@ -13,12 +13,18 @@ export function ImageUploader({
   label,
   currentUrl,
   aspect = "1 / 1",
+  recommended,
+  expectedRatio,
 }: {
   orgId: string;
   column: "logo_url" | "banner_url";
   label: string;
   currentUrl: string | null;
   aspect?: string;
+  /** Display string for recommended pixel size, e.g. "1200 × 400 px". */
+  recommended?: string;
+  /** Expected width/height ratio; a deviating upload triggers a soft warning. */
+  expectedRatio?: number;
 }) {
   const { t } = useI18n();
   const router = useRouter();
@@ -26,11 +32,35 @@ export function ImageUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [warning, setWarning] = useState<string | null>(null);
+
+  const checkRatio = (file: File) =>
+    new Promise<void>((resolve) => {
+      if (!expectedRatio) return resolve();
+      const url = URL.createObjectURL(file);
+      const img = new window.Image();
+      img.onload = () => {
+        const ratio = img.width / img.height;
+        // Warn when off by more than ~12% from the recommended aspect.
+        if (Math.abs(ratio - expectedRatio) / expectedRatio > 0.12) {
+          setWarning(t.orgadmin.imageRatioWarning);
+        }
+        URL.revokeObjectURL(url);
+        resolve();
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        resolve();
+      };
+      img.src = url;
+    });
 
   const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     setError(null);
+    setWarning(null);
+    await checkRatio(file);
     setBusy(true);
     try {
       const ext = file.name.split(".").pop() || "jpg";
@@ -87,7 +117,11 @@ export function ImageUploader({
           <Button variant="ghost" size="sm" onClick={removeImage}>{t.orgadmin.removeImage}</Button>
         )}
       </div>
-      <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.orgadmin.imageHint}</p>
+      <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>
+        {t.orgadmin.imageHint}
+        {recommended && ` ${t.orgadmin.imageRecommended}: ${recommended}.`}
+      </p>
+      {warning && <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--warning-600)" }}>{warning}</p>}
       {error && <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--danger-600)" }}>{error}</p>}
     </div>
   );

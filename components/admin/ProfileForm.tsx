@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { SocialLinksEditor } from "./SocialLinksEditor";
+import type { SocialLinks } from "@/components/ds/socials";
 import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
 
 interface Muni {
@@ -25,6 +27,7 @@ export interface ProfileInitial {
   email: string;
   phone: string;
   address: string;
+  socialLinks: SocialLinks;
 }
 
 const card = {
@@ -54,6 +57,7 @@ export function ProfileForm({
   const [email, setEmail] = useState(org.email);
   const [phone, setPhone] = useState(org.phone);
   const [address, setAddress] = useState(org.address);
+  const [socialLinks, setSocialLinks] = useState<SocialLinks>(org.socialLinks);
   const [overrides, setOverrides] = useState<Record<string, Override>>(() => {
     const o: Record<string, Override> = {};
     for (const m of municipalities) {
@@ -85,6 +89,7 @@ export function ProfileForm({
         email: email || null,
         phone: phone || null,
         address: address || null,
+        social_links: socialLinks,
       })
       .eq("id", org.id);
 
@@ -148,6 +153,14 @@ export function ProfileForm({
             <input id="addr" value={address} onChange={(e) => setAddress(e.target.value)} style={inputStyle} />
           </div>
         </div>
+      </section>
+
+      <section style={{ ...card, display: "flex", flexDirection: "column", gap: 16 }}>
+        <div>
+          <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.social}</h2>
+          <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.orgadmin.socialHint}</p>
+        </div>
+        <SocialLinksEditor value={socialLinks} onChange={setSocialLinks} />
       </section>
 
       {municipalities.length > 0 && (
