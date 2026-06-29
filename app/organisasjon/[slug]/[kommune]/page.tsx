@@ -8,6 +8,8 @@ import type { Listing } from "@/lib/types";
 import { Icon } from "@/components/ds/Icon";
 import { ListingCard } from "@/components/ListingCard";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
+import { RichTextContent } from "@/components/RichTextContent";
+import { isEmptyDoc } from "@/lib/tiptap";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +18,7 @@ async function fetchDepartment(orgSlug: string, muniSlug: string) {
   const [{ data: org }, { data: muni }] = await Promise.all([
     supabase
       .from("organizations")
-      .select("id,name,description,description_en,website,address,logo_url,banner_url,social_links")
+      .select("id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links")
       .eq("slug", orgSlug)
       .eq("status", "published")
       .maybeSingle(),
@@ -26,7 +28,7 @@ async function fetchDepartment(orgSlug: string, muniSlug: string) {
 
   const { data: override } = await supabase
     .from("organization_municipalities")
-    .select("description,description_en,website,address,logo_url,banner_url,social_links")
+    .select("description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links")
     .eq("organization_id", org.id)
     .eq("municipality_id", muni.id)
     .maybeSingle();
@@ -40,6 +42,8 @@ async function fetchDepartment(orgSlug: string, muniSlug: string) {
     eff: {
       description: pick("description"),
       description_en: pick("description_en"),
+      description_doc: pick("description_doc"),
+      description_doc_en: pick("description_doc_en"),
       website: pick("website"),
       address: pick("address"),
       logo_url: pick("logo_url"),
@@ -128,6 +132,8 @@ export default async function DepartmentPublicPage({
   const activities = ((actRes.data as unknown[]) ?? []).map((r) => toListing(r, "activity", org.name, locale));
   const events = ((evtRes.data as unknown[]) ?? []).map((r) => toListing(r, "event", org.name, locale));
   const description = loc(locale, eff.description, eff.description_en);
+  const descDoc =
+    locale === "en" && !isEmptyDoc(eff.description_doc_en) ? eff.description_doc_en : eff.description_doc;
 
   return (
     <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
@@ -151,10 +157,16 @@ export default async function DepartmentPublicPage({
             </p>
           </div>
         </div>
-        {description && (
-          <p style={{ margin: "0 0 12px", maxWidth: "var(--content-measure)", lineHeight: 1.6, color: "var(--text-body)" }}>
-            {description}
-          </p>
+        {!isEmptyDoc(descDoc) ? (
+          <div style={{ maxWidth: "var(--content-measure)", marginBottom: 12 }}>
+            <RichTextContent doc={descDoc} />
+          </div>
+        ) : (
+          description && (
+            <p style={{ margin: "0 0 12px", maxWidth: "var(--content-measure)", lineHeight: 1.6, color: "var(--text-body)" }}>
+              {description}
+            </p>
+          )
         )}
         {eff.website && (
           <a href={eff.website} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-link)", fontWeight: 600, fontSize: "var(--fs-sm)" }}>

@@ -6,15 +6,15 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { SocialLinksEditor } from "./SocialLinksEditor";
+import { RichTextEditor } from "./RichTextEditor";
 import { parseSocialLinks, type SocialLinks } from "@/components/ds/socials";
+import { docToPlainText, plainTextToDoc, isEmptyDoc } from "@/lib/tiptap";
 import type { DepartmentDetail, DepartmentFields } from "@/lib/departments";
-import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
+import { inputStyle, labelStyle } from "./formStyles";
 
-type TextKey = "description" | "descriptionEn" | "website" | "email" | "phone" | "address";
+type TextKey = "website" | "email" | "phone" | "address";
 
 const COLUMN: Record<TextKey, string> = {
-  description: "description",
-  descriptionEn: "description_en",
   website: "website",
   email: "email",
   phone: "phone",
@@ -34,23 +34,29 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
   const supabase = createClient();
 
   const textLabels: Record<TextKey, string> = {
-    description: t.form.description,
-    descriptionEn: `${t.form.descriptionEn} (${t.form.optional})`,
     website: t.orgadmin.fWebsite,
     email: t.auth.email,
     phone: t.orgadmin.phone,
     address: t.orgadmin.fAddress,
   };
 
-  // null = inherit from master; string = custom value.
+  // Master rich docs (fall back to wrapping legacy plain text).
+  const masterDoc = dept.master.descriptionDoc ?? plainTextToDoc(dept.master.description ?? "");
+  const masterDocEn = dept.master.descriptionDocEn ?? plainTextToDoc(dept.master.descriptionEn ?? "");
+  // Initial override docs (legacy plain override -> doc); null = inherit.
+  const initDoc = (doc: unknown, plain: string | null) => doc ?? (plain ? plainTextToDoc(plain) : null);
+
+  // null = inherit from master; value = custom override.
   const [fields, setFields] = useState<Record<TextKey, string | null>>({
-    description: dept.override.description,
-    descriptionEn: dept.override.descriptionEn,
     website: dept.override.website,
     email: dept.override.email,
     phone: dept.override.phone,
     address: dept.override.address,
   });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [descDoc, setDescDoc] = useState<any | null>(initDoc(dept.override.descriptionDoc, dept.override.description));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [descDocEn, setDescDocEn] = useState<any | null>(initDoc(dept.override.descriptionDocEn, dept.override.descriptionEn));
   const [social, setSocial] = useState<SocialLinks | null>(dept.override.socialLinks);
 
   const [busy, setBusy] = useState(false);
@@ -72,6 +78,12 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
       const v = fields[k];
       patch[COLUMN[k]] = v == null || v.trim() === "" ? null : v.trim();
     }
+    // Rich description overrides: write the doc + a flattened plain mirror.
+    patch.description_doc = descDoc == null || isEmptyDoc(descDoc) ? null : descDoc;
+    patch.description = descDoc == null ? null : docToPlainText(descDoc) || null;
+    patch.description_doc_en = descDocEn == null || isEmptyDoc(descDocEn) ? null : descDocEn;
+    patch.description_en = descDocEn == null ? null : docToPlainText(descDocEn) || null;
+
     const socialClean = social == null ? null : parseSocialLinks(social);
     patch.social_links = socialClean && Object.keys(socialClean).length > 0 ? socialClean : null;
 
@@ -97,9 +109,33 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
           <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.orgadmin.departmentsSub}</p>
         </div>
 
+        <RichDescription
+          label={t.form.description}
+          doc={descDoc}
+          masterDoc={masterDoc}
+          masterPlain={dept.master.description}
+          onInherit={() => setDescDoc(null)}
+          onCustom={() => setDescDoc(masterDoc)}
+          onChange={setDescDoc}
+          inheritLabel={t.orgadmin.inheritField}
+          customLabel={t.orgadmin.customField}
+          inheritActive={t.orgadmin.inheritActive}
+        />
+        <RichDescription
+          label={`${t.form.descriptionEn} (${t.form.optional})`}
+          doc={descDocEn}
+          masterDoc={masterDocEn}
+          masterPlain={dept.master.descriptionEn}
+          onInherit={() => setDescDocEn(null)}
+          onCustom={() => setDescDocEn(masterDocEn)}
+          onChange={setDescDocEn}
+          inheritLabel={t.orgadmin.inheritField}
+          customLabel={t.orgadmin.customField}
+          inheritActive={t.orgadmin.inheritActive}
+        />
+
         {(Object.keys(COLUMN) as TextKey[]).map((k) => {
           const inherited = fields[k] == null;
-          const multiline = k === "description" || k === "descriptionEn";
           return (
             <div key={k} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
@@ -116,7 +152,6 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
                 <div
                   style={{
                     ...inputStyle,
-                    minHeight: multiline ? 60 : undefined,
                     color: "var(--text-muted)",
                     background: "var(--surface-sunk)",
                     display: "flex",
@@ -126,8 +161,6 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
                 >
                   {masterText(k) || `— ${t.orgadmin.inheritActive} —`}
                 </div>
-              ) : multiline ? (
-                <textarea rows={3} value={fields[k] ?? ""} onChange={(e) => setField(k, e.target.value)} style={textareaStyle} />
               ) : (
                 <input value={fields[k] ?? ""} onChange={(e) => setField(k, e.target.value)} style={inputStyle} />
               )}
@@ -161,6 +194,66 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
         {done && <span style={{ color: "var(--success-600)", fontSize: "var(--fs-sm)", fontWeight: 600 }}>{t.orgadmin.saved}</span>}
       </div>
     </form>
+  );
+}
+
+function RichDescription({
+  label,
+  doc,
+  masterDoc,
+  masterPlain,
+  onInherit,
+  onCustom,
+  onChange,
+  inheritLabel,
+  customLabel,
+  inheritActive,
+}: {
+  label: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  doc: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  masterDoc: any;
+  masterPlain: string | null;
+  onInherit: () => void;
+  onCustom: () => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange: (doc: any) => void;
+  inheritLabel: string;
+  customLabel: string;
+  inheritActive: string;
+}) {
+  const inherited = doc == null;
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+        <label style={{ ...labelStyle, margin: 0 }}>{label}</label>
+        <InheritToggle
+          inherited={inherited}
+          inheritLabel={inheritLabel}
+          customLabel={customLabel}
+          onInherit={onInherit}
+          onCustom={onCustom}
+        />
+      </div>
+      {inherited ? (
+        <div
+          style={{
+            ...inputStyle,
+            minHeight: 60,
+            color: "var(--text-muted)",
+            background: "var(--surface-sunk)",
+            whiteSpace: "pre-wrap",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {(masterPlain && masterPlain.trim()) || (masterDoc && docToPlainText(masterDoc)) || `— ${inheritActive} —`}
+        </div>
+      ) : (
+        <RichTextEditor value={doc} onChange={onChange} ariaLabel={label} />
+      )}
+    </div>
   );
 }
 

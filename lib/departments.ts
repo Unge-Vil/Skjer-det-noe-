@@ -5,6 +5,10 @@ import { parseSocialLinks, type SocialLinks } from "@/components/ds/socials";
 export interface DepartmentFields {
   description: string | null;
   descriptionEn: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDoc: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDocEn: any | null;
   website: string | null;
   email: string | null;
   phone: string | null;
@@ -31,15 +35,17 @@ export interface DepartmentDetail extends DepartmentListItem {
 
 const DEPT_SELECT =
   "id,organization_id,municipality_id," +
-  "description,description_en,website,email,phone,address,logo_url,banner_url,social_links," +
+  "description,description_en,description_doc,description_doc_en,website,email,phone,address,logo_url,banner_url,social_links," +
   "municipalities(name,slug)," +
-  "organizations(name,slug,description,description_en,website,email,phone,address,logo_url,banner_url,social_links)";
+  "organizations(name,slug,description,description_en,description_doc,description_doc_en,website,email,phone,address,logo_url,banner_url,social_links)";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fieldsFromRow(row: any): DepartmentFields {
   return {
     description: row.description ?? null,
     descriptionEn: row.description_en ?? null,
+    descriptionDoc: row.description_doc ?? null,
+    descriptionDocEn: row.description_doc_en ?? null,
     website: row.website ?? null,
     email: row.email ?? null,
     phone: row.phone ?? null,
