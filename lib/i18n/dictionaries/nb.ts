@@ -57,8 +57,7 @@ export const nb = {
     eyebrowNear: "Aktiviteter nær deg",
     eyebrowIn: "Aktiviteter i {place}",
     searchPlaceholder: "Søk etter aktiviteter…",
-    tagline:
-      "Finn noe å gjøre nær deg. Gratis, lavterskel og åpent for alle – uten innlogging.",
+    tagline: "Finn noe å gjøre nær deg!",
   },
   landing: {
     thisWeek: "Skjer denne uka",
@@ -82,6 +81,7 @@ export const nb = {
   footer: {
     tagline:
       "Et initiativ fra Unge Vil · skjerdetnoe.no · Tilgjengelig for alle (WCAG 2.2 AA)",
+    about: "Om",
     privacy: "Personvern",
     terms: "Vilkår",
     backHome: "Til forsiden",

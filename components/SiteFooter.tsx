@@ -23,7 +23,8 @@ export function SiteFooter() {
       <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)", flex: "1 1 200px" }}>
         {t.footer.tagline}
       </span>
-      <nav aria-label={t.footer.privacy} style={{ display: "flex", gap: 16 }}>
+      <nav aria-label={t.footer.about} style={{ display: "flex", gap: 16 }}>
+        <Link href="/om" style={linkStyle}>{t.footer.about}</Link>
         <Link href="/personvern" style={linkStyle}>{t.footer.privacy}</Link>
         <Link href="/vilkar" style={linkStyle}>{t.footer.terms}</Link>
       </nav>

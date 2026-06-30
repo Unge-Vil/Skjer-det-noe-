@@ -59,8 +59,7 @@ export const en: Dictionary = {
     eyebrowNear: "Activities near you",
     eyebrowIn: "Activities in {place}",
     searchPlaceholder: "Search for activities…",
-    tagline:
-      "Find something to do near you. Free, low-threshold and open to all – no login.",
+    tagline: "Find something to do near you!",
   },
   landing: {
     thisWeek: "Happening this week",
@@ -84,6 +83,7 @@ export const en: Dictionary = {
   footer: {
     tagline:
       "An initiative from Unge Vil · skjerdetnoe.no · Accessible to all (WCAG 2.2 AA)",
+    about: "About",
     privacy: "Privacy",
     terms: "Terms",
     backHome: "Back to home",

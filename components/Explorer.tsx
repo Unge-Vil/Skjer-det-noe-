@@ -8,6 +8,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import {
@@ -95,8 +96,16 @@ export function Explorer({
   const [loading, setLoading] = useState(false);
   const [geoError, setGeoError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   const firstRun = useRef(true);
+
+  // Portal target for the floating toggle (page transform would otherwise
+  // capture position:fixed).
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   // Load on-device favourites (no login).
   useEffect(() => {
@@ -249,55 +258,49 @@ export function Explorer({
         })}
       </div>
 
-      {/* Controls — one compact row on mobile (filters scroll horizontally,
-          list/map toggle pinned right); wraps with a result count on desktop. */}
+      {/* Controls — a single clean filter row (scrolls horizontally on mobile,
+          wraps on desktop). The list/map toggle floats over the map on mobile. */}
       <div className="mx-auto w-full max-w-6xl px-3 py-2 lg:px-4">
-        <div className="flex items-center gap-2">
-          <div
-            className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto lg:flex-wrap"
-            style={{ scrollbarWidth: "none" }}
+        <div
+          className="flex items-center gap-2 overflow-x-auto lg:flex-wrap"
+          style={{ scrollbarWidth: "none" }}
+        >
+          <Button className="shrink-0" variant="coral" size="sm" leadingIcon="locate-fixed" onClick={useMyLocation}>
+            {t.explorer.nearMe}
+          </Button>
+
+          <select
+            value={municipality ?? ""}
+            onChange={(e) => onMunicipalityChange(e.target.value)}
+            style={selectStyle}
+            className="shrink-0"
+            aria-label={t.explorer.allMunicipalities}
           >
-            <Button className="shrink-0" variant="coral" size="sm" leadingIcon="locate-fixed" onClick={useMyLocation}>
-              {t.explorer.nearMe}
-            </Button>
+            <option value="">{t.explorer.allMunicipalities}</option>
+            {municipalities.map((m) => (
+              <option key={m.id} value={m.kommunenummer}>
+                {m.name}
+              </option>
+            ))}
+          </select>
 
-            <select
-              value={municipality ?? ""}
-              onChange={(e) => onMunicipalityChange(e.target.value)}
-              style={selectStyle}
-              className="shrink-0"
-              aria-label={t.explorer.allMunicipalities}
-            >
-              <option value="">{t.explorer.allMunicipalities}</option>
-              {municipalities.map((m) => (
-                <option key={m.id} value={m.kommunenummer}>
-                  {m.name}
-                </option>
-              ))}
-            </select>
+          <select
+            value={radiusM}
+            onChange={(e) => setRadiusM(Number(e.target.value))}
+            style={selectStyle}
+            className="shrink-0"
+            aria-label={fmt(t.explorer.within, { km: "" }).trim()}
+          >
+            {RADIUS_OPTIONS.map((v) => (
+              <option key={v} value={v}>
+                {fmt(t.explorer.within, { km: v / 1000 })}
+              </option>
+            ))}
+          </select>
 
-            <select
-              value={radiusM}
-              onChange={(e) => setRadiusM(Number(e.target.value))}
-              style={selectStyle}
-              className="shrink-0"
-              aria-label={fmt(t.explorer.within, { km: "" }).trim()}
-            >
-              {RADIUS_OPTIONS.map((v) => (
-                <option key={v} value={v}>
-                  {fmt(t.explorer.within, { km: v / 1000 })}
-                </option>
-              ))}
-            </select>
-
-            <span className="ml-auto hidden lg:inline" style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
-              {loading ? t.explorer.loading : plural(locale, visible.length, t.explorer.results)}
-            </span>
-          </div>
-
-          <div className="shrink-0 lg:hidden">
-            <MapListToggle value={view} onChange={setView} />
-          </div>
+          <span className="ml-auto hidden lg:inline" style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
+            {loading ? t.explorer.loading : plural(locale, visible.length, t.explorer.results)}
+          </span>
         </div>
         {geoError && (
           <p style={{ marginTop: 8, fontSize: "var(--fs-sm)", color: "var(--danger-600)" }}>{geoError}</p>
@@ -367,6 +370,30 @@ export function Explorer({
           </div>
         </div>
       </div>
+
+      {/* Floating list/map toggle over the map (mobile only). Portalled to body
+          so it stays viewport-fixed despite the page-transition transform. */}
+      {mounted &&
+        createPortal(
+          <div
+            className="lg:hidden"
+            style={{
+              position: "fixed",
+              left: 0,
+              right: 0,
+              bottom: "calc(74px + env(safe-area-inset-bottom))",
+              zIndex: 25,
+              display: "flex",
+              justifyContent: "center",
+              pointerEvents: "none",
+            }}
+          >
+            <div style={{ pointerEvents: "auto" }}>
+              <MapListToggle value={view} onChange={setView} style={{ boxShadow: "var(--shadow-lg)" }} />
+            </div>
+          </div>,
+          document.body,
+        )}
     </main>
   );
 }
