@@ -9,7 +9,7 @@ import { SocialLinksEditor } from "./SocialLinksEditor";
 import { RichTextEditor } from "./RichTextEditor";
 import { parseSocialLinks, type SocialLinks } from "@/components/ds/socials";
 import { docToPlainText, plainTextToDoc, isEmptyDoc } from "@/lib/tiptap";
-import type { DepartmentDetail, DepartmentFields } from "@/lib/departments";
+import type { ProfileDetail, ProfileFields } from "@/lib/profiles";
 import { inputStyle, labelStyle } from "./formStyles";
 
 type TextKey = "website" | "email" | "phone" | "address";
@@ -28,10 +28,11 @@ const card = {
   padding: 20,
 } as const;
 
-export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
+export function DepartmentForm({ dept }: { dept: ProfileDetail }) {
   const { t } = useI18n();
   const router = useRouter();
   const supabase = createClient();
+  const [name, setName] = useState(dept.name);
 
   const textLabels: Record<TextKey, string> = {
     website: t.orgadmin.fWebsite,
@@ -64,7 +65,7 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
   const [done, setDone] = useState(false);
 
   const setField = (k: TextKey, v: string | null) => setFields((p) => ({ ...p, [k]: v }));
-  const masterText = (k: TextKey): string => (dept.master[k as keyof DepartmentFields] as string) ?? "";
+  const masterText = (k: TextKey): string => (dept.master[k as keyof ProfileFields] as string) ?? "";
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +74,7 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
     setBusy(true);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const patch: Record<string, any> = {};
+    const patch: Record<string, any> = { name: name.trim() || dept.name };
     for (const k of Object.keys(COLUMN) as TextKey[]) {
       const v = fields[k];
       patch[COLUMN[k]] = v == null || v.trim() === "" ? null : v.trim();
@@ -88,7 +89,7 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
     patch.social_links = socialClean && Object.keys(socialClean).length > 0 ? socialClean : null;
 
     const { error } = await supabase
-      .from("organization_municipalities")
+      .from("org_profiles")
       .update(patch)
       .eq("id", dept.id);
 
@@ -107,6 +108,11 @@ export function DepartmentForm({ dept }: { dept: DepartmentDetail }) {
         <div>
           <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.deptProfile}</h2>
           <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.orgadmin.departmentsSub}</p>
+        </div>
+
+        <div>
+          <label htmlFor="p-name" style={labelStyle}>{t.orgadmin.profileName}</label>
+          <input id="p-name" required value={name} onChange={(e) => setName(e.target.value)} style={inputStyle} />
         </div>
 
         <RichDescription

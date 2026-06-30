@@ -75,7 +75,7 @@ function Field({
   const [custom, setCustom] = useState(override != null);
 
   const revertToInherited = async () => {
-    await supabase.from("organization_municipalities").update({ [column]: null }).eq("id", deptId);
+    await supabase.from("org_profiles").update({ [column]: null }).eq("id", deptId);
     setCustom(false);
     router.refresh();
   };
@@ -97,8 +97,8 @@ function Field({
       {custom ? (
         <ImageUploader
           rowId={deptId}
-          table="organization_municipalities"
-          pathPrefix={`dept/${deptId}`}
+          table="org_profiles"
+          pathPrefix={`profile/${deptId}`}
           column={column}
           currentUrl={override}
           aspect={aspect}

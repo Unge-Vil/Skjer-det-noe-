@@ -31,16 +31,16 @@ export function AreaSwitcher() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
-      const [orgRes, deptRes, muniRes, profRes] = await Promise.all([
+      const [orgRes, profileMemRes, muniRes, profRes] = await Promise.all([
         supabase.from("organization_members").select("organization_id", { count: "exact", head: true }).eq("user_id", user.id),
-        supabase.from("org_municipality_members").select("user_id", { count: "exact", head: true }).eq("user_id", user.id),
+        supabase.from("org_profile_members").select("profile_id", { count: "exact", head: true }).eq("user_id", user.id),
         supabase.from("municipality_admins").select("user_id", { count: "exact", head: true }).eq("user_id", user.id),
         supabase.from("profiles").select("is_platform_admin").eq("id", user.id).maybeSingle(),
       ]);
       if (!active) return;
       const platform = Boolean(profRes.data?.is_platform_admin);
       const list: Area[] = [];
-      if ((orgRes.count ?? 0) > 0 || (deptRes.count ?? 0) > 0)
+      if ((orgRes.count ?? 0) > 0 || (profileMemRes.count ?? 0) > 0)
         list.push({ key: "org", href: "/admin", label: t.areas.org, icon: "building-2" });
       if ((muniRes.count ?? 0) > 0 || platform)
         list.push({ key: "municipality", href: "/kommune", label: t.areas.municipality, icon: "map-pin" });

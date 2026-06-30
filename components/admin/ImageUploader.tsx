@@ -20,7 +20,7 @@ export function ImageUploader({
 }: {
   rowId: string;
   /** Table whose row holds the image column. Defaults to organizations. */
-  table?: "organizations" | "organization_municipalities";
+  table?: "organizations" | "organization_municipalities" | "org_profiles";
   /** Storage path prefix; defaults to `org/<rowId>`. */
   pathPrefix?: string;
   column: "logo_url" | "banner_url";

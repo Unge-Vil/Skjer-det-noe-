@@ -3,7 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg, getMyOrgs } from "@/lib/org";
-import { getMyDepartments } from "@/lib/departments";
+import { getMyProfiles } from "@/lib/profiles";
 import { getAccessAreas } from "@/lib/access";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
@@ -62,9 +62,9 @@ export default async function AdminPage() {
   const org = await getMyOrg();
 
   if (!org) {
-    // Department-only admins have no master org — send them to their departments.
-    const departments = await getMyDepartments();
-    if (departments.length > 0) redirect("/admin/avdelinger");
+    // Profile-only admins have no master org — send them to their profiles.
+    const profiles = await getMyProfiles();
+    if (profiles.length > 0) redirect("/admin/profiler");
     // No org at all: route municipality / platform admins to their area instead
     // of the "register organisation" dead end.
     const areas = await getAccessAreas();
@@ -108,7 +108,7 @@ export default async function AdminPage() {
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
-    { href: "/admin/avdelinger", label: t.orgadmin.departments, icon: "building-2" },
+    { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
     { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
     { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
     { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },

@@ -18,7 +18,7 @@ async function fetchOrg(slug: string) {
   const { data } = await supabase
     .from("organizations")
     .select(
-      "id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links,organization_municipalities(municipalities(name,slug))",
+      "id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links,org_profiles(name,slug)",
     )
     .eq("slug", slug)
     .eq("status", "published")
@@ -134,11 +134,9 @@ export default async function OrganisationPage({
       : orgAny.description_doc;
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const municipalities: { name: string; slug: string }[] = ((org as any).organization_municipalities ?? [])
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .map((om: any) => om.municipalities)
-    .filter((m: unknown): m is { name: string; slug: string } => Boolean(m))
-    .map((m: { name: string; slug: string }) => ({ name: m.name, slug: m.slug }));
+  const profiles: { name: string; slug: string }[] = ((org as any).org_profiles ?? [])
+    .filter((p: unknown): p is { name: string; slug: string } => Boolean(p))
+    .map((p: { name: string; slug: string }) => ({ name: p.name, slug: p.slug }));
 
   return (
     <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
@@ -156,10 +154,10 @@ export default async function OrganisationPage({
           )}
           <h1 style={{ margin: 0, fontSize: "var(--fs-h1)", fontWeight: 800 }}>{org.name}</h1>
         </div>
-        {municipalities.length > 0 && (
+        {profiles.length > 0 && (
           <p style={{ margin: "0 0 12px", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
             <Icon name="map-pin" size={15} />
-            {municipalities.map((m) => (
+            {profiles.map((m) => (
               <a
                 key={m.slug}
                 href={`/organisasjon/${slug}/${m.slug}`}

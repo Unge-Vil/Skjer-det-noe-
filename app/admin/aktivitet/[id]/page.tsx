@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg } from "@/lib/org";
-import { getMyDepartments, getDepartment } from "@/lib/departments";
+import { getMyProfiles, getProfile } from "@/lib/profiles";
 import { createClient } from "@/lib/supabase/server";
 import { DEFAULT_CENTER } from "@/lib/listings";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
@@ -31,10 +31,10 @@ export default async function ActivityFormPage({
   searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ dept?: string }>;
+  searchParams: Promise<{ profile?: string }>;
 }) {
   const { id } = await params;
-  const { dept: deptId } = await searchParams;
+  const { profile: profileId } = await searchParams;
   const user = await getUser();
   if (!user) redirect("/logg-inn");
 
@@ -43,20 +43,23 @@ export default async function ActivityFormPage({
   const t = getDictionary(locale);
   const { data: cats } = await supabase.from("categories").select("id,name").order("sort_order");
 
-  // Department-scoped creation/editing.
+  // Profile-scoped creation/editing.
   let orgId: string;
   let municipalities: { id: string; name: string }[] = [];
   let lockedMunicipality: { id: string; name: string } | undefined;
+  let scopedProfileId: string | undefined;
   let returnHref = "/admin";
 
-  if (deptId) {
-    const allowed = await getMyDepartments();
-    if (!allowed.some((d) => d.id === deptId)) notFound();
-    const department = await getDepartment(deptId);
-    if (!department) notFound();
-    orgId = department.organizationId;
-    lockedMunicipality = { id: department.municipalityId, name: department.municipalityName };
-    returnHref = `/admin/avdelinger/${department.id}`;
+  if (profileId) {
+    const allowed = await getMyProfiles();
+    if (!allowed.some((p) => p.id === profileId)) notFound();
+    const profile = await getProfile(profileId);
+    if (!profile) notFound();
+    orgId = profile.organizationId;
+    scopedProfileId = profile.id;
+    if (profile.municipalityId && profile.municipalityName)
+      lockedMunicipality = { id: profile.municipalityId, name: profile.municipalityName };
+    returnHref = `/admin/profiler/${profile.id}`;
   } else {
     const org = await getMyOrg();
     if (!org) redirect("/registrer");
@@ -92,6 +95,7 @@ export default async function ActivityFormPage({
         initial={initial}
         initialCoOrganizers={initialCoOrganizers}
         lockedMunicipality={lockedMunicipality}
+        profileId={scopedProfileId}
         returnHref={returnHref}
       />
     </main>

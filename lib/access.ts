@@ -14,16 +14,16 @@ export async function getAccessAreas(): Promise<AccessAreas> {
   } = await supabase.auth.getUser();
   if (!user) return { org: false, municipality: false, platform: false };
 
-  const [orgRes, deptRes, muniRes, { data: profile }] = await Promise.all([
+  const [orgRes, profRes, muniRes, { data: profile }] = await Promise.all([
     supabase.from("organization_members").select("organization_id", { count: "exact", head: true }).eq("user_id", user.id),
-    supabase.from("org_municipality_members").select("user_id", { count: "exact", head: true }).eq("user_id", user.id),
+    supabase.from("org_profile_members").select("profile_id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase.from("municipality_admins").select("user_id", { count: "exact", head: true }).eq("user_id", user.id),
     supabase.from("profiles").select("is_platform_admin").eq("id", user.id).maybeSingle(),
   ]);
 
   const platform = Boolean(profile?.is_platform_admin);
   return {
-    org: (orgRes.count ?? 0) > 0 || (deptRes.count ?? 0) > 0,
+    org: (orgRes.count ?? 0) > 0 || (profRes.count ?? 0) > 0,
     municipality: (muniRes.count ?? 0) > 0 || platform,
     platform,
   };

@@ -13,32 +13,29 @@ import { isEmptyDoc } from "@/lib/tiptap";
 
 export const dynamic = "force-dynamic";
 
-async function fetchDepartment(orgSlug: string, muniSlug: string) {
+async function fetchProfile(orgSlug: string, profileSlug: string) {
   const supabase = await createClient();
-  const [{ data: org }, { data: muni }] = await Promise.all([
-    supabase
-      .from("organizations")
-      .select("id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links")
-      .eq("slug", orgSlug)
-      .eq("status", "published")
-      .maybeSingle(),
-    supabase.from("municipalities").select("id,name").eq("slug", muniSlug).maybeSingle(),
-  ]);
-  if (!org || !muni) return null;
+  const { data: org } = await supabase
+    .from("organizations")
+    .select("id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links")
+    .eq("slug", orgSlug)
+    .eq("status", "published")
+    .maybeSingle();
+  if (!org) return null;
 
   const { data: override } = await supabase
-    .from("organization_municipalities")
-    .select("description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links")
+    .from("org_profiles")
+    .select("id,name,description,description_en,description_doc,description_doc_en,website,address,logo_url,banner_url,social_links")
     .eq("organization_id", org.id)
-    .eq("municipality_id", muni.id)
+    .eq("slug", profileSlug)
     .maybeSingle();
-  if (!override) return null; // the org is not linked to this municipality
+  if (!override) return null; // no such profile under this org
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const pick = (k: string) => ((override as any)[k] ?? (org as any)[k]) ?? null;
   return {
     org,
-    muni,
+    profile: { id: override.id as string, name: override.name as string },
     eff: {
       description: pick("description"),
       description_en: pick("description_en"),
@@ -57,11 +54,11 @@ async function fetchDepartment(orgSlug: string, muniSlug: string) {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string; kommune: string }>;
+  params: Promise<{ slug: string; profil: string }>;
 }): Promise<Metadata> {
-  const { slug, kommune } = await params;
-  const data = await fetchDepartment(slug, kommune);
-  const title = data ? `${data.org.name} – ${data.muni.name}` : "Skjer det noe?";
+  const { slug, profil } = await params;
+  const data = await fetchProfile(slug, profil);
+  const title = data ? `${data.org.name} – ${data.profile.name}` : "Skjer det noe?";
   return { title: `${title} – Skjer det noe?` };
 }
 
@@ -100,30 +97,28 @@ const LISTING_SELECT =
 export default async function DepartmentPublicPage({
   params,
 }: {
-  params: Promise<{ slug: string; kommune: string }>;
+  params: Promise<{ slug: string; profil: string }>;
 }) {
-  const { slug, kommune } = await params;
-  const data = await fetchDepartment(slug, kommune);
+  const { slug, profil } = await params;
+  const data = await fetchProfile(slug, profil);
   if (!data) notFound();
 
   const locale = await getLocale();
   const t = getDictionary(locale);
-  const { org, muni, eff } = data;
+  const { org, profile, eff } = data;
   const supabase = await createClient();
 
   const [actRes, evtRes] = await Promise.all([
     supabase
       .from("activities")
       .select(`${LISTING_SELECT},weekday,start_time,end_time,recurrence_note`)
-      .eq("organization_id", org.id)
-      .eq("municipality_id", muni.id)
+      .eq("profile_id", profile.id)
       .eq("status", "published")
       .order("title"),
     supabase
       .from("events")
       .select(`${LISTING_SELECT},starts_at,ends_at`)
-      .eq("organization_id", org.id)
-      .eq("municipality_id", muni.id)
+      .eq("profile_id", profile.id)
       .eq("status", "published")
       .gte("starts_at", new Date().toISOString())
       .order("starts_at"),
@@ -153,7 +148,7 @@ export default async function DepartmentPublicPage({
             <h1 style={{ margin: 0, fontSize: "var(--fs-h1)", fontWeight: 800 }}>{org.name}</h1>
             <p style={{ margin: "2px 0 0", display: "flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
               <Icon name="map-pin" size={15} />
-              {muni.name}
+              {profile.name}
             </p>
           </div>
         </div>

@@ -52,6 +52,7 @@ export function EventForm({
   initial,
   initialCoOrganizers = [],
   lockedMunicipality,
+  profileId,
   returnHref = "/admin",
 }: {
   orgId: string;
@@ -61,6 +62,7 @@ export function EventForm({
   initial?: EventInitial | null;
   initialCoOrganizers?: CoOrg[];
   lockedMunicipality?: { id: string; name: string };
+  profileId?: string;
   returnHref?: string;
 }) {
   const { t } = useI18n();
@@ -121,7 +123,7 @@ export function EventForm({
     } else {
       const res = await supabase
         .from("events")
-        .insert({ ...payload, slug: makeSlug(title), organization_id: orgId })
+        .insert({ ...payload, slug: makeSlug(title), organization_id: orgId, profile_id: profileId ?? null })
         .select("id")
         .single();
       error = res.error;

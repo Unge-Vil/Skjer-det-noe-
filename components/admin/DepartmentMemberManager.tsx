@@ -14,13 +14,11 @@ interface Member {
 }
 
 export function DepartmentMemberManager({
-  organizationId,
-  municipalityId,
+  profileId,
   members,
   currentUserId,
 }: {
-  organizationId: string;
-  municipalityId: string;
+  profileId: string;
   members: Member[];
   currentUserId: string;
 }) {
@@ -35,9 +33,8 @@ export function DepartmentMemberManager({
     e.preventDefault();
     setError(null);
     setBusy(true);
-    const { error } = await supabase.rpc("add_department_member", {
-      p_org: organizationId,
-      p_muni: municipalityId,
+    const { error } = await supabase.rpc("add_profile_member", {
+      p_profile: profileId,
       p_email: email,
     });
     setBusy(false);
@@ -50,11 +47,7 @@ export function DepartmentMemberManager({
   };
 
   const remove = async (userId: string) => {
-    await supabase.rpc("remove_department_member", {
-      p_org: organizationId,
-      p_muni: municipalityId,
-      p_user: userId,
-    });
+    await supabase.rpc("remove_profile_member", { p_profile: profileId, p_user: userId });
     router.refresh();
   };
 

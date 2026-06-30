@@ -48,6 +48,7 @@ export function ActivityForm({
   initial,
   initialCoOrganizers = [],
   lockedMunicipality,
+  profileId,
   returnHref = "/admin",
 }: {
   orgId: string;
@@ -56,8 +57,10 @@ export function ActivityForm({
   defaultCenter: { lat: number; lng: number };
   initial?: ActivityInitial | null;
   initialCoOrganizers?: CoOrg[];
-  /** When set, the municipality is fixed (department-scoped creation). */
+  /** When set, the municipality is fixed (profile-scoped creation). */
   lockedMunicipality?: { id: string; name: string };
+  /** When set, new listings are owned by this profile. */
+  profileId?: string;
   returnHref?: string;
 }) {
   const { t, locale } = useI18n();
@@ -122,7 +125,7 @@ export function ActivityForm({
     } else {
       const res = await supabase
         .from("activities")
-        .insert({ ...payload, slug: makeSlug(title), organization_id: orgId })
+        .insert({ ...payload, slug: makeSlug(title), organization_id: orgId, profile_id: profileId ?? null })
         .select("id")
         .single();
       error = res.error;

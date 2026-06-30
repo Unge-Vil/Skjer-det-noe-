@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import { getMyDepartments, getDepartment } from "@/lib/departments";
+import { getMyProfiles, getProfile } from "@/lib/profiles";
+import { getMyOrgs } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { ShellIdentity } from "@/components/admin/ShellIdentity";
+import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
 import { DepartmentForm } from "@/components/admin/DepartmentForm";
 import { DepartmentImages } from "@/components/admin/DepartmentImages";
 import { DepartmentMemberManager } from "@/components/admin/DepartmentMemberManager";
@@ -33,11 +34,11 @@ export default async function DepartmentEditor({
   const user = await getUser();
   if (!user) redirect("/logg-inn");
 
-  // Authorisation: the department must be one the user can administer.
-  const departments = await getMyDepartments();
-  if (!departments.some((d) => d.id === id)) notFound();
+  // Authorisation: the profile must be one the user can administer.
+  const profiles = await getMyProfiles();
+  if (!profiles.some((p) => p.id === id)) notFound();
 
-  const dept = await getDepartment(id);
+  const dept = await getProfile(id);
   if (!dept) notFound();
 
   const locale = await getLocale();
@@ -45,34 +46,33 @@ export default async function DepartmentEditor({
   const supabase = await createClient();
 
   const [{ data: memberRows }, { data: actRows }, { data: evtRows }] = await Promise.all([
-    supabase.rpc("list_department_members", { p_org: dept.organizationId, p_muni: dept.municipalityId }),
+    supabase.rpc("list_profile_members", { p_profile: dept.id }),
     supabase
       .from("activities")
       .select("id,title,status")
-      .eq("organization_id", dept.organizationId)
-      .eq("municipality_id", dept.municipalityId)
+      .eq("profile_id", dept.id)
       .order("created_at", { ascending: false }),
     supabase
       .from("events")
       .select("id,title,status")
-      .eq("organization_id", dept.organizationId)
-      .eq("municipality_id", dept.municipalityId)
+      .eq("profile_id", dept.id)
       .order("starts_at", { ascending: true }),
   ]);
   const members = (memberRows as Member[]) ?? [];
   const activities = (actRows as ListingRow[]) ?? [];
   const events = (evtRows as ListingRow[]) ?? [];
+  const orgs = await getMyOrgs();
 
-  const publicHref = `/organisasjon/${dept.organizationSlug}/${dept.municipalitySlug}`;
+  const publicHref = `/organisasjon/${dept.organizationSlug}/${dept.slug}`;
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
-    { href: "/admin/avdelinger", label: t.orgadmin.departments, icon: "building-2", active: true },
+    { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2", active: true },
   ];
 
   return (
     <AdminShell
-      title={`${dept.organizationName} · ${dept.municipalityName}`}
-      identity={<ShellIdentity name={dept.organizationName} sub={dept.municipalityName} />}
+      title={`${dept.organizationName} · ${dept.name}`}
+      identity={<OrgSwitcher orgs={orgs} />}
       nav={nav}
       headerAction={
         <a href={publicHref} target="_blank" rel="noopener noreferrer">
@@ -99,24 +99,24 @@ export default async function DepartmentEditor({
 
         <ListingSection
           title={t.admin.activities}
-          newHref={`/admin/aktivitet/ny?dept=${dept.id}`}
+          newHref={`/admin/aktivitet/ny?profile=${dept.id}`}
           newLabel={t.admin.newActivity}
           editBase="/admin/aktivitet"
           empty={t.admin.noActivities}
           rows={activities}
-          deptId={dept.id}
+          profileId={dept.id}
           publishedLabel={t.admin.statusPublished}
           draftLabel={t.admin.statusDraft}
         />
 
         <ListingSection
           title={t.admin.events}
-          newHref={`/admin/arrangement/ny?dept=${dept.id}`}
+          newHref={`/admin/arrangement/ny?profile=${dept.id}`}
           newLabel={t.admin.newEvent}
           editBase="/admin/arrangement"
           empty={t.admin.noEvents}
           rows={events}
-          deptId={dept.id}
+          profileId={dept.id}
           publishedLabel={t.admin.statusPublished}
           draftLabel={t.admin.statusDraft}
         />
@@ -126,12 +126,7 @@ export default async function DepartmentEditor({
             <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.deptMembers}</h2>
             <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.orgadmin.deptMembersHint}</p>
           </div>
-          <DepartmentMemberManager
-            organizationId={dept.organizationId}
-            municipalityId={dept.municipalityId}
-            members={members}
-            currentUserId={user.id}
-          />
+          <DepartmentMemberManager profileId={dept.id} members={members} currentUserId={user.id} />
         </section>
       </div>
     </AdminShell>
@@ -145,7 +140,7 @@ function ListingSection({
   editBase,
   empty,
   rows,
-  deptId,
+  profileId,
   publishedLabel,
   draftLabel,
 }: {
@@ -155,7 +150,7 @@ function ListingSection({
   editBase: string;
   empty: string;
   rows: ListingRow[];
-  deptId: string;
+  profileId: string;
   publishedLabel: string;
   draftLabel: string;
 }) {
@@ -172,7 +167,7 @@ function ListingSection({
       ) : (
         <div className="flex flex-col gap-2">
           {rows.map((r) => (
-            <Link key={r.id} href={`${editBase}/${r.id}?dept=${deptId}`} style={{ textDecoration: "none", color: "inherit" }}>
+            <Link key={r.id} href={`${editBase}/${r.id}?profile=${profileId}`} style={{ textDecoration: "none", color: "inherit" }}>
               <div
                 className="flex items-center justify-between gap-3"
                 style={{ background: "var(--surface-sunk)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", padding: "10px 14px" }}
