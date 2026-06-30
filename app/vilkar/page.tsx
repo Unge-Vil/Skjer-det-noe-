@@ -44,7 +44,7 @@ export default function VilkarPage() {
 
       <h2>Kontakt</h2>
       <p>
-        Spørsmål om vilkårene: <a href="mailto:post@ungevil.no">post@ungevil.no</a>.
+        Spørsmål om vilkårene: <a href="mailto:org@ungevil.no">org@ungevil.no</a>.
       </p>
     </LegalPage>
   );

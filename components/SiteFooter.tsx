@@ -21,7 +21,10 @@ export function SiteFooter() {
     >
       <Wordmark size={18} />
       <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)", flex: "1 1 200px" }}>
-        {t.footer.tagline}
+        {t.footer.initiativeBy}{" "}
+        <a href="https://ungevil.no" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-link)", fontWeight: 600 }}>
+          Unge Vil
+        </a>
       </span>
       <nav aria-label={t.footer.about} style={{ display: "flex", gap: 16 }}>
         <Link href="/om" style={linkStyle}>{t.footer.about}</Link>

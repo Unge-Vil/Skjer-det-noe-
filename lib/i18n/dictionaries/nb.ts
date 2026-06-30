@@ -79,8 +79,8 @@ export const nb = {
     forOrganisations: "For organisasjoner",
   },
   footer: {
-    tagline:
-      "Et initiativ fra Unge Vil · skjerdetnoe.no · Tilgjengelig for alle (WCAG 2.2 AA)",
+    tagline: "Et initiativ fra Unge Vil",
+    initiativeBy: "Et initiativ fra",
     about: "Om",
     privacy: "Personvern",
     terms: "Vilkår",

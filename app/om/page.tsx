@@ -46,7 +46,7 @@ export default async function OmPage() {
           <p>
             Kommuner og lag/foreninger kan legge ut sine aktiviteter og arrangementer, lage egne profiler og
             informasjonssider, og nå innbyggerne der de leter. Vil dere være med? Ta kontakt på{" "}
-            <a href="mailto:post@ungevil.no">post@ungevil.no</a>.
+            <a href="mailto:org@ungevil.no">org@ungevil.no</a>.
           </p>
 
           <h2>Tilgjengelig for alle</h2>

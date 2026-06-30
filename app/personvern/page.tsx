@@ -14,7 +14,7 @@ export default function PersonvernPage() {
       <h2>Behandlingsansvarlig</h2>
       <p>
         Unge Vil er behandlingsansvarlig for personopplysningene som behandles gjennom tjenesten. Har du
-        spørsmål om personvern, kontakt oss på <a href="mailto:personvern@ungevil.no">personvern@ungevil.no</a>.
+        spørsmål om personvern, kontakt oss på <a href="mailto:org@ungevil.no">org@ungevil.no</a>.
       </p>
 
       <h2>For deg som besøker tjenesten</h2>
@@ -61,7 +61,7 @@ export default function PersonvernPage() {
 
       <h2>Kontakt</h2>
       <p>
-        Spørsmål om personvern: <a href="mailto:personvern@ungevil.no">personvern@ungevil.no</a>.
+        Spørsmål om personvern: <a href="mailto:org@ungevil.no">org@ungevil.no</a>.
       </p>
     </LegalPage>
   );

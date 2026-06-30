@@ -81,8 +81,8 @@ export const en: Dictionary = {
     forOrganisations: "For organisations",
   },
   footer: {
-    tagline:
-      "An initiative from Unge Vil · skjerdetnoe.no · Accessible to all (WCAG 2.2 AA)",
+    tagline: "An initiative from Unge Vil",
+    initiativeBy: "An initiative from",
     about: "About",
     privacy: "Privacy",
     terms: "Terms",
