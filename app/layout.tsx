@@ -5,6 +5,7 @@ import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { MobileTabBar } from "@/components/MobileTabBar";
+import { CookieBanner } from "@/components/CookieBanner";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 const schibsted = Schibsted_Grotesk({
@@ -68,6 +69,7 @@ export default async function RootLayout({
             {children}
             <MobileTabBar />
           </div>
+          <CookieBanner />
           <ServiceWorkerRegister />
         </LocaleProvider>
       </body>

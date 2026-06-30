@@ -179,6 +179,14 @@ export function AdminShell({
           <div className="flex items-center gap-2">
             {headerAction && <div className="hidden sm:block">{headerAction}</div>}
             <AreaSwitcher />
+            <Link
+              href="/konto"
+              aria-label={t.account.title}
+              title={t.account.title}
+              style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 40, height: 40, borderRadius: "var(--radius-pill)", border: "1.5px solid var(--border-strong)", background: "var(--surface-card)", color: "var(--text-brand)" }}
+            >
+              <Icon name="user" size={18} />
+            </Link>
             <SettingsMenu />
             <LogoutButton />
           </div>
