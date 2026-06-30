@@ -249,49 +249,54 @@ export function Explorer({
         })}
       </div>
 
-      {/* Controls */}
-      <div className="mx-auto w-full max-w-6xl px-4 py-2">
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="coral" size="sm" leadingIcon="locate-fixed" onClick={useMyLocation}>
-            {t.explorer.nearMe}
-          </Button>
-
-          <select
-            value={municipality ?? ""}
-            onChange={(e) => onMunicipalityChange(e.target.value)}
-            style={selectStyle}
-            aria-label={t.explorer.allMunicipalities}
+      {/* Controls — one compact row on mobile (filters scroll horizontally,
+          list/map toggle pinned right); wraps with a result count on desktop. */}
+      <div className="mx-auto w-full max-w-6xl px-3 py-2 lg:px-4">
+        <div className="flex items-center gap-2">
+          <div
+            className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto lg:flex-wrap"
+            style={{ scrollbarWidth: "none" }}
           >
-            <option value="">{t.explorer.allMunicipalities}</option>
-            {municipalities.map((m) => (
-              <option key={m.id} value={m.kommunenummer}>
-                {m.name}
-              </option>
-            ))}
-          </select>
+            <Button className="shrink-0" variant="coral" size="sm" leadingIcon="locate-fixed" onClick={useMyLocation}>
+              {t.explorer.nearMe}
+            </Button>
 
-          <select
-            value={radiusM}
-            onChange={(e) => setRadiusM(Number(e.target.value))}
-            style={selectStyle}
-            aria-label={fmt(t.explorer.within, { km: "" }).trim()}
-          >
-            {RADIUS_OPTIONS.map((v) => (
-              <option key={v} value={v}>
-                {fmt(t.explorer.within, { km: v / 1000 })}
-              </option>
-            ))}
-          </select>
+            <select
+              value={municipality ?? ""}
+              onChange={(e) => onMunicipalityChange(e.target.value)}
+              style={selectStyle}
+              className="shrink-0"
+              aria-label={t.explorer.allMunicipalities}
+            >
+              <option value="">{t.explorer.allMunicipalities}</option>
+              {municipalities.map((m) => (
+                <option key={m.id} value={m.kommunenummer}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
 
-          <div className="ml-auto flex items-center gap-3">
-            <span style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
-              {loading
-                ? t.explorer.loading
-                : plural(locale, visible.length, t.explorer.results)}
+            <select
+              value={radiusM}
+              onChange={(e) => setRadiusM(Number(e.target.value))}
+              style={selectStyle}
+              className="shrink-0"
+              aria-label={fmt(t.explorer.within, { km: "" }).trim()}
+            >
+              {RADIUS_OPTIONS.map((v) => (
+                <option key={v} value={v}>
+                  {fmt(t.explorer.within, { km: v / 1000 })}
+                </option>
+              ))}
+            </select>
+
+            <span className="ml-auto hidden lg:inline" style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
+              {loading ? t.explorer.loading : plural(locale, visible.length, t.explorer.results)}
             </span>
-            <div className="lg:hidden">
-              <MapListToggle value={view} onChange={setView} />
-            </div>
+          </div>
+
+          <div className="shrink-0 lg:hidden">
+            <MapListToggle value={view} onChange={setView} />
           </div>
         </div>
         {geoError && (
