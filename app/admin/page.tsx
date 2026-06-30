@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg, getMyOrgs } from "@/lib/org";
 import { getMyDepartments } from "@/lib/departments";
+import { getAccessAreas } from "@/lib/access";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { weekdayName, formatTimeRange, formatEventDate } from "@/lib/format";
@@ -64,6 +65,11 @@ export default async function AdminPage() {
     // Department-only admins have no master org — send them to their departments.
     const departments = await getMyDepartments();
     if (departments.length > 0) redirect("/admin/avdelinger");
+    // No org at all: route municipality / platform admins to their area instead
+    // of the "register organisation" dead end.
+    const areas = await getAccessAreas();
+    if (areas.municipality) redirect("/kommune");
+    if (areas.platform) redirect("/plattform");
     return (
       <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 py-10">
         <div className="mb-6 flex items-center justify-between">

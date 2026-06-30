@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ds/Wordmark";
 import { Icon, type IconName } from "@/components/ds/Icon";
 import { SettingsMenu } from "@/components/SettingsMenu";
+import { AreaSwitcher } from "@/components/admin/AreaSwitcher";
 import { LogoutButton } from "@/components/LogoutButton";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 
@@ -177,6 +178,7 @@ export function AdminShell({
           </div>
           <div className="flex items-center gap-2">
             {headerAction && <div className="hidden sm:block">{headerAction}</div>}
+            <AreaSwitcher />
             <SettingsMenu />
             <LogoutButton />
           </div>

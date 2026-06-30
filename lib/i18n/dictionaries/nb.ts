@@ -87,6 +87,12 @@ export const nb = {
     backHome: "Til forsiden",
     updated: "Sist oppdatert",
   },
+  areas: {
+    label: "Bytt område",
+    org: "Organisasjon",
+    municipality: "Kommune",
+    platform: "Plattform",
+  },
   auth: {
     loginTitle: "Logg inn",
     loginSubtitle: "For organisasjoner og kommuner.",

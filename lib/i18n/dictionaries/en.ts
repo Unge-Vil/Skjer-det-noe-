@@ -89,6 +89,12 @@ export const en: Dictionary = {
     backHome: "Back to home",
     updated: "Last updated",
   },
+  areas: {
+    label: "Switch area",
+    org: "Organisation",
+    municipality: "Municipality",
+    platform: "Platform",
+  },
   auth: {
     loginTitle: "Log in",
     loginSubtitle: "For organisations and municipalities.",
