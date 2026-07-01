@@ -4,8 +4,12 @@ import type { Config, Data } from "@measured/puck";
 export type PuckProps = {
   Heading: { text: string; level: "2" | "3" };
   Text: { text: string };
-  Image: { url: string; alt: string };
+  Image: { url: string; alt: string; caption: string };
   Button: { label: string; href: string };
+  Card: { imageUrl: string; title: string; text: string; linkLabel: string; linkHref: string };
+  Video: { url: string };
+  Embed: { url: string; height: number };
+  Divider: Record<string, never>;
   Spacer: { size: "small" | "medium" | "large" };
 };
 
@@ -18,6 +22,41 @@ export type PuckRoot = {
 };
 
 const SPACER: Record<PuckProps["Spacer"]["size"], number> = { small: 16, medium: 32, large: 64 };
+const card = {
+  background: "var(--surface-card)",
+  border: "1px solid var(--border-subtle)",
+  borderRadius: "var(--radius-lg)",
+} as const;
+
+/** Turn a YouTube/Vimeo/other URL into an embeddable src. */
+function videoEmbed(url: string): string {
+  if (!url) return "";
+  const yt = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/);
+  if (yt) return `https://www.youtube.com/embed/${yt[1]}`;
+  const vimeo = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vimeo) return `https://player.vimeo.com/video/${vimeo[1]}`;
+  return url; // assume it is already an embeddable URL
+}
+
+/** Smart-convert Google/Microsoft Forms share links to their embeddable form. */
+function embedSrc(url: string): string {
+  if (!url) return "";
+  if (/docs\.google\.com\/forms\/.+\/viewform/.test(url) && !/[?&]embedded=true/.test(url)) {
+    return url + (url.includes("?") ? "&" : "?") + "embedded=true";
+  }
+  if (/forms\.(office|microsoft)\.com\//.test(url) && !/[?&]embed=true/.test(url)) {
+    return url + (url.includes("?") ? "&" : "?") + "embed=true";
+  }
+  return url;
+}
+
+function Placeholder({ label }: { label: string }) {
+  return (
+    <div style={{ padding: 24, textAlign: "center", color: "var(--text-muted)", background: "var(--surface-sunk)", borderRadius: "var(--radius-md)", margin: "0 0 0.8em" }}>
+      {label}
+    </div>
+  );
+}
 
 export const puckConfig: Config<PuckProps, PuckRoot> = {
   root: {
@@ -72,16 +111,20 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
       fields: {
         url: { type: "text", label: "Bilde-URL" },
         alt: { type: "text", label: "Alt-tekst" },
+        caption: { type: "text", label: "Bildetekst (valgfritt)" },
       },
-      defaultProps: { url: "", alt: "" },
-      render: ({ url, alt }) =>
+      defaultProps: { url: "", alt: "", caption: "" },
+      render: ({ url, alt, caption }) =>
         url ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={url} alt={alt} style={{ maxWidth: "100%", borderRadius: "var(--radius-md)", margin: "0 0 0.8em" }} />
+          <figure style={{ margin: "0 0 0.8em" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={url} alt={alt} style={{ maxWidth: "100%", borderRadius: "var(--radius-md)", display: "block" }} />
+            {caption && (
+              <figcaption style={{ marginTop: 6, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{caption}</figcaption>
+            )}
+          </figure>
         ) : (
-          <div style={{ padding: 24, textAlign: "center", color: "var(--text-muted)", background: "var(--surface-sunk)", borderRadius: "var(--radius-md)" }}>
-            Bilde
-          </div>
+          <Placeholder label="Bilde" />
         ),
     },
     Button: {
@@ -111,6 +154,87 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
           {label}
         </a>
       ),
+    },
+    Card: {
+      label: "Kort",
+      fields: {
+        imageUrl: { type: "text", label: "Bilde-URL (valgfritt)" },
+        title: { type: "text", label: "Tittel" },
+        text: { type: "textarea", label: "Tekst" },
+        linkLabel: { type: "text", label: "Lenketekst (valgfritt)" },
+        linkHref: { type: "text", label: "Lenke (URL)" },
+      },
+      defaultProps: { imageUrl: "", title: "Korttittel", text: "Kort beskrivelse.", linkLabel: "", linkHref: "" },
+      render: ({ imageUrl, title, text, linkLabel, linkHref }) => (
+        <div style={{ ...card, overflow: "hidden", margin: "0 0 0.8em" }}>
+          {imageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={imageUrl} alt={title || ""} style={{ width: "100%", display: "block", aspectRatio: "16 / 9", objectFit: "cover" }} />
+          )}
+          <div style={{ padding: 16 }}>
+            {title && <h3 style={{ margin: "0 0 6px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{title}</h3>}
+            {text && <p style={{ margin: 0, lineHeight: 1.6, color: "var(--text-body)", whiteSpace: "pre-wrap" }}>{text}</p>}
+            {linkHref && (
+              <a
+                href={linkHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ display: "inline-flex", alignItems: "center", gap: 6, marginTop: 12, color: "var(--text-link)", fontWeight: 600, textDecoration: "none" }}
+              >
+                {linkLabel || "Les mer"} →
+              </a>
+            )}
+          </div>
+        </div>
+      ),
+    },
+    Video: {
+      label: "Video (YouTube / Vimeo)",
+      fields: { url: { type: "text", label: "Video-URL" } },
+      defaultProps: { url: "" },
+      render: ({ url }) => {
+        const src = videoEmbed(url);
+        if (!src) return <Placeholder label="Lim inn en YouTube- eller Vimeo-lenke" />;
+        return (
+          <div style={{ position: "relative", paddingTop: "56.25%", margin: "0 0 0.8em", borderRadius: "var(--radius-md)", overflow: "hidden", background: "#000" }}>
+            <iframe
+              src={src}
+              title="Video"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+            />
+          </div>
+        );
+      },
+    },
+    Embed: {
+      label: "Innebygging (skjema / kart / iframe)",
+      fields: {
+        url: { type: "text", label: "URL (Google Forms, Microsoft Forms, kart, …)" },
+        height: { type: "number", label: "Høyde (px)", min: 120 },
+      },
+      defaultProps: { url: "", height: 600 },
+      render: ({ url, height }) => {
+        const src = embedSrc(url);
+        if (!src) return <Placeholder label="Lim inn en delings-/innebyggingslenke" />;
+        return (
+          <iframe
+            src={src}
+            title="Innebygging"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            style={{ width: "100%", height: Math.max(120, height || 600), border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", margin: "0 0 0.8em" }}
+          />
+        );
+      },
+    },
+    Divider: {
+      label: "Skillelinje",
+      fields: {},
+      defaultProps: {},
+      render: () => <hr style={{ border: 0, borderTop: "1px solid var(--border-subtle)", margin: "1.4em 0" }} />,
     },
     Spacer: {
       label: "Luft",
