@@ -28,8 +28,12 @@ export interface ActivityInitial {
   description: string | null;
   description_en: string | null;
   category_id: string | null;
+  category_ids: string[] | null;
   municipality_id: string | null;
   address: string | null;
+  accessibility: string | null;
+  area: string | null;
+  ends_on: string | null;
   weekday: number | null;
   start_time: string | null;
   end_time: string | null;
@@ -73,9 +77,13 @@ export function ActivityForm({
   const [description, setDescription] = useState(initial?.description ?? "");
   const [descriptionEn, setDescriptionEn] = useState(initial?.description_en ?? "");
   const [categoryId, setCategoryId] = useState(initial?.category_id ?? "");
+  const [categoryIds, setCategoryIds] = useState<string[]>(initial?.category_ids ?? []);
   const [municipalityId, setMunicipalityId] = useState(initial?.municipality_id ?? lockedMunicipality?.id ?? "");
   const [coOrgs, setCoOrgs] = useState<CoOrg[]>(initialCoOrganizers);
   const [address, setAddress] = useState(initial?.address ?? "");
+  const [accessibility, setAccessibility] = useState(initial?.accessibility ?? "");
+  const [area, setArea] = useState(initial?.area ?? "");
+  const [endsOn, setEndsOn] = useState(initial?.ends_on ?? "");
   const [weekday, setWeekday] = useState<string>(initial?.weekday?.toString() ?? "");
   const [startTime, setStartTime] = useState(initial?.start_time?.slice(0, 5) ?? "");
   const [endTime, setEndTime] = useState(initial?.end_time?.slice(0, 5) ?? "");
@@ -105,8 +113,12 @@ export function ActivityForm({
       description: description || null,
       description_en: descriptionEn || null,
       category_id: categoryId || null,
+      category_ids: categoryIds,
       municipality_id: municipalityId || null,
       address: address || null,
+      accessibility: accessibility.trim() || null,
+      area: area.trim() || null,
+      ends_on: endsOn || null,
       weekday: weekday === "" ? null : Number(weekday),
       start_time: startTime || null,
       end_time: endTime || null,
@@ -226,6 +238,56 @@ export function ActivityForm({
         <label htmlFor="rec" style={labelStyle}>{t.form.recurrenceNote}</label>
         <input id="rec" value={recurrenceNote} onChange={(e) => setRecurrenceNote(e.target.value)} style={inputStyle} />
       </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="area" style={labelStyle}>{t.form.area}</label>
+          <input id="area" value={area} onChange={(e) => setArea(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="ends_on" style={labelStyle}>{t.form.endsOn}</label>
+          <input id="ends_on" type="date" value={endsOn} onChange={(e) => setEndsOn(e.target.value)} style={inputStyle} />
+          <p style={{ margin: "6px 0 0", fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.form.endsOnHint}</p>
+        </div>
+      </div>
+
+      <div>
+        <label htmlFor="a11y" style={labelStyle}>{t.form.accessibility}</label>
+        <textarea id="a11y" rows={2} value={accessibility} onChange={(e) => setAccessibility(e.target.value)} style={textareaStyle} />
+        <p style={{ margin: "6px 0 0", fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.form.accessibilityHint}</p>
+      </div>
+
+      {categories.length > 0 && (
+        <div>
+          <label style={labelStyle}>{t.form.extraCategories}</label>
+          <p style={{ margin: "0 0 8px", fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.form.extraCategoriesHint}</p>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+            {categories.filter((c) => c.id !== categoryId).map((c) => {
+              const on = categoryIds.includes(c.id);
+              return (
+                <button
+                  key={c.id}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => setCategoryIds((prev) => on ? prev.filter((x) => x !== c.id) : [...prev, c.id])}
+                  style={{
+                    padding: "5px 12px",
+                    borderRadius: "var(--radius-pill)",
+                    border: "1px solid " + (on ? "var(--border-brand)" : "var(--border-subtle)"),
+                    background: on ? "var(--surface-brand-soft)" : "transparent",
+                    color: on ? "var(--text-brand)" : "var(--text-muted)",
+                    fontSize: "var(--fs-sm)",
+                    fontWeight: 600,
+                    cursor: "pointer",
+                  }}
+                >
+                  {c.name}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <div>

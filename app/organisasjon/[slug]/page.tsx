@@ -123,6 +123,17 @@ export default async function OrganisationPage({
       .order("starts_at"),
   ]);
 
+  const { data: dirData } = await supabase
+    .from("directory_listings")
+    .select("id,kind,title,title_en,slug")
+    .eq("organization_id", org.id)
+    .eq("status", "published")
+    .order("created_at", { ascending: false });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const dir = ((dirData as any[]) ?? []).map((r) => ({ id: r.id, kind: r.kind as string, title: loc(locale, r.title, r.title_en) ?? r.title, slug: r.slug as string }));
+  const services = dir.filter((d) => d.kind === "service");
+  const volunteers = dir.filter((d) => d.kind === "volunteer");
+
   const activities = ((actRes.data as unknown[]) ?? []).map((r) => activityToListing(r, org.name, locale));
   const events = ((evtRes.data as unknown[]) ?? []).map((r) => eventToListing(r, org.name, locale));
   const orgDescription = loc(locale, org.description, org.description_en);
@@ -203,7 +214,37 @@ export default async function OrganisationPage({
       <Section title={t.orgpage.activities} listings={activities} empty={t.orgpage.empty} />
       <div className="h-8" />
       <Section title={t.orgpage.events} listings={events} empty={t.orgpage.empty} />
+      {services.length > 0 && (
+        <>
+          <div className="h-8" />
+          <DirectoryLinks title={t.directory.services} base="/tjeneste" items={services} />
+        </>
+      )}
+      {volunteers.length > 0 && (
+        <>
+          <div className="h-8" />
+          <DirectoryLinks title={t.directory.volunteer} base="/frivillig" items={volunteers} />
+        </>
+      )}
     </main>
+  );
+}
+
+function DirectoryLinks({ title, base, items }: { title: string; base: string; items: { id: string; title: string; slug: string }[] }) {
+  return (
+    <section>
+      <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{title}</h2>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
+        {items.map((it) => (
+          <li key={it.id}>
+            <a href={`${base}/${it.slug}`} style={{ display: "inline-flex", alignItems: "center", gap: 8, color: "var(--text-link)", fontWeight: 600 }}>
+              <Icon name="arrow-right" size={15} />
+              {it.title}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 

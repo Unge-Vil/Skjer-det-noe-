@@ -51,6 +51,8 @@ export interface NearbyActivity {
   price: string | null;
   url: string | null;
   image_url: string | null;
+  accessibility: string | null;
+  area: string | null;
   distance_m: number;
 }
 
@@ -75,6 +77,8 @@ export interface NearbyEvent {
   price: string | null;
   url: string | null;
   image_url: string | null;
+  accessibility: string | null;
+  area: string | null;
   distance_m: number;
 }
 
@@ -98,6 +102,8 @@ export interface Listing {
   price: string | null;
   url: string | null;
   imageUrl: string | null;
+  accessibility?: string | null;
+  area?: string | null;
   distanceM: number;
   /** Recurring activities only. */
   weekday?: number | null;
@@ -132,6 +138,8 @@ export function activityToListing(a: NearbyActivity, locale: Locale): Listing {
     price: a.price,
     url: a.url,
     imageUrl: a.image_url,
+    accessibility: a.accessibility,
+    area: a.area,
     distanceM: a.distance_m,
     weekday: a.weekday,
     startTime: a.start_time,
@@ -158,6 +166,8 @@ export function eventToListing(e: NearbyEvent, locale: Locale): Listing {
     price: e.price,
     url: e.url,
     imageUrl: e.image_url,
+    accessibility: e.accessibility,
+    area: e.area,
     distanceM: e.distance_m,
     startsAt: e.starts_at,
     endsAt: e.ends_at,

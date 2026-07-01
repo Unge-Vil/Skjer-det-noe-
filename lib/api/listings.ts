@@ -29,8 +29,9 @@ async function resolveRefs(
   db: SupabaseClient<any>,
   orgId: string,
   body: Body,
-): Promise<{ category_id: string | null; municipality_id: string | null; profile_id: string | null } | ApiResult> {
+): Promise<{ category_id: string | null; category_ids: string[]; municipality_id: string | null; profile_id: string | null } | ApiResult> {
   let category_id: string | null = null;
+  let category_ids: string[] = [];
   let municipality_id: string | null = null;
   let profile_id: string | null = null;
 
@@ -39,6 +40,15 @@ async function resolveRefs(
     const { data } = await db.from("categories").select("id").eq("slug", category).maybeSingle();
     if (!data) return bad(`Unknown category slug: ${category}`);
     category_id = data.id as string;
+  }
+
+  if (Array.isArray(body.categories) && body.categories.length > 0) {
+    const slugs = body.categories.filter((s: unknown): s is string => typeof s === "string");
+    const { data } = await db.from("categories").select("id,slug").in("slug", slugs);
+    const found = (data ?? []) as { id: string; slug: string }[];
+    const missing = slugs.filter((s) => !found.some((f) => f.slug === s));
+    if (missing.length) return bad(`Unknown category slug(s): ${missing.join(", ")}`);
+    category_ids = found.map((f) => f.id);
   }
 
   const municipality = str(body.municipality);
@@ -64,7 +74,7 @@ async function resolveRefs(
     profile_id = data.id as string;
   }
 
-  return { category_id, municipality_id, profile_id };
+  return { category_id, category_ids, municipality_id, profile_id };
 }
 
 function locationEwkt(body: Body): string | null | ApiResult {
@@ -109,9 +119,12 @@ export async function upsertListingFromApi(
     description: str(body.description),
     description_en: str(body.description_en),
     category_id: refs.category_id,
+    category_ids: refs.category_ids,
     municipality_id: refs.municipality_id,
     profile_id: refs.profile_id,
     address: str(body.address),
+    accessibility: str(body.accessibility),
+    area: str(body.area),
     location: (location as string | null) ?? null,
     age_min: int(body.age_min),
     age_max: int(body.age_max),
@@ -136,6 +149,12 @@ export async function upsertListingFromApi(
     row.start_time = str(body.start_time);
     row.end_time = str(body.end_time);
     row.recurrence_note = str(body.recurrence_note);
+    const endsOn = str(body.ends_on);
+    if (endsOn) {
+      const d = new Date(endsOn);
+      if (Number.isNaN(d.getTime())) return bad(`ends_on is not a valid date: ${endsOn}`);
+      row.ends_on = endsOn;
+    }
   }
 
   // Idempotent upsert on external_ref (partial unique index isn't a usable

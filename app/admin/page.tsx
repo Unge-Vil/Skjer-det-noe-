@@ -85,12 +85,15 @@ export default async function AdminPage() {
   }
 
   const supabase = await createClient();
-  const [actRes, evtRes] = await Promise.all([
+  const [actRes, evtRes, dirRes] = await Promise.all([
     supabase.from("activities").select("id,title,status,image_url,weekday,start_time,end_time,recurrence_note,categories(slug)").eq("organization_id", org.id).order("created_at", { ascending: false }),
     supabase.from("events").select("id,title,status,image_url,starts_at,categories(slug)").eq("organization_id", org.id).order("starts_at", { ascending: true }),
+    supabase.from("directory_listings").select("id,kind,title,status").eq("organization_id", org.id).order("created_at", { ascending: false }),
   ]);
   const activities = (actRes.data as Row[]) ?? [];
   const events = (evtRes.data as Row[]) ?? [];
+  const services = ((dirRes.data as Row[]) ?? []).filter((r) => r.kind === "service");
+  const volunteers = ((dirRes.data as Row[]) ?? []).filter((r) => r.kind === "volunteer");
   const { data: views } = await supabase.rpc("org_view_count_30d", { p_org: org.id });
 
   // Profile completeness
@@ -110,6 +113,8 @@ export default async function AdminPage() {
     { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
     { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
     { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
+    { href: "/admin#tjenester", label: t.directory.services, icon: "clipboard-list", badge: services.length },
+    { href: "/admin#frivilligtorg", label: t.directory.volunteer, icon: "users-round", badge: volunteers.length },
     { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
     { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
     { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
@@ -223,8 +228,60 @@ export default async function AdminPage() {
           t={t}
           locale={locale}
         />
+        <DirectorySection
+          id="tjenester"
+          title={t.directory.services}
+          newHref="/admin/oppdrag/tjeneste/ny"
+          newLabel={t.directory.newService}
+          empty={t.directory.noServices}
+          editBase="/admin/oppdrag/tjeneste"
+          rows={services}
+          t={t}
+        />
+        <DirectorySection
+          id="frivilligtorg"
+          title={t.directory.volunteer}
+          newHref="/admin/oppdrag/frivillig/ny"
+          newLabel={t.directory.newVolunteer}
+          empty={t.directory.noVolunteer}
+          editBase="/admin/oppdrag/frivillig"
+          rows={volunteers}
+          t={t}
+        />
       </div>
     </AdminShell>
+  );
+}
+
+function DirectorySection({
+  id, title, newHref, newLabel, empty, editBase, rows, t,
+}: {
+  id: string; title: string; newHref: string; newLabel: string; empty: string;
+  editBase: string; rows: Row[]; t: Dictionary;
+}) {
+  return (
+    <section id={id} style={card}>
+      <div className="flex items-center justify-between" style={{ padding: "16px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
+        <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{title}</h2>
+        <Link href={newHref}><Button variant="secondary" size="sm" leadingIcon="plus">{newLabel}</Button></Link>
+      </div>
+      {rows.length === 0 ? (
+        <p style={{ padding: "16px 18px", margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{empty}</p>
+      ) : (
+        <div>
+          {rows.map((r) => (
+            <Link key={r.id} href={`${editBase}/${r.id}`} className="flex items-center justify-between gap-3" style={{ padding: "12px 18px", borderTop: "1px solid var(--border-subtle)", textDecoration: "none", color: "var(--text-body)" }}>
+              <span style={{ fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{r.title}</span>
+              {r.status === "published" ? (
+                <StatusLabel icon="check" label={t.admin.statusPublished} tone="success" size="sm" />
+              ) : (
+                <StatusLabel icon="clock" label={t.admin.statusDraft} tone="neutral" size="sm" />
+              )}
+            </Link>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 

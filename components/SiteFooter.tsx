@@ -26,10 +26,13 @@ export function SiteFooter() {
           Unge Vil
         </a>
       </span>
-      <nav aria-label={t.footer.about} style={{ display: "flex", gap: 16 }}>
+      <nav aria-label={t.footer.about} style={{ display: "flex", flexWrap: "wrap", gap: 16 }}>
         <Link href="/om" style={linkStyle}>{t.footer.about}</Link>
+        <Link href="/for-organisasjoner" style={linkStyle}>{t.footer.forOrg}</Link>
+        <Link href="/for-kommuner" style={linkStyle}>{t.footer.forMuni}</Link>
         <Link href="/personvern" style={linkStyle}>{t.footer.privacy}</Link>
         <Link href="/vilkar" style={linkStyle}>{t.footer.terms}</Link>
+        <Link href="/tilgjengelighet" style={linkStyle}>{t.footer.accessibility}</Link>
       </nav>
     </footer>
   );

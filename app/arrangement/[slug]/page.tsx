@@ -8,7 +8,7 @@ import { DetailView, type DetailData } from "@/components/DetailView";
 export const dynamic = "force-dynamic";
 
 const SELECT =
-  "id,title,title_en,description,description_en,address,price,age_min,age_max,url,image_url,starts_at,ends_at,organizations(name,slug),categories(slug),municipalities(name,kommunenummer),event_co_organizers(organizations(name,slug))";
+  "id,title,title_en,description,description_en,address,accessibility,area,price,age_min,age_max,url,image_url,starts_at,ends_at,organizations!events_organization_id_fkey(name,slug),categories(slug),municipalities(name,kommunenummer),event_co_organizers(organizations(name,slug))";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toDetail(row: any, locale: Locale): DetailData {
@@ -23,6 +23,8 @@ function toDetail(row: any, locale: Locale): DetailData {
     municipalityName: row.municipalities?.name ?? null,
     municipalityNumber: row.municipalities?.kommunenummer ?? null,
     address: row.address,
+    accessibility: row.accessibility,
+    area: row.area,
     price: row.price,
     ageMin: row.age_min,
     ageMax: row.age_max,

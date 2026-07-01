@@ -31,6 +31,8 @@ export interface DetailData {
   municipalityName: string | null;
   municipalityNumber: string | null;
   address: string | null;
+  accessibility?: string | null;
+  area?: string | null;
   price: string | null;
   ageMin: number | null;
   ageMax: number | null;
@@ -186,6 +188,7 @@ export function DetailView({ data }: { data: DetailData }) {
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {timeValue && <Fact icon="clock" label={t.detail.time} value={timeValue} />}
           {place && <Fact icon="map-pin" label={t.detail.place} value={place} />}
+          {data.area && <Fact icon="locate-fixed" label={t.form.area} value={data.area} />}
           <Fact icon="wallet" label={t.detail.price} value={data.price || t.detail.free} />
           {ageValue && <Fact icon="users-round" label={t.detail.age} value={ageValue} />}
         </div>
@@ -194,6 +197,16 @@ export function DetailView({ data }: { data: DetailData }) {
           <p style={{ margin: 0, fontSize: "var(--fs-body)", lineHeight: 1.6, color: "var(--text-body)" }}>
             {data.description}
           </p>
+        )}
+
+        {data.accessibility && (
+          <div style={{ display: "flex", gap: 10, padding: 16, background: "var(--surface-brand-soft)", borderRadius: "var(--radius-lg)" }}>
+            <Icon name="accessibility" size={20} color="var(--text-brand)" />
+            <div>
+              <div style={{ fontSize: "var(--fs-sm)", fontWeight: 700, marginBottom: 2 }}>{t.form.accessibility}</div>
+              <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-body)", lineHeight: 1.5, whiteSpace: "pre-wrap" }}>{data.accessibility}</p>
+            </div>
+          </div>
         )}
 
         {data.kind === "activity" && (

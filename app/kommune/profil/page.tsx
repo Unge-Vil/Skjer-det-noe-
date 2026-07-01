@@ -36,6 +36,7 @@ export default async function KommuneProfilePage() {
           email: active.email ?? "",
           phone: active.phone ?? "",
           address: active.address ?? "",
+          accessibilityUrl: active.accessibilityUrl ?? "",
           socialLinks: active.socialLinks,
         }}
       />

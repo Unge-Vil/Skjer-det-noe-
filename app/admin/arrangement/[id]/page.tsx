@@ -72,7 +72,7 @@ export default async function EventFormPage({
     const { data } = await supabase
       .from("events")
       .select(
-        "id,title,title_en,description,description_en,category_id,municipality_id,address,starts_at,ends_at,age_min,age_max,price,image_url,status",
+        "id,title,title_en,description,description_en,category_id,category_ids,municipality_id,address,accessibility,area,starts_at,ends_at,age_min,age_max,price,image_url,status",
       )
       .eq("id", id)
       .maybeSingle();

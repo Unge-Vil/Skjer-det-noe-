@@ -147,7 +147,7 @@ export default async function Home() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/logg-inn"
+              href="/for-kommuner"
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -163,7 +163,7 @@ export default async function Home() {
               {t.cta.forMunicipalities}
             </Link>
             <Link
-              href="/logg-inn"
+              href="/for-organisasjoner"
               style={{
                 display: "inline-flex",
                 alignItems: "center",

@@ -26,6 +26,8 @@ export function SiteHeader() {
     { href: "/", label: t.nav.home },
     { href: "/utforsk", label: t.nav.explore },
     { href: "/kart", label: t.nav.map },
+    { href: "/tjenester", label: t.nav.services },
+    { href: "/frivilligtorg", label: t.nav.volunteer },
   ];
 
   return (

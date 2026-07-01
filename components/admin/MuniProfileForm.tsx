@@ -23,6 +23,7 @@ export interface MuniProfileInitial {
   email: string;
   phone: string;
   address: string;
+  accessibilityUrl: string;
   socialLinks: SocialLinks;
 }
 
@@ -50,6 +51,7 @@ export function MuniProfileForm({
   const [email, setEmail] = useState(initial.email);
   const [phone, setPhone] = useState(initial.phone);
   const [address, setAddress] = useState(initial.address);
+  const [accessibilityUrl, setAccessibilityUrl] = useState(initial.accessibilityUrl);
   const [socialLinks, setSocialLinks] = useState<SocialLinks>(initial.socialLinks);
 
   const [busy, setBusy] = useState(false);
@@ -75,6 +77,7 @@ export function MuniProfileForm({
         email: email.trim() || null,
         phone: phone.trim() || null,
         address: address.trim() || null,
+        accessibility_url: accessibilityUrl.trim() || null,
         social_links: socialLinks,
       })
       .eq("id", municipalityId);
@@ -128,6 +131,11 @@ export function MuniProfileForm({
             <label htmlFor="m-addr" style={labelStyle}>{t.orgadmin.fAddress}</label>
             <input id="m-addr" value={address} onChange={(e) => setAddress(e.target.value)} style={inputStyle} />
           </div>
+        </div>
+        <div>
+          <label htmlFor="m-a11y" style={labelStyle}>{t.kommune.accessibilityUrl}</label>
+          <input id="m-a11y" type="url" value={accessibilityUrl} onChange={(e) => setAccessibilityUrl(e.target.value)} style={inputStyle} placeholder="https://uustatus.no/…" />
+          <p style={{ margin: "6px 0 0", fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.kommune.accessibilityUrlHint}</p>
         </div>
       </section>
 

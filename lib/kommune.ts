@@ -23,6 +23,7 @@ export interface MyMunicipality extends MuniRef {
   email: string | null;
   phone: string | null;
   address: string | null;
+  accessibilityUrl: string | null;
   socialLinks: SocialLinks;
 }
 
@@ -59,7 +60,7 @@ export async function getActiveMunicipality(): Promise<MyMunicipality | null> {
   const { data } = await supabase
     .from("municipalities")
     .select(
-      "id,name,slug,kommunenummer,county,description,description_en,description_doc,description_doc_en,website,email,phone,address,social_links",
+      "id,name,slug,kommunenummer,county,description,description_en,description_doc,description_doc_en,website,email,phone,address,accessibility_url,social_links",
     )
     .eq("id", chosen.id)
     .maybeSingle();
@@ -79,6 +80,7 @@ export async function getActiveMunicipality(): Promise<MyMunicipality | null> {
     email: (data.email as string) ?? null,
     phone: (data.phone as string) ?? null,
     address: (data.address as string) ?? null,
+    accessibilityUrl: (data.accessibility_url as string) ?? null,
     socialLinks: parseSocialLinks(data.social_links),
   };
 }

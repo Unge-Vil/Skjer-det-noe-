@@ -15,7 +15,7 @@ export async function fetchOrganisations(
 ): Promise<OrgSummary[]> {
   let query = supabase
     .from("organizations")
-    .select("id,name,slug,organization_municipalities(municipalities(name)),activities(count)")
+    .select("id,name,slug,organization_municipalities(municipalities(name)),activities!activities_organization_id_fkey(count)")
     .eq("status", "published")
     .order("name");
   if (limit) query = query.limit(limit);

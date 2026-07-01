@@ -15,7 +15,7 @@ async function fetchMuni(slug: string) {
   const { data: muni } = await supabase
     .from("municipalities")
     .select(
-      "id,name,slug,county,description,description_en,description_doc,description_doc_en,website,email,phone,address,social_links",
+      "id,name,slug,county,description,description_en,description_doc,description_doc_en,website,email,phone,address,accessibility_url,social_links",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -129,6 +129,15 @@ export default async function MunicipalityPage({
       )}
 
       <SocialLinksBar links={muni.social_links} />
+
+      {m.accessibility_url && (
+        <p style={{ marginTop: 20, fontSize: "var(--fs-sm)" }}>
+          <a href={m.accessibility_url} target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-link)", fontWeight: 600 }}>
+            <Icon name="accessibility" size={15} />
+            {t.footer.accessibility}
+          </a>
+        </p>
+      )}
 
       <p style={{ marginTop: 24, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.footer.tagline}</p>
     </main>
