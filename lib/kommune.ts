@@ -16,24 +16,15 @@ export interface MyMunicipality extends MuniRef {
   socialLinks: SocialLinks;
 }
 
-/** Municipalities the current user may administer (all of them for platform admins). */
+/** Municipalities the current user specifically administers. Platform admins do
+ *  NOT get all municipalities here — they never auto-enter a municipality they
+ *  don't administer (platform-wide work lives on /plattform). */
 export async function getMyMunicipalities(): Promise<MuniRef[]> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) return [];
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("is_platform_admin")
-    .eq("id", user.id)
-    .maybeSingle();
-
-  if (profile?.is_platform_admin) {
-    const { data } = await supabase.from("municipalities_view").select("id,name,slug").order("name");
-    return (data as MuniRef[]) ?? [];
-  }
 
   const { data } = await supabase
     .from("municipality_admins")

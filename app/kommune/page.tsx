@@ -6,10 +6,8 @@ import { Icon } from "@/components/ds/Icon";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { ShellIdentity } from "@/components/admin/ShellIdentity";
-import { MuniSwitcher } from "@/components/admin/MuniSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { kommuneNav } from "@/components/admin/kommuneNav";
-import { getMyMunicipalities, getActiveMunicipality } from "@/lib/kommune";
 
 export const dynamic = "force-dynamic";
 
@@ -36,15 +34,16 @@ export default async function KommunePage() {
   const t = getDictionary(locale);
   const supabase = await createClient();
 
-  const [{ data: profile }, { data: adminRows }] = await Promise.all([
-    supabase.from("profiles").select("is_platform_admin").eq("id", user.id).maybeSingle(),
-    supabase.from("municipality_admins").select("municipality_id").eq("user_id", user.id),
-  ]);
+  const { data: adminRows } = await supabase
+    .from("municipality_admins")
+    .select("municipality_id")
+    .eq("user_id", user.id);
 
-  const isPlatform = Boolean(profile?.is_platform_admin);
   const muniIds = (adminRows ?? []).map((r) => r.municipality_id as string);
 
-  if (!isPlatform && muniIds.length === 0) {
+  // Platform admins do not auto-enter municipalities they don't specifically
+  // administer — municipality work requires municipality-admin access.
+  if (muniIds.length === 0) {
     return (
       <main id="main" className="mx-auto w-full max-w-4xl flex-1 px-4 py-10">
         <div className="mb-6 flex items-center justify-between">
@@ -58,43 +57,28 @@ export default async function KommunePage() {
     );
   }
 
-  // Collect organisations in scope (deduped).
+  // Organisations listed in the municipalities this user administers (deduped).
   const byId = new Map<string, Org>();
-  if (isPlatform) {
-    const { data } = await supabase
-      .from("organizations")
-      .select("id,name,status,org_number,is_volunteer")
-      .order("name");
-    for (const o of (data as Org[]) ?? []) byId.set(o.id, o);
-  } else {
-    const { data } = await supabase
-      .from("organization_municipalities")
-      .select("organizations(id,name,status,org_number,is_volunteer)")
-      .in("municipality_id", muniIds);
-    for (const row of data ?? []) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const o = (row as any).organizations as Org | null;
-      if (o) byId.set(o.id, o);
-    }
+  const { data: omRows } = await supabase
+    .from("organization_municipalities")
+    .select("organizations(id,name,status,org_number,is_volunteer)")
+    .in("municipality_id", muniIds);
+  for (const row of omRows ?? []) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const o = (row as any).organizations as Org | null;
+    if (o) byId.set(o.id, o);
   }
 
   const orgs = [...byId.values()];
   const pending = orgs.filter((o) => o.status === "draft");
   const approved = orgs.filter((o) => o.status === "published");
 
-  const [munis, activeMuni] = await Promise.all([getMyMunicipalities(), getActiveMunicipality()]);
   const nav = kommuneNav(t, "/kommune");
 
   return (
     <AdminShell
       title={t.kommune.title}
-      identity={
-        activeMuni ? (
-          <MuniSwitcher munis={munis} activeId={activeMuni.id} />
-        ) : (
-          <ShellIdentity name={t.kommune.title} sub={user.email ?? ""} />
-        )
-      }
+      identity={<ContextSwitcher />}
       nav={nav}
     >
       <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>

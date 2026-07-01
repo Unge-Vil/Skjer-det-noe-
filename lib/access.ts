@@ -24,7 +24,8 @@ export async function getAccessAreas(): Promise<AccessAreas> {
   const platform = Boolean(profile?.is_platform_admin);
   return {
     org: (orgRes.count ?? 0) > 0 || (profRes.count ?? 0) > 0,
-    municipality: (muniRes.count ?? 0) > 0 || platform,
+    // Platform admins don't auto-get municipality access; only specific admins.
+    municipality: (muniRes.count ?? 0) > 0,
     platform,
   };
 }

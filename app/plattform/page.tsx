@@ -7,7 +7,7 @@ import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { MuniAdminManager } from "@/components/admin/MuniAdminManager";
 import { MuniCreateForm } from "@/components/admin/MuniCreateForm";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { ShellIdentity } from "@/components/admin/ShellIdentity";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 
 export const dynamic = "force-dynamic";
 
@@ -75,7 +75,7 @@ export default async function PlatformPage() {
   return (
     <AdminShell
       title={t.platform.title}
-      identity={<ShellIdentity name={t.platform.title} sub={user.email ?? ""} />}
+      identity={<ContextSwitcher />}
       nav={nav}
     >
       <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>

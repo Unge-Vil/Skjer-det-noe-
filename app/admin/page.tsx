@@ -2,7 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import { getMyOrg, getMyOrgs } from "@/lib/org";
+import { getMyOrg } from "@/lib/org";
 import { getMyProfiles } from "@/lib/profiles";
 import { getAccessAreas } from "@/lib/access";
 import { createClient } from "@/lib/supabase/server";
@@ -17,7 +17,7 @@ import { StatusLabel } from "@/components/ds/StatusLabel";
 import { LogoutButton } from "@/components/LogoutButton";
 import { DeleteButton } from "@/components/admin/DeleteButton";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { categoryDef } from "@/components/ds/categories";
 
 export const dynamic = "force-dynamic";
@@ -91,7 +91,6 @@ export default async function AdminPage() {
   ]);
   const activities = (actRes.data as Row[]) ?? [];
   const events = (evtRes.data as Row[]) ?? [];
-  const orgs = await getMyOrgs();
   const { data: views } = await supabase.rpc("org_view_count_30d", { p_org: org.id });
 
   // Profile completeness
@@ -119,7 +118,7 @@ export default async function AdminPage() {
   return (
     <AdminShell
       title={t.orgadmin.overview}
-      identity={<OrgSwitcher orgs={orgs} activeId={org.id} />}
+      identity={<ContextSwitcher />}
       nav={nav}
       footerTop={
         <Link href="/admin/aktivitet/ny">

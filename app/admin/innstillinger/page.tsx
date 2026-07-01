@@ -1,12 +1,12 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import { getMyOrg, getMyOrgs } from "@/lib/org";
+import { getMyOrg } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Button } from "@/components/ds/Button";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { OrgMemberManager } from "@/components/admin/OrgMemberManager";
 
 export const dynamic = "force-dynamic";
@@ -25,7 +25,6 @@ export default async function SettingsPage() {
   const { data: memberData } = await supabase.rpc("list_org_members", { p_org: org.id });
   const members = (memberData as Member[]) ?? [];
 
-  const orgs = await getMyOrgs();
   const previewHref = `/organisasjon/${org.slug}`;
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
@@ -38,7 +37,7 @@ export default async function SettingsPage() {
   return (
     <AdminShell
       title={t.orgadmin.settings}
-      identity={<OrgSwitcher orgs={orgs} activeId={org.id} />}
+      identity={<ContextSwitcher />}
       nav={nav}
       footerTop={
         <Link href="/admin/aktivitet/ny">

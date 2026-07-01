@@ -7,7 +7,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon } from "@/components/ds/Icon";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { CreateProfileForm } from "@/components/admin/CreateProfileForm";
 
 export const dynamic = "force-dynamic";
@@ -41,7 +41,7 @@ export default async function ProfilesPage() {
   return (
     <AdminShell
       title={t.orgadmin.departments}
-      identity={<OrgSwitcher orgs={orgs} />}
+      identity={<ContextSwitcher />}
       nav={nav}
     >
       <div className="mx-auto w-full max-w-3xl" style={{ padding: 24, display: "flex", flexDirection: "column", gap: 24 }}>

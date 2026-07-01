@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import { getMyOrg, getMyOrgs } from "@/lib/org";
+import { getMyOrg } from "@/lib/org";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Button } from "@/components/ds/Button";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { ImageUploader } from "@/components/admin/ImageUploader";
 
 export const dynamic = "force-dynamic";
@@ -18,7 +18,6 @@ export default async function MediaPage() {
 
   const locale = await getLocale();
   const t = getDictionary(locale);
-  const orgs = await getMyOrgs();
   const previewHref = `/organisasjon/${org.slug}`;
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
@@ -32,7 +31,7 @@ export default async function MediaPage() {
   return (
     <AdminShell
       title={t.orgadmin.media}
-      identity={<OrgSwitcher orgs={orgs} activeId={org.id} />}
+      identity={<ContextSwitcher />}
       nav={nav}
       footerTop={
         <Link href="/admin/aktivitet/ny">

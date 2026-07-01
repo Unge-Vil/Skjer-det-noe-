@@ -2,13 +2,12 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyProfiles, getProfile } from "@/lib/profiles";
-import { getMyOrgs } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
-import { OrgSwitcher } from "@/components/admin/OrgSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { DepartmentForm } from "@/components/admin/DepartmentForm";
 import { DepartmentImages } from "@/components/admin/DepartmentImages";
 import { DepartmentMemberManager } from "@/components/admin/DepartmentMemberManager";
@@ -61,7 +60,6 @@ export default async function DepartmentEditor({
   const members = (memberRows as Member[]) ?? [];
   const activities = (actRows as ListingRow[]) ?? [];
   const events = (evtRows as ListingRow[]) ?? [];
-  const orgs = await getMyOrgs();
 
   const publicHref = `/organisasjon/${dept.organizationSlug}/${dept.slug}`;
   const nav: NavItem[] = [
@@ -72,7 +70,7 @@ export default async function DepartmentEditor({
   return (
     <AdminShell
       title={`${dept.organizationName} · ${dept.name}`}
-      identity={<OrgSwitcher orgs={orgs} />}
+      identity={<ContextSwitcher />}
       nav={nav}
       headerAction={
         <a href={publicHref} target="_blank" rel="noopener noreferrer">

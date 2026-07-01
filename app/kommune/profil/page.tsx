@@ -1,9 +1,9 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
-import { getMyMunicipalities, getActiveMunicipality } from "@/lib/kommune";
+import { getActiveMunicipality } from "@/lib/kommune";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { AdminShell } from "@/components/admin/AdminShell";
-import { MuniSwitcher } from "@/components/admin/MuniSwitcher";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { kommuneNav } from "@/components/admin/kommuneNav";
 import { MuniProfileForm } from "@/components/admin/MuniProfileForm";
 
@@ -13,7 +13,7 @@ export default async function KommuneProfilePage() {
   const user = await getUser();
   if (!user) redirect("/logg-inn");
 
-  const [munis, active] = await Promise.all([getMyMunicipalities(), getActiveMunicipality()]);
+  const active = await getActiveMunicipality();
   if (!active) redirect("/kommune");
 
   const locale = await getLocale();
@@ -22,7 +22,7 @@ export default async function KommuneProfilePage() {
   return (
     <AdminShell
       title={t.kommune.profileTitle}
-      identity={<MuniSwitcher munis={munis} activeId={active.id} />}
+      identity={<ContextSwitcher />}
       nav={kommuneNav(t, "/kommune/profil")}
     >
       <MuniProfileForm municipalityId={active.id} initialSocialLinks={active.socialLinks} />
