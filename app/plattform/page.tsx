@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
+import { Icon } from "@/components/ds/Icon";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
-import { MuniAdminManager } from "@/components/admin/MuniAdminManager";
 import { MuniCreateForm } from "@/components/admin/MuniCreateForm";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
@@ -13,12 +14,6 @@ export const dynamic = "force-dynamic";
 
 type Org = { id: string; name: string; status: string };
 type Muni = { id: string; name: string };
-type AdminRow = {
-  municipality_id: string;
-  municipality_name: string;
-  user_id: string;
-  email: string;
-};
 
 const cardStyle = {
   background: "var(--surface-card)",
@@ -55,15 +50,13 @@ export default async function PlatformPage() {
     );
   }
 
-  const [orgRes, muniRes, adminRes] = await Promise.all([
+  const [orgRes, muniRes] = await Promise.all([
     supabase.from("organizations").select("id,name,status").order("status").order("name"),
     supabase.from("municipalities_view").select("id,name").order("name"),
-    supabase.rpc("list_municipality_admins"),
   ]);
 
   const orgs = (orgRes.data as Org[]) ?? [];
   const municipalities = (muniRes.data as Muni[]) ?? [];
-  const admins = (adminRes.data as AdminRow[]) ?? [];
 
   const statusText = (s: string) =>
     s === "published" ? t.admin.statusPublished : s === "archived" ? t.admin.statusArchived : t.admin.statusDraft;
@@ -91,8 +84,27 @@ export default async function PlatformPage() {
       </section>
 
       <section className="mb-10">
-        <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.muniAdmins}</h2>
-        <MuniAdminManager municipalities={municipalities} admins={admins} />
+        <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.municipalities}</h2>
+        {municipalities.length === 0 ? (
+          <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>—</p>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {municipalities.map((m) => (
+              <Link
+                key={m.id}
+                href={`/plattform/kommune/${m.id}`}
+                className="flex items-center justify-between gap-3"
+                style={{ ...cardStyle, padding: "12px 16px", textDecoration: "none", color: "var(--text-body)" }}
+              >
+                <span style={{ fontWeight: 600 }}>{m.name}</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-link)", fontSize: "var(--fs-sm)", fontWeight: 600 }}>
+                  {t.platform.manageMuni}
+                  <Icon name="arrow-right" size={15} />
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       <section>

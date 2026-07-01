@@ -7,6 +7,7 @@ import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { SocialLinksEditor } from "./SocialLinksEditor";
 import { RichTextEditor } from "./RichTextEditor";
+import { LanguageFields } from "./LanguageFields";
 import type { SocialLinks } from "@/components/ds/socials";
 import { docToPlainText, plainTextToDoc, isEmptyDoc } from "@/lib/tiptap";
 import { inputStyle, labelStyle } from "./formStyles";
@@ -100,10 +101,15 @@ export function ProfileForm({ org }: { org: ProfileInitial }) {
           <label style={labelStyle}>{t.form.description}</label>
           <RichTextEditor value={descDoc} onChange={setDescDoc} ariaLabel={t.form.description} />
         </div>
-        <div>
-          <label style={labelStyle}>{t.form.descriptionEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
-          <RichTextEditor value={descDocEn} onChange={setDescDocEn} ariaLabel={t.form.descriptionEn} />
-        </div>
+        <LanguageFields
+          hasContent={!isEmptyDoc(descDocEn)}
+          onRemove={() => setDescDocEn(plainTextToDoc(""))}
+        >
+          <div>
+            <label style={labelStyle}>{t.form.descriptionEn}</label>
+            <RichTextEditor value={descDocEn} onChange={setDescDocEn} ariaLabel={t.form.descriptionEn} />
+          </div>
+        </LanguageFields>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="web" style={labelStyle}>{t.orgadmin.fWebsite}</label>

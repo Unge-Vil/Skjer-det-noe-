@@ -25,7 +25,20 @@ export default async function KommuneProfilePage() {
       identity={<ContextSwitcher />}
       nav={kommuneNav(t, "/kommune/profil")}
     >
-      <MuniProfileForm municipalityId={active.id} initialSocialLinks={active.socialLinks} />
+      <MuniProfileForm
+        municipalityId={active.id}
+        initial={{
+          description: active.description ?? "",
+          descriptionEn: active.descriptionEn ?? "",
+          descriptionDoc: active.descriptionDoc,
+          descriptionDocEn: active.descriptionDocEn,
+          website: active.website ?? "",
+          email: active.email ?? "",
+          phone: active.phone ?? "",
+          address: active.address ?? "",
+          socialLinks: active.socialLinks,
+        }}
+      />
     </AdminShell>
   );
 }

@@ -7,6 +7,7 @@ import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { SocialLinksEditor } from "./SocialLinksEditor";
 import { RichTextEditor } from "./RichTextEditor";
+import { LanguageFields } from "./LanguageFields";
 import { parseSocialLinks, type SocialLinks } from "@/components/ds/socials";
 import { docToPlainText, plainTextToDoc, isEmptyDoc } from "@/lib/tiptap";
 import type { ProfileDetail, ProfileFields } from "@/lib/profiles";
@@ -127,18 +128,23 @@ export function DepartmentForm({ dept }: { dept: ProfileDetail }) {
           customLabel={t.orgadmin.customField}
           inheritActive={t.orgadmin.inheritActive}
         />
-        <RichDescription
-          label={`${t.form.descriptionEn} (${t.form.optional})`}
-          doc={descDocEn}
-          masterDoc={masterDocEn}
-          masterPlain={dept.master.descriptionEn}
-          onInherit={() => setDescDocEn(null)}
-          onCustom={() => setDescDocEn(masterDocEn)}
-          onChange={setDescDocEn}
-          inheritLabel={t.orgadmin.inheritField}
-          customLabel={t.orgadmin.customField}
-          inheritActive={t.orgadmin.inheritActive}
-        />
+        <LanguageFields
+          hasContent={descDocEn != null || !!dept.master.descriptionEn?.trim()}
+          onRemove={() => setDescDocEn(null)}
+        >
+          <RichDescription
+            label={t.form.descriptionEn}
+            doc={descDocEn}
+            masterDoc={masterDocEn}
+            masterPlain={dept.master.descriptionEn}
+            onInherit={() => setDescDocEn(null)}
+            onCustom={() => setDescDocEn(masterDocEn)}
+            onChange={setDescDocEn}
+            inheritLabel={t.orgadmin.inheritField}
+            customLabel={t.orgadmin.customField}
+            inheritActive={t.orgadmin.inheritActive}
+          />
+        </LanguageFields>
 
         {(Object.keys(COLUMN) as TextKey[]).map((k) => {
           const inherited = fields[k] == null;

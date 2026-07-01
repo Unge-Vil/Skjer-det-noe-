@@ -1,0 +1,2144 @@
+[
+  {
+    "kommunenummer": "1820",
+    "name": "Alstahaug",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5601",
+    "name": "Alta",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "3428",
+    "name": "Alvdal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4631",
+    "name": "Alver",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1871",
+    "name": "Andøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3124",
+    "name": "Aremark",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "4203",
+    "name": "Arendal",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3203",
+    "name": "Asker",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4645",
+    "name": "Askvoll",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4627",
+    "name": "Askøy",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1547",
+    "name": "Aukra",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1576",
+    "name": "Aure",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4641",
+    "name": "Aurland",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3226",
+    "name": "Aurskog-Høland",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4625",
+    "name": "Austevoll",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4632",
+    "name": "Austrheim",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1554",
+    "name": "Averøy",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "5532",
+    "name": "Balsfjord",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "4012",
+    "name": "Bamble",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "5520",
+    "name": "Bardu",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "1839",
+    "name": "Beiarn",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4601",
+    "name": "Bergen",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "5630",
+    "name": "Berlevåg",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1811",
+    "name": "Bindal",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4216",
+    "name": "Birkenes",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "1114",
+    "name": "Bjerkreim",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "4624",
+    "name": "Bjørnafjorden",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1804",
+    "name": "Bodø",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1145",
+    "name": "Bokn",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "4648",
+    "name": "Bremanger",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1813",
+    "name": "Brønnøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4220",
+    "name": "Bygland",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "4222",
+    "name": "Bykle",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3201",
+    "name": "Bærum",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1867",
+    "name": "Bø",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4613",
+    "name": "Bømlo",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "5632",
+    "name": "Båtsfjord",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "3431",
+    "name": "Dovre",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3301",
+    "name": "Drammen",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "4016",
+    "name": "Drangedal",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "5528",
+    "name": "Dyrøy",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "1827",
+    "name": "Dønna",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4619",
+    "name": "Eidfjord",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3416",
+    "name": "Eidskog",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3240",
+    "name": "Eidsvoll",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1101",
+    "name": "Eigersund",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3420",
+    "name": "Elverum",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3220",
+    "name": "Enebakk",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "3425",
+    "name": "Engerdal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4611",
+    "name": "Etne",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3450",
+    "name": "Etnedal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1853",
+    "name": "Evenes",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4219",
+    "name": "Evje og Hornnes",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "4206",
+    "name": "Farsund",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "1841",
+    "name": "Fauske",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4633",
+    "name": "Fedje",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4615",
+    "name": "Fitjar",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4646",
+    "name": "Fjaler",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1578",
+    "name": "Fjord",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1859",
+    "name": "Flakstad",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5049",
+    "name": "Flatanger",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4207",
+    "name": "Flekkefjord",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3334",
+    "name": "Flesberg",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3320",
+    "name": "Flå",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3429",
+    "name": "Folldal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3107",
+    "name": "Fredrikstad",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "3214",
+    "name": "Frogn",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4214",
+    "name": "Froland",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "5036",
+    "name": "Frosta",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5014",
+    "name": "Frøya",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4032",
+    "name": "Fyresdal",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "3911",
+    "name": "Færder",
+    "fylkesnummer": "39",
+    "fylke": "Vestfold"
+  },
+  {
+    "kommunenummer": "5626",
+    "name": "Gamvik",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "3441",
+    "name": "Gausdal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1838",
+    "name": "Gildeskål",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1532",
+    "name": "Giske",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1557",
+    "name": "Gjemnes",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3230",
+    "name": "Gjerdrum",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4211",
+    "name": "Gjerstad",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "1122",
+    "name": "Gjesdal",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3407",
+    "name": "Gjøvik",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4650",
+    "name": "Gloppen",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3324",
+    "name": "Gol",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3446",
+    "name": "Gran",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1825",
+    "name": "Grane",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5516",
+    "name": "Gratangen",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "4202",
+    "name": "Grimstad",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "5045",
+    "name": "Grong",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3417",
+    "name": "Grue",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4635",
+    "name": "Gulen",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1866",
+    "name": "Hadsel",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3101",
+    "name": "Halden",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "3403",
+    "name": "Hamar",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1875",
+    "name": "Hamarøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5603",
+    "name": "Hammerfest",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1580",
+    "name": "Haram",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1517",
+    "name": "Hareid",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "5503",
+    "name": "Harstad",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5616",
+    "name": "Hasvik",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1826",
+    "name": "Hattfjelldal",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1106",
+    "name": "Haugesund",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "5055",
+    "name": "Heim",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "1832",
+    "name": "Hemnes",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3326",
+    "name": "Hemsedal",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "1818",
+    "name": "Herøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1515",
+    "name": "Herøy",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "5056",
+    "name": "Hitra",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4024",
+    "name": "Hjartdal",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "1133",
+    "name": "Hjelmeland",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3330",
+    "name": "Hol",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3310",
+    "name": "Hole",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3903",
+    "name": "Holmestrand",
+    "fylkesnummer": "39",
+    "fylke": "Vestfold"
+  },
+  {
+    "kommunenummer": "5026",
+    "name": "Holtålen",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3901",
+    "name": "Horten",
+    "fylkesnummer": "39",
+    "fylke": "Vestfold"
+  },
+  {
+    "kommunenummer": "3242",
+    "name": "Hurdal",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1579",
+    "name": "Hustadvika",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3110",
+    "name": "Hvaler",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "4637",
+    "name": "Hyllestad",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4226",
+    "name": "Hægebostad",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "4638",
+    "name": "Høyanger",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "5046",
+    "name": "Høylandet",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "1119",
+    "name": "Hå",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "5514",
+    "name": "Ibestad",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5053",
+    "name": "Inderøy",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5054",
+    "name": "Indre Fosen",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3118",
+    "name": "Indre Østfold",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "4218",
+    "name": "Iveland",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3236",
+    "name": "Jevnaker",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "5610",
+    "name": "Karasjok",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "5534",
+    "name": "Karlsøy",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "1149",
+    "name": "Karmøy",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "5612",
+    "name": "Kautokeino",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "4602",
+    "name": "Kinn",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1120",
+    "name": "Klepp",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3303",
+    "name": "Kongsberg",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3401",
+    "name": "Kongsvinger",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4014",
+    "name": "Kragerø",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "4204",
+    "name": "Kristiansand",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "1505",
+    "name": "Kristiansund",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3318",
+    "name": "Krødsherad",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "4622",
+    "name": "Kvam",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4227",
+    "name": "Kvinesdal",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "4617",
+    "name": "Kvinnherad",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4028",
+    "name": "Kviteseid",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "1144",
+    "name": "Kvitsøy",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "5510",
+    "name": "Kvæfjord",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5546",
+    "name": "Kvænangen",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5540",
+    "name": "Kåfjord",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "3909",
+    "name": "Larvik",
+    "fylkesnummer": "39",
+    "fylke": "Vestfold"
+  },
+  {
+    "kommunenummer": "5518",
+    "name": "Lavangen",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5624",
+    "name": "Lebesby",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1822",
+    "name": "Leirfjord",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5052",
+    "name": "Leka",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3432",
+    "name": "Lesja",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5037",
+    "name": "Levanger",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3312",
+    "name": "Lier",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "5042",
+    "name": "Lierne",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3405",
+    "name": "Lillehammer",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4215",
+    "name": "Lillesand",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3205",
+    "name": "Lillestrøm",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4205",
+    "name": "Lindesnes",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3434",
+    "name": "Lom",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5614",
+    "name": "Loppa",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1112",
+    "name": "Lund",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3234",
+    "name": "Lunner",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1834",
+    "name": "Lurøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4644",
+    "name": "Luster",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4225",
+    "name": "Lyngdal",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "5536",
+    "name": "Lyngen",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "4642",
+    "name": "Lærdal",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1851",
+    "name": "Lødingen",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3222",
+    "name": "Lørenskog",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "3412",
+    "name": "Løten",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5031",
+    "name": "Malvik",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3122",
+    "name": "Marker",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "4634",
+    "name": "Masfjorden",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "5028",
+    "name": "Melhus",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "1837",
+    "name": "Meløy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5034",
+    "name": "Meråker",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4020",
+    "name": "Midt-Telemark",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "5027",
+    "name": "Midtre Gauldal",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4629",
+    "name": "Modalen",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3316",
+    "name": "Modum",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "1506",
+    "name": "Molde",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1874",
+    "name": "Moskenes",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3103",
+    "name": "Moss",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "5524",
+    "name": "Målselv",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5618",
+    "name": "Måsøy",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "5007",
+    "name": "Namsos",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5044",
+    "name": "Namsskogan",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3238",
+    "name": "Nannestad",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1806",
+    "name": "Narvik",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3228",
+    "name": "Nes",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "3322",
+    "name": "Nesbyen",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "1828",
+    "name": "Nesna",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3212",
+    "name": "Nesodden",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "5636",
+    "name": "Nesseby",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "4030",
+    "name": "Nissedal",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "3232",
+    "name": "Nittedal",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4018",
+    "name": "Nome",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "3451",
+    "name": "Nord-Aurdal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3436",
+    "name": "Nord-Fron",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3414",
+    "name": "Nord-Odal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5620",
+    "name": "Nordkapp",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "3207",
+    "name": "Nordre Follo",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "3448",
+    "name": "Nordre Land",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5544",
+    "name": "Nordreisa",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "3338",
+    "name": "Nore og Uvdal",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "4005",
+    "name": "Notodden",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "5060",
+    "name": "Nærøysund",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5021",
+    "name": "Oppdal",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5059",
+    "name": "Orkland",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3430",
+    "name": "Os",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5020",
+    "name": "Osen",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "0301",
+    "name": "Oslo",
+    "fylkesnummer": "03",
+    "fylke": "Oslo"
+  },
+  {
+    "kommunenummer": "4630",
+    "name": "Osterøy",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "5047",
+    "name": "Overhalla",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5622",
+    "name": "Porsanger",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "4001",
+    "name": "Porsgrunn",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "3120",
+    "name": "Rakkestad",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "1833",
+    "name": "Rana",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1127",
+    "name": "Randaberg",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "1539",
+    "name": "Rauma",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3424",
+    "name": "Rendalen",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5022",
+    "name": "Rennebu",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5061",
+    "name": "Rindal",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3439",
+    "name": "Ringebu",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3305",
+    "name": "Ringerike",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3411",
+    "name": "Ringsaker",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4201",
+    "name": "Risør",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3336",
+    "name": "Rollag",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3224",
+    "name": "Rælingen",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1836",
+    "name": "Rødøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5025",
+    "name": "Røros",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "1856",
+    "name": "Røst",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5043",
+    "name": "Røyrvik",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3112",
+    "name": "Råde",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "5522",
+    "name": "Salangen",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "1840",
+    "name": "Saltdal",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4623",
+    "name": "Samnanger",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1514",
+    "name": "Sande",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3907",
+    "name": "Sandefjord",
+    "fylkesnummer": "39",
+    "fylke": "Vestfold"
+  },
+  {
+    "kommunenummer": "1108",
+    "name": "Sandnes",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3105",
+    "name": "Sarpsborg",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "1135",
+    "name": "Sauda",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3437",
+    "name": "Sel",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5032",
+    "name": "Selbu",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4022",
+    "name": "Seljord",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "5530",
+    "name": "Senja",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "3332",
+    "name": "Sigdal",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "4010",
+    "name": "Siljan",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "4228",
+    "name": "Sirdal",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "5029",
+    "name": "Skaun",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4003",
+    "name": "Skien",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "3116",
+    "name": "Skiptvet",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "5542",
+    "name": "Skjervøy",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "3433",
+    "name": "Skjåk",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1573",
+    "name": "Smøla",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "5041",
+    "name": "Snåsa",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "4640",
+    "name": "Sogndal",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1111",
+    "name": "Sokndal",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "1124",
+    "name": "Sola",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "4636",
+    "name": "Solund",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1870",
+    "name": "Sortland",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4649",
+    "name": "Stad",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3413",
+    "name": "Stange",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1103",
+    "name": "Stavanger",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "1848",
+    "name": "Steigen",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5006",
+    "name": "Steinkjer",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "5035",
+    "name": "Stjørdal",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3423",
+    "name": "Stor-Elvdal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4614",
+    "name": "Stord",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "5538",
+    "name": "Storfjord",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "1130",
+    "name": "Strand",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "1525",
+    "name": "Stranda",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4651",
+    "name": "Stryn",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1531",
+    "name": "Sula",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1134",
+    "name": "Suldal",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "1563",
+    "name": "Sunndal",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4647",
+    "name": "Sunnfjord",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1566",
+    "name": "Surnadal",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4612",
+    "name": "Sveio",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1528",
+    "name": "Sykkylven",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "1812",
+    "name": "Sømna",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3447",
+    "name": "Søndre Land",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3449",
+    "name": "Sør-Aurdal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3438",
+    "name": "Sør-Fron",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3415",
+    "name": "Sør-Odal",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5605",
+    "name": "Sør-Varanger",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1845",
+    "name": "Sørfold",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5526",
+    "name": "Sørreisa",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5628",
+    "name": "Tana",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1121",
+    "name": "Time",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "1560",
+    "name": "Tingvoll",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4026",
+    "name": "Tinn",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "5512",
+    "name": "Tjeldsund",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "4034",
+    "name": "Tokke",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "3426",
+    "name": "Tolga",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5501",
+    "name": "Tromsø",
+    "fylkesnummer": "55",
+    "fylke": "Troms"
+  },
+  {
+    "kommunenummer": "5001",
+    "name": "Trondheim",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3421",
+    "name": "Trysil",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1835",
+    "name": "Træna",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4213",
+    "name": "Tvedestrand",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "5033",
+    "name": "Tydal",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3427",
+    "name": "Tynset",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4616",
+    "name": "Tysnes",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1146",
+    "name": "Tysvær",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "3905",
+    "name": "Tønsberg",
+    "fylkesnummer": "39",
+    "fylke": "Vestfold"
+  },
+  {
+    "kommunenummer": "3209",
+    "name": "Ullensaker",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4618",
+    "name": "Ullensvang",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1516",
+    "name": "Ulstein",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4620",
+    "name": "Ulvik",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1151",
+    "name": "Utsira",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "5607",
+    "name": "Vadsø",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "4628",
+    "name": "Vaksdal",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "4221",
+    "name": "Valle",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3454",
+    "name": "Vang",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1511",
+    "name": "Vanylven",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "5634",
+    "name": "Vardø",
+    "fylkesnummer": "56",
+    "fylke": "Finnmark"
+  },
+  {
+    "kommunenummer": "1824",
+    "name": "Vefsn",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1815",
+    "name": "Vega",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4212",
+    "name": "Vegårshei",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "4223",
+    "name": "Vennesla",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "5038",
+    "name": "Verdal",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3216",
+    "name": "Vestby",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "1535",
+    "name": "Vestnes",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3452",
+    "name": "Vestre Slidre",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3443",
+    "name": "Vestre Toten",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "1860",
+    "name": "Vestvågøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1816",
+    "name": "Vevelstad",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "4639",
+    "name": "Vik",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1160",
+    "name": "Vindafjord",
+    "fylkesnummer": "11",
+    "fylke": "Rogaland"
+  },
+  {
+    "kommunenummer": "4036",
+    "name": "Vinje",
+    "fylkesnummer": "40",
+    "fylke": "Telemark"
+  },
+  {
+    "kommunenummer": "1577",
+    "name": "Volda",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4621",
+    "name": "Voss",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "1857",
+    "name": "Værøy",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "1865",
+    "name": "Vågan",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "3435",
+    "name": "Vågå",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3419",
+    "name": "Våler",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3114",
+    "name": "Våler",
+    "fylkesnummer": "31",
+    "fylke": "Østfold"
+  },
+  {
+    "kommunenummer": "1868",
+    "name": "Øksnes",
+    "fylkesnummer": "18",
+    "fylke": "Nordland"
+  },
+  {
+    "kommunenummer": "5057",
+    "name": "Ørland",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "1520",
+    "name": "Ørsta",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "3442",
+    "name": "Østre Toten",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "3314",
+    "name": "Øvre Eiker",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "3440",
+    "name": "Øyer",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4626",
+    "name": "Øygarden",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3453",
+    "name": "Øystre Slidre",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "5058",
+    "name": "Åfjord",
+    "fylkesnummer": "50",
+    "fylke": "Trøndelag"
+  },
+  {
+    "kommunenummer": "3328",
+    "name": "Ål",
+    "fylkesnummer": "33",
+    "fylke": "Buskerud"
+  },
+  {
+    "kommunenummer": "1508",
+    "name": "Ålesund",
+    "fylkesnummer": "15",
+    "fylke": "Møre og Romsdal"
+  },
+  {
+    "kommunenummer": "4217",
+    "name": "Åmli",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3422",
+    "name": "Åmot",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  },
+  {
+    "kommunenummer": "4643",
+    "name": "Årdal",
+    "fylkesnummer": "46",
+    "fylke": "Vestland"
+  },
+  {
+    "kommunenummer": "3218",
+    "name": "Ås",
+    "fylkesnummer": "32",
+    "fylke": "Akershus"
+  },
+  {
+    "kommunenummer": "4224",
+    "name": "Åseral",
+    "fylkesnummer": "42",
+    "fylke": "Agder"
+  },
+  {
+    "kommunenummer": "3418",
+    "name": "Åsnes",
+    "fylkesnummer": "34",
+    "fylke": "Innlandet"
+  }
+]

@@ -71,7 +71,17 @@ export function MuniPageBuilder({
   };
 
   return (
-    <div style={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column" }}>
+    <div
+      style={{
+        // Fill the space under the (sticky) admin header. isolation:isolate keeps
+        // Puck's own chrome from stacking over the admin header.
+        height: "calc(100dvh - 65px)",
+        display: "flex",
+        flexDirection: "column",
+        position: "relative",
+        isolation: "isolate",
+      }}
+    >
       {error && (
         <p style={{ margin: 0, padding: "8px 16px", color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>
       )}

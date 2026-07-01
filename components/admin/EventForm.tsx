@@ -8,6 +8,7 @@ import { makeSlug, pointEwkt } from "@/lib/slug";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { CoOrganizerEditor, type CoOrg } from "./CoOrganizerEditor";
+import { LanguageFields } from "./LanguageFields";
 import { syncCoOrganizers } from "@/lib/coOrganizers";
 import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
 
@@ -159,19 +160,26 @@ export function EventForm({
       </div>
 
       <div>
-        <label htmlFor="title_en" style={labelStyle}>{t.form.titleEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
-        <input id="title_en" value={titleEn} onChange={(e) => setTitleEn(e.target.value)} style={inputStyle} />
-      </div>
-
-      <div>
         <label htmlFor="desc" style={labelStyle}>{t.form.description}</label>
         <textarea id="desc" rows={3} value={description} onChange={(e) => setDescription(e.target.value)} style={textareaStyle} />
       </div>
 
-      <div>
-        <label htmlFor="desc_en" style={labelStyle}>{t.form.descriptionEn} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({t.form.optional})</span></label>
-        <textarea id="desc_en" rows={3} value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} style={textareaStyle} />
-      </div>
+      <LanguageFields
+        hasContent={!!titleEn.trim() || !!descriptionEn.trim()}
+        onRemove={() => {
+          setTitleEn("");
+          setDescriptionEn("");
+        }}
+      >
+        <div>
+          <label htmlFor="title_en" style={labelStyle}>{t.form.titleEn}</label>
+          <input id="title_en" value={titleEn} onChange={(e) => setTitleEn(e.target.value)} style={inputStyle} />
+        </div>
+        <div>
+          <label htmlFor="desc_en" style={labelStyle}>{t.form.descriptionEn}</label>
+          <textarea id="desc_en" rows={3} value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} style={textareaStyle} />
+        </div>
+      </LanguageFields>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>

@@ -61,9 +61,9 @@ function Placeholder({ label }: { label: string }) {
 export const puckConfig: Config<PuckProps, PuckRoot> = {
   root: {
     fields: {
-      title: { type: "text", label: "Tittel" },
-      titleEn: { type: "text", label: "Tittel (engelsk)" },
-      slug: { type: "text", label: "Nettadresse (slug)" },
+      title: { type: "text", label: "Tittel", placeholder: "F.eks. Fritidstilbud" },
+      titleEn: { type: "text", label: "Tittel (engelsk)", placeholder: "Valgfritt" },
+      slug: { type: "text", label: "Nettadresse (slug)", placeholder: "f.eks. fritidstilbud" },
       status: {
         type: "select",
         label: "Status",
@@ -80,7 +80,7 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     Heading: {
       label: "Overskrift",
       fields: {
-        text: { type: "text", label: "Tekst" },
+        text: { type: "text", label: "Tekst", placeholder: "Skriv overskriften" },
         level: {
           type: "select",
           label: "Nivå",
@@ -100,7 +100,7 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     },
     Text: {
       label: "Tekst",
-      fields: { text: { type: "textarea", label: "Tekst" } },
+      fields: { text: { type: "textarea", label: "Tekst", placeholder: "Skriv inn tekst her" } },
       defaultProps: { text: "Skriv inn tekst her." },
       render: ({ text }) => (
         <p style={{ margin: "0 0 0.8em", lineHeight: 1.65, whiteSpace: "pre-wrap", color: "var(--text-body)" }}>{text}</p>
@@ -109,9 +109,9 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     Image: {
       label: "Bilde",
       fields: {
-        url: { type: "text", label: "Bilde-URL" },
-        alt: { type: "text", label: "Alt-tekst" },
-        caption: { type: "text", label: "Bildetekst (valgfritt)" },
+        url: { type: "text", label: "Bilde-URL", placeholder: "https://… (lim inn lenke til bildet)" },
+        alt: { type: "text", label: "Alt-tekst", placeholder: "Beskriv bildet for skjermlesere" },
+        caption: { type: "text", label: "Bildetekst (valgfritt)", placeholder: "Vises under bildet" },
       },
       defaultProps: { url: "", alt: "", caption: "" },
       render: ({ url, alt, caption }) =>
@@ -130,8 +130,8 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     Button: {
       label: "Knapp / lenke",
       fields: {
-        label: { type: "text", label: "Tekst" },
-        href: { type: "text", label: "Lenke (URL)" },
+        label: { type: "text", label: "Tekst", placeholder: "F.eks. Les mer" },
+        href: { type: "text", label: "Lenke (URL)", placeholder: "https://…" },
       },
       defaultProps: { label: "Les mer", href: "#" },
       render: ({ label, href }) => (
@@ -158,11 +158,11 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     Card: {
       label: "Kort",
       fields: {
-        imageUrl: { type: "text", label: "Bilde-URL (valgfritt)" },
-        title: { type: "text", label: "Tittel" },
-        text: { type: "textarea", label: "Tekst" },
-        linkLabel: { type: "text", label: "Lenketekst (valgfritt)" },
-        linkHref: { type: "text", label: "Lenke (URL)" },
+        imageUrl: { type: "text", label: "Bilde-URL (valgfritt)", placeholder: "https://…" },
+        title: { type: "text", label: "Tittel", placeholder: "Korttittel" },
+        text: { type: "textarea", label: "Tekst", placeholder: "Kort beskrivelse" },
+        linkLabel: { type: "text", label: "Lenketekst (valgfritt)", placeholder: "F.eks. Les mer" },
+        linkHref: { type: "text", label: "Lenke (URL)", placeholder: "https://…" },
       },
       defaultProps: { imageUrl: "", title: "Korttittel", text: "Kort beskrivelse.", linkLabel: "", linkHref: "" },
       render: ({ imageUrl, title, text, linkLabel, linkHref }) => (
@@ -190,7 +190,13 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     },
     Video: {
       label: "Video (YouTube / Vimeo)",
-      fields: { url: { type: "text", label: "Video-URL" } },
+      fields: {
+        url: {
+          type: "text",
+          label: "Video-URL",
+          placeholder: "https://www.youtube.com/watch?v=… eller vimeo.com/…",
+        },
+      },
       defaultProps: { url: "" },
       render: ({ url }) => {
         const src = videoEmbed(url);
@@ -212,8 +218,12 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
     Embed: {
       label: "Innebygging (skjema / kart / iframe)",
       fields: {
-        url: { type: "text", label: "URL (Google Forms, Microsoft Forms, kart, …)" },
-        height: { type: "number", label: "Høyde (px)", min: 120 },
+        url: {
+          type: "text",
+          label: "URL (Google Forms, Microsoft Forms, kart, …)",
+          placeholder: "Lim inn delings-/innebyggingslenke",
+        },
+        height: { type: "number", label: "Høyde (px)", min: 120, max: 2000, step: 20 },
       },
       defaultProps: { url: "", height: 600 },
       render: ({ url, height }) => {

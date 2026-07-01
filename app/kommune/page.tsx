@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { getActiveMunicipality } from "@/lib/kommune";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
-import { Icon } from "@/components/ds/Icon";
+import { Icon, type IconName } from "@/components/ds/Icon";
 import { LogoutButton } from "@/components/LogoutButton";
 import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -34,16 +35,10 @@ export default async function KommunePage() {
   const t = getDictionary(locale);
   const supabase = await createClient();
 
-  const { data: adminRows } = await supabase
-    .from("municipality_admins")
-    .select("municipality_id")
-    .eq("user_id", user.id);
-
-  const muniIds = (adminRows ?? []).map((r) => r.municipality_id as string);
-
   // Platform admins do not auto-enter municipalities they don't specifically
   // administer — municipality work requires municipality-admin access.
-  if (muniIds.length === 0) {
+  const active = await getActiveMunicipality();
+  if (!active) {
     return (
       <main id="main" className="mx-auto w-full max-w-4xl flex-1 px-4 py-10">
         <div className="mb-6 flex items-center justify-between">
@@ -57,13 +52,24 @@ export default async function KommunePage() {
     );
   }
 
-  // Organisations listed in the municipalities this user administers (deduped).
+  // Everything on the dashboard is scoped to the active municipality (chosen in
+  // the context switcher) — the same one the profile/pages screens act on.
+  const [omRes, actCount, evtCount, pageCount] = await Promise.all([
+    supabase
+      .from("organization_municipalities")
+      .select("organizations(id,name,status,org_number,is_volunteer)")
+      .eq("municipality_id", active.id),
+    supabase.from("activities").select("id", { count: "exact", head: true }).eq("municipality_id", active.id),
+    supabase.from("events").select("id", { count: "exact", head: true }).eq("municipality_id", active.id),
+    supabase
+      .from("municipality_pages")
+      .select("id", { count: "exact", head: true })
+      .eq("municipality_id", active.id)
+      .eq("status", "published"),
+  ]);
+
   const byId = new Map<string, Org>();
-  const { data: omRows } = await supabase
-    .from("organization_municipalities")
-    .select("organizations(id,name,status,org_number,is_volunteer)")
-    .in("municipality_id", muniIds);
-  for (const row of omRows ?? []) {
+  for (const row of omRes.data ?? []) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const o = (row as any).organizations as Org | null;
     if (o) byId.set(o.id, o);
@@ -82,14 +88,44 @@ export default async function KommunePage() {
       nav={nav}
     >
       <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>
-        <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
-          {t.kommune.subtitle}
-        </p>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
+            {t.kommune.subtitle}
+          </p>
+          <a
+            href={`/kommune/${active.slug}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-link)", fontWeight: 600, fontSize: "var(--fs-sm)" }}
+          >
+            <Icon name="external-link" size={15} />
+            {t.kommune.viewPublic}
+          </a>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5" style={{ marginBottom: 28 }}>
+          <MiniStat icon="clipboard-list" value={pending.length} label={t.kommune.statPending} />
+          <MiniStat icon="building-2" value={approved.length} label={t.kommune.statApproved} />
+          <MiniStat icon="repeat" value={actCount.count ?? 0} label={t.kommune.statActivities} />
+          <MiniStat icon="calendar-days" value={evtCount.count ?? 0} label={t.kommune.statEvents} />
+          <MiniStat icon="file-text" value={pageCount.count ?? 0} label={t.kommune.statPages} />
+        </div>
+
         <OrgList title={t.kommune.pending} empty={t.kommune.noPending} orgs={pending} t={t} />
         <div className="h-8" />
         <OrgList title={t.kommune.approved} empty={t.kommune.noApproved} orgs={approved} t={t} />
       </div>
     </AdminShell>
+  );
+}
+
+function MiniStat({ icon, value, label }: { icon: IconName; value: number | string; label: string }) {
+  return (
+    <div style={{ ...cardStyle, padding: 16 }}>
+      <Icon name={icon} size={20} color="var(--fjord-600)" />
+      <div style={{ marginTop: 8, fontSize: 24, fontWeight: 800, letterSpacing: "-0.01em" }}>{value}</div>
+      <div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div>
+    </div>
   );
 }
 

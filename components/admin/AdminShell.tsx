@@ -159,7 +159,7 @@ export function AdminShell({
       <div className="flex min-w-0 flex-1 flex-col">
         <header
           className="flex items-center justify-between gap-3"
-          style={{ position: "sticky", top: 0, zIndex: 20, padding: "12px 16px", background: "var(--surface-card)", borderBottom: "1px solid var(--border-subtle)" }}
+          style={{ position: "sticky", top: 0, zIndex: 30, padding: "12px 16px", background: "var(--surface-card)", borderBottom: "1px solid var(--border-subtle)" }}
         >
           <div className="flex min-w-0 items-center gap-2">
             <button

@@ -13,6 +13,16 @@ export interface MuniRef {
 export interface MyMunicipality extends MuniRef {
   kommunenummer: string;
   county: string | null;
+  description: string | null;
+  descriptionEn: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDoc: any | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  descriptionDocEn: any | null;
+  website: string | null;
+  email: string | null;
+  phone: string | null;
+  address: string | null;
   socialLinks: SocialLinks;
 }
 
@@ -48,7 +58,9 @@ export async function getActiveMunicipality(): Promise<MyMunicipality | null> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("municipalities")
-    .select("id,name,slug,kommunenummer,county,social_links")
+    .select(
+      "id,name,slug,kommunenummer,county,description,description_en,description_doc,description_doc_en,website,email,phone,address,social_links",
+    )
     .eq("id", chosen.id)
     .maybeSingle();
   if (!data) return null;
@@ -59,6 +71,14 @@ export async function getActiveMunicipality(): Promise<MyMunicipality | null> {
     slug: data.slug as string,
     kommunenummer: data.kommunenummer as string,
     county: (data.county as string) ?? null,
+    description: (data.description as string) ?? null,
+    descriptionEn: (data.description_en as string) ?? null,
+    descriptionDoc: data.description_doc ?? null,
+    descriptionDocEn: data.description_doc_en ?? null,
+    website: (data.website as string) ?? null,
+    email: (data.email as string) ?? null,
+    phone: (data.phone as string) ?? null,
+    address: (data.address as string) ?? null,
     socialLinks: parseSocialLinks(data.social_links),
   };
 }
