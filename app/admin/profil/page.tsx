@@ -25,6 +25,7 @@ export default async function ProfilePage() {
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
     { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
     { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
+    { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
     { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
     { href: previewHref, label: t.orgadmin.preview, icon: "external-link" },
   ];

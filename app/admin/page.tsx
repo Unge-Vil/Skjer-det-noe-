@@ -111,6 +111,7 @@ export default async function AdminPage() {
     { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
     { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
     { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
+    { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
     { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
     { href: previewHref, label: t.orgadmin.preview, icon: "external-link" },
   ];
