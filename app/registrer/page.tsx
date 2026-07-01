@@ -190,7 +190,7 @@ export default function RegisterPage() {
               <label htmlFor="password" style={labelStyle}>{t.auth.password}</label>
               <input id="password" type="password" autoComplete="new-password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
             </div>
-            {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+            {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
             <Button type="submit" fullWidth loading={busy}>{t.register.createAccount}</Button>
             <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>
               {t.auth.haveAccount}{" "}
@@ -259,7 +259,7 @@ export default function RegisterPage() {
                 </label>
               ))}
             </div>
-            {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+            {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
             <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
               <Button variant="ghost" onClick={() => setStep("details")}>{t.register.back}</Button>
               <Button onClick={submit} loading={busy} disabled={selected.size === 0}>{t.register.submit}</Button>
@@ -269,7 +269,7 @@ export default function RegisterPage() {
 
         {step === "done" && (
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <Icon name="sparkles" size={28} color="var(--success-600)" />
+            <Icon name="sparkles" size={28} color="var(--success-text)" />
             <h2 style={{ margin: 0, fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.register.successTitle}</h2>
             <p style={{ margin: 0, fontSize: "var(--fs-body)", lineHeight: 1.5 }}>{t.register.successBody}</p>
             <Link href="/admin"><Button>{t.register.toDashboard}</Button></Link>

@@ -101,7 +101,7 @@ export function CreateProfileForm({ orgs, municipalities }: { orgs: Ref[]; munic
           ))}
         </select>
       </div>
-      {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
       <div>
         <Button type="submit" loading={busy} leadingIcon="plus">{t.orgadmin.createProfile}</Button>
       </div>

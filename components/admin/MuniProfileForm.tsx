@@ -59,11 +59,11 @@ export function MuniProfileForm({
         <SocialLinksEditor value={socialLinks} onChange={setSocialLinks} />
       </section>
 
-      {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <Button type="submit" loading={busy}>{busy ? t.kommune.saving : t.orgadmin.save}</Button>
-        {done && <span style={{ color: "var(--success-600)", fontSize: "var(--fs-sm)", fontWeight: 600 }}>{t.kommune.profileSaved}</span>}
+        {done && <span style={{ color: "var(--success-text)", fontSize: "var(--fs-sm)", fontWeight: 600 }}>{t.kommune.profileSaved}</span>}
       </div>
     </form>
   );

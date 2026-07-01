@@ -95,7 +95,7 @@ export default function LoginPage() {
           </div>
 
           {error && (
-            <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>
+            <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>
           )}
 
           <Button type="submit" fullWidth loading={loading}>

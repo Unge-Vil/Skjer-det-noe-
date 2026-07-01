@@ -264,7 +264,7 @@ export function ActivityForm({
         <CoOrganizerEditor value={coOrgs} onChange={setCoOrgs} excludeOrgId={orgId} />
       </div>
 
-      {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       <div style={{ display: "flex", gap: 10 }}>
         <Button type="submit" loading={busy}>{busy ? t.form.saving : t.form.save}</Button>

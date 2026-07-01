@@ -157,7 +157,7 @@ export default async function AdminPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
               {fields.map((f) => (
                 <div key={f.label} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: "var(--fs-sm)" }}>
-                  <Icon name={f.done ? "check-circle-2" : "circle"} size={19} color={f.done ? "var(--success-600)" : "var(--stone-300)"} />
+                  <Icon name={f.done ? "check-circle-2" : "circle"} size={19} color={f.done ? "var(--success-text)" : "var(--stone-300)"} />
                   <span style={{ flex: 1, color: f.done ? "var(--text-body)" : "var(--text-strong)", fontWeight: f.done ? 500 : 600 }}>{f.label}</span>
                   {!f.done && <span style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.orgadmin.addField}</span>}
                 </div>

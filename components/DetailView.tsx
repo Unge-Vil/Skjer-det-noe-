@@ -198,7 +198,7 @@ export function DetailView({ data }: { data: DetailData }) {
 
         {data.kind === "activity" && (
           <div style={{ display: "flex", gap: 10, padding: 16, background: "var(--success-50)", borderRadius: "var(--radius-lg)" }}>
-            <Icon name="sparkles" size={20} color="var(--success-600)" />
+            <Icon name="sparkles" size={20} color="var(--success-text)" />
             <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "#15532f", lineHeight: 1.5 }}>
               <strong>{t.detail.newHere}</strong> {t.detail.newHereBody}
             </p>

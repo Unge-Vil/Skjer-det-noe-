@@ -73,7 +73,7 @@ export function MuniPageBuilder({
   return (
     <div style={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column" }}>
       {error && (
-        <p style={{ margin: 0, padding: "8px 16px", color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>
+        <p style={{ margin: 0, padding: "8px 16px", color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>
       )}
       <div style={{ flex: 1, minHeight: 0 }}>
         <Puck
@@ -93,7 +93,7 @@ export function MuniPageBuilder({
                       borderRadius: "var(--radius-md)",
                       border: "1px solid var(--border-subtle)",
                       background: "transparent",
-                      color: "var(--danger-600)",
+                      color: "var(--danger-text)",
                       fontWeight: 600,
                       cursor: "pointer",
                     }}

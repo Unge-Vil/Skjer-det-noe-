@@ -303,7 +303,7 @@ export function Explorer({
           </span>
         </div>
         {geoError && (
-          <p style={{ marginTop: 8, fontSize: "var(--fs-sm)", color: "var(--danger-600)" }}>{geoError}</p>
+          <p style={{ marginTop: 8, fontSize: "var(--fs-sm)", color: "var(--danger-text)" }}>{geoError}</p>
         )}
       </div>
 

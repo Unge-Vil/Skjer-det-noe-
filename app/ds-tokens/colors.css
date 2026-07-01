@@ -113,6 +113,12 @@
   --accent-soft:   var(--coral-50);
   --highlight:     var(--sol-400);
 
+  /* Status TEXT on the page/card surface. The -600 steps are tuned for light
+     surfaces; dark mode flips these to lighter tints so AA holds on dark. */
+  --danger-text:   var(--danger-600);
+  --success-text:  var(--success-600);
+  --warning-text:  var(--warning-600);
+
   /* Focus ring — high contrast, never colour-only (always a visible outline). */
   --focus-ring:        var(--fjord-700);
   --focus-ring-offset: var(--sand-50);
@@ -158,6 +164,11 @@
   --accent-soft:   #3A1A12;
   --highlight:     var(--sol-400);
 
+  /* Lighter status text so it reads on dark surfaces (≥4.5:1). */
+  --danger-text:   #FF8A7A;
+  --success-text:  #5FCF92;
+  --warning-text:  #E6B450;
+
   --focus-ring:        var(--fjord-300);
   --focus-ring-offset: #15181B;
 
@@ -194,6 +205,9 @@
     --border-brand:  var(--fjord-400);
     --accent:        var(--coral-400);
     --accent-soft:   #3A1A12;
+    --danger-text:   #FF8A7A;
+    --success-text:  #5FCF92;
+    --warning-text:  #E6B450;
     --focus-ring:        var(--fjord-300);
     --focus-ring-offset: #15181B;
   }

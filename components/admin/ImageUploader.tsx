@@ -127,8 +127,8 @@ export function ImageUploader({
         {t.orgadmin.imageHint}
         {recommended && ` ${t.orgadmin.imageRecommended}: ${recommended}.`}
       </p>
-      {warning && <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--warning-600)" }}>{warning}</p>}
-      {error && <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--danger-600)" }}>{error}</p>}
+      {warning && <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--warning-text)" }}>{warning}</p>}
+      {error && <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--danger-text)" }}>{error}</p>}
     </div>
   );
 }

@@ -64,7 +64,7 @@ export function DepartmentMemberManager({
         />
         <Button type="submit" loading={busy}>{t.orgadmin.addMember}</Button>
       </form>
-      {error && <p style={{ margin: 0, color: "var(--danger-600)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       {members.length === 0 ? (
         <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.orgadmin.noMembers}</p>
