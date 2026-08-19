@@ -8,6 +8,7 @@ export function kommuneNav(t: any, active?: string): NavItem[] {
     { href: "/kommune", label: t.orgadmin.overview, icon: "layout-dashboard" },
     { href: "/kommune/organisasjoner", label: t.kommune.organizations, icon: "building-2" },
     { href: "/kommune/innhold", label: t.kommune.content, icon: "clipboard-list" },
+    { href: "/kommune/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
     { href: "/kommune/sider", label: t.kommune.pages, icon: "file-text" },
     { href: "/kommune/profil", label: t.orgadmin.profile, icon: "building-2" },
   ];
