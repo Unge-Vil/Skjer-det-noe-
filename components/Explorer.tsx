@@ -7,6 +7,7 @@ import {
   useState,
   type CSSProperties,
 } from "react";
+import Link from "next/link";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
@@ -15,7 +16,7 @@ import {
   DEFAULT_RADIUS_M,
   fetchNearbyListings,
 } from "@/lib/listings";
-import type { Category, Listing, Municipality } from "@/lib/types";
+import type { Category, Listing, ListingKind, Municipality } from "@/lib/types";
 import { categoryDef } from "@/components/ds/categories";
 import { CategoryPill } from "@/components/ds/CategoryPill";
 import { FilterChip } from "@/components/ds/FilterChip";
@@ -65,6 +66,11 @@ export function Explorer({
   initialQuery = "",
   initialCategory = null,
   initialMunicipality = null,
+  initialKind = null,
+  initialView = "map",
+  showDirectoryShortcuts = false,
+  showMap = true,
+  listVariant = "card",
 }: {
   initialListings: Listing[];
   categories: Category[];
@@ -73,6 +79,11 @@ export function Explorer({
   initialQuery?: string;
   initialCategory?: string | null;
   initialMunicipality?: string | null;
+  initialKind?: ListingKind | null;
+  initialView?: MapListView;
+  showDirectoryShortcuts?: boolean;
+  showMap?: boolean;
+  listVariant?: "card" | "row";
 }) {
   const { t, locale } = useI18n();
   const location = useLocation();
@@ -86,10 +97,11 @@ export function Explorer({
 
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [category, setCategory] = useState<string | null>(initialCategory);
+  const [kind, setKind] = useState<ListingKind | null>(initialKind);
   const [query, setQuery] = useState(initialQuery);
-  // Mobile opens map-first (the page is "Kart"); the toggle is mobile-only and
-  // desktop always shows list + map side by side regardless of this value.
-  const [view, setView] = useState<MapListView>("map");
+  // The toggle is mobile-only and desktop always shows list + map side by side
+  // regardless of this value.
+  const [view, setView] = useState<MapListView>(initialView);
   const [listings, setListings] = useState<Listing[]>(initialListings);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -177,13 +189,14 @@ export function Explorer({
   const visible = useMemo(() => {
     if (!scopeReady) return [];
     const q = query.trim().toLowerCase();
-    if (!q) return listings;
-    return listings.filter((l) =>
-      [l.title, l.organizationName, l.description, categoryDef(l.categorySlug).label]
+    return listings.filter((l) => {
+      if (kind && l.kind !== kind) return false;
+      if (!q) return true;
+      return [l.title, l.organizationName, l.description, categoryDef(l.categorySlug).label]
         .filter(Boolean)
-        .some((t) => t!.toLowerCase().includes(q)),
-    );
-  }, [listings, query, scopeReady]);
+        .some((t) => t!.toLowerCase().includes(q));
+    });
+  }, [listings, query, scopeReady, kind]);
 
   return (
     <main id="main" className="flex min-h-0 flex-1 flex-col">
@@ -226,6 +239,60 @@ export function Explorer({
         />
       </section>
 
+      <div
+        className="mx-auto w-full max-w-6xl"
+        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "6px 16px", scrollbarWidth: "none" }}
+      >
+        <FilterChip selected={kind === "activity"} onClick={() => setKind("activity")}>
+          {t.explorer.activities}
+        </FilterChip>
+        <FilterChip selected={kind === "event"} onClick={() => setKind("event")}>
+          {t.explorer.events}
+        </FilterChip>
+        {showDirectoryShortcuts && (
+          <Link
+            href="/tjenester"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              minHeight: 40,
+              padding: "0 16px",
+              borderRadius: "var(--radius-pill)",
+              border: "1.5px solid var(--border-strong)",
+              background: "var(--surface-card)",
+              color: "var(--text-strong)",
+              fontSize: "var(--fs-sm)",
+              fontWeight: 600,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {t.explorer.services}
+          </Link>
+        )}
+        {showDirectoryShortcuts && (
+          <Link
+            href="/frivilligtorg"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              minHeight: 40,
+              padding: "0 16px",
+              borderRadius: "var(--radius-pill)",
+              border: "1.5px solid var(--border-strong)",
+              background: "var(--surface-card)",
+              color: "var(--text-strong)",
+              fontSize: "var(--fs-sm)",
+              fontWeight: 600,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {t.explorer.volunteer}
+          </Link>
+        )}
+      </div>
+
       {/* Category chips */}
       <div
         className="mx-auto w-full max-w-6xl"
@@ -250,8 +317,8 @@ export function Explorer({
         })}
       </div>
 
-      {/* Controls — a single clean filter row (scrolls horizontally on mobile,
-          wraps on desktop). The list/map toggle floats over the map on mobile. */}
+        {/* Controls — a single clean filter row (scrolls horizontally on mobile,
+          wraps on desktop). */}
       <div className="mx-auto w-full max-w-6xl px-3 py-2 lg:px-4">
         <div
           className="flex items-center gap-2 overflow-x-auto lg:flex-wrap"
@@ -288,9 +355,11 @@ export function Explorer({
       </div>
 
       {/* List + map */}
-      <div className="mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-0 px-0 pb-0 lg:grid-cols-[minmax(0,440px)_1fr] lg:gap-4 lg:px-4 lg:pb-6">
+      <div
+        className={`mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-0 px-0 pb-0 ${showMap ? "lg:grid-cols-[minmax(0,440px)_1fr] lg:gap-4" : ""} lg:px-4 lg:pb-6`}
+      >
         <div
-          className={`sdn-stagger ${view === "map" ? "hidden" : "block"} space-y-3 px-3 py-2 lg:block lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto lg:p-2`}
+          className={`sdn-stagger ${showMap && view === "map" ? "hidden" : "block"} space-y-3 px-3 py-2 lg:block ${showMap ? "lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto" : ""} lg:p-2`}
         >
           {!configured && (
             <div
@@ -326,6 +395,7 @@ export function Explorer({
             <ListingCard
               key={l.id}
               listing={l}
+              variant={listVariant}
               active={l.id === activeId}
               saved={saved.includes(l.id)}
               showDistance={location.mode === "nearby"}
@@ -335,27 +405,30 @@ export function Explorer({
           ))}
         </div>
 
-        <div
-          className={`${view === "list" ? "hidden" : "block"} h-[calc(100dvh-208px)] min-h-[340px] overflow-hidden p-0 lg:block lg:h-auto lg:min-h-[70vh] lg:p-0`}
-        >
+        {showMap && (
           <div
-            className="h-full w-full overflow-hidden lg:[border:1px_solid_var(--border-subtle)] lg:[border-radius:var(--radius-lg)]"
+            className={`${view === "list" ? "hidden" : "block"} h-[calc(100dvh-208px)] min-h-[340px] overflow-hidden p-0 lg:block lg:h-auto lg:min-h-[70vh] lg:p-0`}
           >
-            <ListingMap
-              center={center}
-              listings={visible}
-              activeId={activeId}
-              onHover={setActiveId}
-              onSelect={setActiveId}
-              showCurrentLocation={location.mode === "nearby"}
-            />
+            <div
+              className="h-full w-full overflow-hidden lg:[border:1px_solid_var(--border-subtle)] lg:[border-radius:var(--radius-lg)]"
+            >
+              <ListingMap
+                center={center}
+                listings={visible}
+                activeId={activeId}
+                onHover={setActiveId}
+                onSelect={setActiveId}
+                showCurrentLocation={location.mode === "nearby"}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Floating list/map toggle over the map (mobile only). Portalled to body
           so it stays viewport-fixed despite the page-transition transform. */}
-      {mounted &&
+      {showMap &&
+        mounted &&
         createPortal(
           <div
             className="flex lg:hidden"

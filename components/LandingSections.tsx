@@ -96,7 +96,7 @@ export function LandingSections({
         title={t.landing.thisWeek}
         sub={t.landing.thisWeekSub}
         actionLabel={t.landing.allEvents}
-        actionHref="/kart"
+        actionHref="/utforsk?type=event"
       >
         {events.length === 0 ? (
           empty

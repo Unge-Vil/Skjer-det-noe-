@@ -6,14 +6,21 @@ import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "@/components/ds/Icon";
 import { SettingsContent } from "@/components/SettingsContent";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { createClient } from "@/lib/supabase/client";
+import { findMunicipality } from "@/lib/location";
+import { useLocation } from "@/components/location/LocationProvider";
 
 const SAVED_KEY = "sdn-saved";
 
 export function MobileTabBar() {
   const { t } = useI18n();
   const pathname = usePathname();
+  const location = useLocation();
+  const defaultMunicipality = findMunicipality(location.municipalities, location.defaultMunicipality);
+  const myMunicipalityHref = defaultMunicipality?.slug ? `/kommune/${defaultMunicipality.slug}` : "/kommuner";
   const [savedCount, setSavedCount] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
   const settingsTriggerRef = useRef<HTMLButtonElement>(null);
   const settingsSheetRef = useRef<HTMLDivElement>(null);
 
@@ -48,6 +55,15 @@ export function MobileTabBar() {
     return () => document.removeEventListener("keydown", onKey);
   }, [settingsOpen]);
 
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSignedIn(Boolean(session?.user));
+    });
+    return () => listener.subscription.unsubscribe();
+  }, []);
+
   // Hide the tab bar inside the admin areas (own chrome).
   if (
     pathname.startsWith("/admin") ||
@@ -59,14 +75,14 @@ export function MobileTabBar() {
   const tabs: { href: string; label: string; icon: IconName; badge?: number }[] = [
     { href: "/", label: t.nav.home, icon: "house" },
     { href: "/utforsk", label: t.nav.explore, icon: "sparkles" },
-    { href: "/kart", label: t.nav.map, icon: "map" },
+    { href: "/swipe", label: t.nav.swipe, icon: "repeat" },
     { href: "/lagret", label: t.nav.saved, icon: "heart", badge: savedCount },
   ];
 
   return (
     <>
       {settingsOpen && (
-        <div className="sm:hidden" role="dialog" aria-modal="true" aria-label={t.nav.settings}>
+        <div className="sm:hidden" role="dialog" aria-modal="true" aria-label={t.nav.more}>
           <button
             type="button"
             aria-label={t.nav.closeSettings}
@@ -115,7 +131,7 @@ export function MobileTabBar() {
             }}
           >
             <div className="flex items-center justify-between" style={{ marginBottom: 16 }}>
-              <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.nav.settings}</h2>
+              <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.nav.more}</h2>
               <button
                 type="button"
                 aria-label={t.nav.closeSettings}
@@ -135,6 +151,96 @@ export function MobileTabBar() {
               >
                 <Icon name="x" size={18} />
               </button>
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 18 }}>
+              <Link
+                href={myMunicipalityHref}
+                onClick={closeSettings}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  minHeight: 44,
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "0 12px",
+                  textDecoration: "none",
+                  color: "var(--text-body)",
+                  fontWeight: 600,
+                }}
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <Icon name="map-pin" size={16} /> {t.nav.myMunicipality}
+                </span>
+                <Icon name="arrow-right" size={15} />
+              </Link>
+              <Link
+                href={signedIn ? "/konto" : "/logg-inn"}
+                onClick={closeSettings}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  minHeight: 44,
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "0 12px",
+                  textDecoration: "none",
+                  color: "var(--text-body)",
+                  fontWeight: 600,
+                }}
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <Icon name="user" size={16} /> {signedIn ? t.account.title : t.auth.login}
+                </span>
+                <Icon name="arrow-right" size={15} />
+              </Link>
+              <Link
+                href="/personvern-og-vilkar"
+                onClick={closeSettings}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  minHeight: 44,
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "0 12px",
+                  textDecoration: "none",
+                  color: "var(--text-body)",
+                  fontWeight: 600,
+                }}
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <Icon name="file-text" size={16} /> {t.footer.privacyTerms}
+                </span>
+                <Icon name="arrow-right" size={15} />
+              </Link>
+              <Link
+                href="/tilgjengelighet"
+                onClick={closeSettings}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  minHeight: 44,
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "0 12px",
+                  textDecoration: "none",
+                  color: "var(--text-body)",
+                  fontWeight: 600,
+                }}
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <Icon name="accessibility" size={16} /> {t.footer.accessibility}
+                </span>
+                <Icon name="arrow-right" size={15} />
+              </Link>
             </div>
             <SettingsContent />
           </div>
@@ -226,7 +332,7 @@ export function MobileTabBar() {
         >
           <Icon name="settings" size={23} />
           <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: settingsOpen ? 700 : 500 }}>
-            {t.nav.settings}
+            {t.nav.more}
           </span>
         </button>
       </nav>

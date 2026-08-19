@@ -96,6 +96,7 @@ export function ListingCard({
   active,
   saved = false,
   showDistance = true,
+  variant = "card",
   onHover,
   onToggleSave,
 }: {
@@ -103,6 +104,7 @@ export function ListingCard({
   active?: boolean;
   saved?: boolean;
   showDistance?: boolean;
+  variant?: "card" | "row";
   onHover?: (id: string | null) => void;
   onToggleSave?: (id: string) => void;
 }) {
@@ -149,6 +151,79 @@ export function ListingCard({
       if (e.key === "Enter") router.push(href);
     },
   };
+
+  if (variant === "row") {
+    const schedule =
+      listing.kind === "event" && listing.startsAt
+        ? new Date(listing.startsAt).toLocaleString(INTL_LOCALE[locale], {
+            weekday: "short",
+            day: "numeric",
+            month: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : [weekdayName(listing.weekday, locale), formatTimeRange(listing.startTime, listing.endTime)]
+            .filter(Boolean)
+            .join(" · ") || listing.recurrenceNote;
+
+    return (
+      <article
+        {...handlers}
+        style={{
+          ...cardShell,
+          display: "grid",
+          gridTemplateColumns: "clamp(148px, 34vw, 220px) minmax(0,1fr)",
+          gap: 12,
+          alignItems: "center",
+          overflow: "hidden",
+        }}
+      >
+        <div style={{ position: "relative", background: cat.bg, aspectRatio: "16 / 9" }}>
+          {listing.imageUrl ? (
+            <Image src={listing.imageUrl} alt="" fill style={{ objectFit: "cover" }} sizes="120px" />
+          ) : (
+            <span
+              style={{
+                position: "absolute",
+                inset: 0,
+                margin: "auto",
+                width: 30,
+                height: 30,
+                color: cat.fg,
+                opacity: 0.6,
+                display: "inline-flex",
+              }}
+            >
+              <Icon name={cat.icon} size={30} />
+            </span>
+          )}
+        </div>
+
+        <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 6, padding: "10px 12px 10px 0" }}>
+          <div style={{ display: "flex", alignItems: "start", gap: 8 }}>
+            <div style={{ minWidth: 0, flex: 1 }}>
+              <h3 style={{ margin: 0, fontSize: "var(--fs-body)", fontWeight: 700, lineHeight: 1.3 }}>
+                {listing.title}
+              </h3>
+              {listing.organizationName && (
+                <p style={{ margin: "2px 0 0", fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>
+                  {listing.organizationName}
+                </p>
+              )}
+            </div>
+            {onToggleSave && <SaveButton saved={saved} onToggle={() => onToggleSave(listing.id)} />}
+          </div>
+
+          <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--text-muted)", display: "flex", gap: 10, flexWrap: "wrap" }}>
+            <span>{listing.kind === "event" ? t.card.event : t.card.activity}</span>
+            {schedule && <span>{schedule}</span>}
+            {placeText && <span>{placeText}</span>}
+            {showDistance && <span>{distance}</span>}
+          </p>
+        </div>
+      </article>
+    );
+  }
 
   // ── Event: horizontal card led by a date block ──
   if (listing.kind === "event" && listing.startsAt) {

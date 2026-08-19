@@ -9,10 +9,15 @@ import { useI18n } from "@/components/i18n/LocaleProvider";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { LocationMenu } from "@/components/location/LocationMenu";
+import { findMunicipality } from "@/lib/location";
+import { useLocation } from "@/components/location/LocationProvider";
 
 export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: boolean }) {
   const { t } = useI18n();
   const pathname = usePathname();
+  const location = useLocation();
+  const defaultMunicipality = findMunicipality(location.municipalities, location.defaultMunicipality);
+  const myMunicipalityHref = defaultMunicipality?.slug ? `/kommune/${defaultMunicipality.slug}` : "/kommuner";
   const [signedIn, setSignedIn] = useState<boolean | null>(initialSignedIn);
   const inAdminArea = pathname.startsWith("/admin") || pathname.startsWith("/kommune") || pathname.startsWith("/plattform");
   const showContextMenu = inAdminArea || signedIn === true;
@@ -30,8 +35,7 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
     { href: "/", label: t.nav.home },
     { href: "/utforsk", label: t.nav.explore },
     { href: "/kart", label: t.nav.map },
-    { href: "/tjenester", label: t.nav.services },
-    { href: "/frivilligtorg", label: t.nav.volunteer },
+    { href: myMunicipalityHref, label: t.nav.myMunicipality },
   ];
 
   return (

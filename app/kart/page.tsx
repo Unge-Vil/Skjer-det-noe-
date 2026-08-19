@@ -73,6 +73,7 @@ export default async function MapPage({
       initialQuery={query}
       initialCategory={category}
       initialMunicipality={municipality}
+      initialView="map"
     />
   );
 }
