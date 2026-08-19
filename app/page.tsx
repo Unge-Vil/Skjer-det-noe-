@@ -13,6 +13,7 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { LandingHero } from "@/components/LandingHero";
 import { LandingSections } from "@/components/LandingSections";
 import { OrganisationCard } from "@/components/OrganisationCard";
+import { LocationPrimer } from "@/components/location/LocationPrimer";
 
 export const dynamic = "force-dynamic";
 
@@ -61,6 +62,7 @@ export default async function Home() {
 
   return (
     <main id="main" className="flex flex-1 flex-col pb-12">
+      <LocationPrimer />
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, var(--surface-brand-soft), var(--bg-app))" }}>
         <div className="mx-auto max-w-6xl px-4 py-12 text-center sm:py-16">

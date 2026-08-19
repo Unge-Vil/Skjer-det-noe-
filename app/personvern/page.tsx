@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Personvern – Skjer det noe?" };
 
 export default function PersonvernPage() {
   return (
-    <LegalPage title="Personvernerklæring" updated="29. juni 2026">
+    <LegalPage title="Personvernerklæring" updated="19. august 2026">
       <p>
         «Skjer det noe?» er en tjeneste fra Unge Vil som hjelper deg å finne faste aktiviteter og
         arrangementer i nærheten. Vi er opptatt av å samle inn så få personopplysninger som mulig.
@@ -24,15 +24,17 @@ export default function PersonvernPage() {
           Aktiviteter du lagrer som favoritter, lagres kun lokalt i nettleseren din – de sendes ikke til oss.
         </li>
         <li>
-          Vi lagrer valg av språk og tema i informasjonskapsler på enheten din, slik at tjenesten husker
-          innstillingene dine.
+          Vi lagrer valg av språk, tema, lokasjonsmodus og standardkommune på enheten din, slik at tjenesten
+          husker innstillingene dine. Vi lagrer ikke GPS-koordinatene dine.
         </li>
         <li>
           Vi teller anonyme sidevisninger for å se hvilke oppføringer som er populære. Disse tallene knyttes
           ikke til deg som person.
         </li>
         <li>
-          Hvis du bruker «nær meg», beregnes avstanden i nettleseren din. Posisjonen din lagres ikke hos oss.
+          Hvis du bruker «nær meg», sendes posisjonen midlertidig til tjenesten for å sortere oppføringer etter
+          faktisk avstand. Den brukes også i et punkt-oppslag hos Kartverket for å finne kommunen du befinner
+          deg i. Koordinatene lagres ikke av «Skjer det noe?».
         </li>
       </ul>
 
@@ -47,6 +49,7 @@ export default function PersonvernPage() {
       <ul>
         <li>Supabase – database og autentisering</li>
         <li>Cloudflare – hosting og levering av innhold</li>
+        <li>Kartverket – oppslag av kommune fra posisjon</li>
       </ul>
       <p>De behandler data på våre vegne, og vi etterstreber lagring innenfor EU/EØS.</p>
 

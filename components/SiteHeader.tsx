@@ -9,6 +9,7 @@ import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { LocationMenu } from "@/components/location/LocationMenu";
 
 export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: boolean }) {
   const { t } = useI18n();
@@ -73,9 +74,13 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
           })}
         </nav>
 
+        <div className="ml-auto sm:ml-2">
+          <LocationMenu />
+        </div>
+
         {/* Settings and account access are desktop-only; on mobile settings
           lives in the bottom tab bar. */}
-        <div className="ml-auto hidden items-center gap-2 sm:flex">
+        <div className="hidden items-center gap-2 sm:flex">
           {showContextMenu && (
             <div style={{ maxWidth: 260, minWidth: 190 }}>
               <ContextSwitcher />

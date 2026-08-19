@@ -4,7 +4,6 @@ import {
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type CSSProperties,
 } from "react";
@@ -21,10 +20,10 @@ import { categoryDef } from "@/components/ds/categories";
 import { CategoryPill } from "@/components/ds/CategoryPill";
 import { FilterChip } from "@/components/ds/FilterChip";
 import { SearchBar } from "@/components/ds/SearchBar";
-import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
 import { MapListToggle, type MapListView } from "@/components/ds/MapListToggle";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { useLocation } from "@/components/location/LocationProvider";
 import { fmt, plural } from "@/lib/i18n/config";
 import { ListingCard } from "./ListingCard";
 
@@ -76,6 +75,8 @@ export function Explorer({
   initialMunicipality?: string | null;
 }) {
   const { t, locale } = useI18n();
+  const location = useLocation();
+  const { selectMunicipality } = location;
   const supabase = useMemo(() => (configured ? createClient() : null), [configured]);
 
   const initialCenter = useMemo(() => {
@@ -83,10 +84,8 @@ export function Explorer({
     return m?.lat != null && m?.lng != null ? { lat: m.lat, lng: m.lng } : DEFAULT_CENTER;
   }, [municipalities, initialMunicipality]);
 
-  const [center, setCenter] = useState(initialCenter);
   const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [category, setCategory] = useState<string | null>(initialCategory);
-  const [municipality, setMunicipality] = useState<string | null>(initialMunicipality);
   const [query, setQuery] = useState(initialQuery);
   // Mobile opens map-first (the page is "Kart"); the toggle is mobile-only and
   // desktop always shows list + map side by side regardless of this value.
@@ -94,11 +93,21 @@ export function Explorer({
   const [listings, setListings] = useState<Listing[]>(initialListings);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [geoError, setGeoError] = useState<string | null>(null);
   const [saved, setSaved] = useState<string[]>([]);
   const [mounted, setMounted] = useState(false);
 
-  const firstRun = useRef(true);
+  const municipality =
+    location.mode === "municipality"
+      ? location.selectedMunicipality ?? location.defaultMunicipality
+      : null;
+  const center = useMemo(() => {
+    if (location.mode === "nearby" && location.coordinates) return location.coordinates;
+    if (location.mode === "municipality") {
+      const selected = municipalities.find((item) => item.kommunenummer === municipality);
+      if (selected?.lat != null && selected.lng != null) return { lat: selected.lat, lng: selected.lng };
+    }
+    return initialCenter;
+  }, [location.mode, location.coordinates, municipalities, municipality, initialCenter]);
 
   // Portal target for the floating toggle (page transform would otherwise
   // capture position:fixed).
@@ -131,13 +140,19 @@ export function Explorer({
   }, []);
 
   useEffect(() => {
-    if (!supabase) return;
-    if (firstRun.current) {
-      firstRun.current = false;
-      return;
+    if (initialMunicipality && location.selectedMunicipality !== initialMunicipality) {
+      selectMunicipality(initialMunicipality);
     }
+  }, [initialMunicipality, location.selectedMunicipality, selectMunicipality]);
+
+  useEffect(() => {
+    if (!supabase) return;
+    if (location.mode === "nearby" && !location.coordinates) return;
+    if (location.mode === "municipality" && !municipality) return;
     let cancelled = false;
-    setLoading(true);
+    queueMicrotask(() => {
+      if (!cancelled) setLoading(true);
+    });
     fetchNearbyListings(supabase, { lat: center.lat, lng: center.lng, radiusM, category, municipality }, locale)
       .then((rows) => {
         if (!cancelled) setListings(rows);
@@ -152,38 +167,15 @@ export function Explorer({
     return () => {
       cancelled = true;
     };
-  }, [supabase, center, radiusM, category, municipality, locale]);
-
-  const useMyLocation = useCallback(() => {
-    setGeoError(null);
-    if (!("geolocation" in navigator)) {
-      setGeoError(t.explorer.geoUnsupported);
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setMunicipality(null);
-        setCenter({ lat: pos.coords.latitude, lng: pos.coords.longitude });
-      },
-      () => setGeoError(t.explorer.geoDenied),
-    );
-  }, [t]);
-
-  const onMunicipalityChange = useCallback(
-    (kommunenummer: string) => {
-      const value = kommunenummer || null;
-      setMunicipality(value);
-      const m = municipalities.find((x) => x.kommunenummer === value);
-      if (m?.lat != null && m?.lng != null) setCenter({ lat: m.lat, lng: m.lng });
-    },
-    [municipalities],
-  );
+  }, [supabase, center, radiusM, category, municipality, locale, location.mode, location.coordinates]);
 
   const municipalityName =
     municipalities.find((m) => m.kommunenummer === municipality)?.name ?? null;
+  const scopeReady = location.mode === "nearby" ? Boolean(location.coordinates) : Boolean(municipality);
 
   // Client-side text search over the fetched set.
   const visible = useMemo(() => {
+    if (!scopeReady) return [];
     const q = query.trim().toLowerCase();
     if (!q) return listings;
     return listings.filter((l) =>
@@ -191,7 +183,7 @@ export function Explorer({
         .filter(Boolean)
         .some((t) => t!.toLowerCase().includes(q)),
     );
-  }, [listings, query]);
+  }, [listings, query, scopeReady]);
 
   return (
     <main id="main" className="flex min-h-0 flex-1 flex-col">
@@ -265,45 +257,33 @@ export function Explorer({
           className="flex items-center gap-2 overflow-x-auto lg:flex-wrap"
           style={{ scrollbarWidth: "none" }}
         >
-          <Button className="shrink-0" variant="coral" size="sm" leadingIcon="locate-fixed" onClick={useMyLocation}>
-            {t.explorer.nearMe}
-          </Button>
+          <span className="inline-flex shrink-0 items-center gap-2" style={{ minHeight: 38, padding: "0 12px", borderRadius: "var(--radius-pill)", background: "var(--surface-brand-soft)", color: "var(--text-brand)", fontSize: "var(--fs-sm)", fontWeight: 650 }}>
+            <Icon name={location.mode === "nearby" ? "locate-fixed" : "map-pin"} size={16} />
+            {location.mode === "nearby" ? location.currentMunicipality?.name ?? t.location.nearMe : municipalityName ?? t.location.chooseMunicipality}
+          </span>
 
-          <select
-            value={municipality ?? ""}
-            onChange={(e) => onMunicipalityChange(e.target.value)}
-            style={selectStyle}
-            className="shrink-0"
-            aria-label={t.explorer.allMunicipalities}
-          >
-            <option value="">{t.explorer.allMunicipalities}</option>
-            {municipalities.map((m) => (
-              <option key={m.id} value={m.kommunenummer}>
-                {m.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            value={radiusM}
-            onChange={(e) => setRadiusM(Number(e.target.value))}
-            style={selectStyle}
-            className="shrink-0"
-            aria-label={fmt(t.explorer.within, { km: "" }).trim()}
-          >
-            {RADIUS_OPTIONS.map((v) => (
-              <option key={v} value={v}>
-                {fmt(t.explorer.within, { km: v / 1000 })}
-              </option>
-            ))}
-          </select>
+          {location.mode === "nearby" && (
+            <select
+              value={radiusM}
+              onChange={(e) => setRadiusM(Number(e.target.value))}
+              style={selectStyle}
+              className="shrink-0"
+              aria-label={fmt(t.explorer.within, { km: "" }).trim()}
+            >
+              {RADIUS_OPTIONS.map((v) => (
+                <option key={v} value={v}>
+                  {fmt(t.explorer.within, { km: v / 1000 })}
+                </option>
+              ))}
+            </select>
+          )}
 
           <span className="ml-auto hidden lg:inline" style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
             {loading ? t.explorer.loading : plural(locale, visible.length, t.explorer.results)}
           </span>
         </div>
-        {geoError && (
-          <p style={{ marginTop: 8, fontSize: "var(--fs-sm)", color: "var(--danger-text)" }}>{geoError}</p>
+        {location.mode === "nearby" && !location.coordinates && !location.locating && (
+          <p style={{ marginTop: 8, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.location.useMenuHint}</p>
         )}
       </div>
 
@@ -348,6 +328,7 @@ export function Explorer({
               listing={l}
               active={l.id === activeId}
               saved={saved.includes(l.id)}
+              showDistance={location.mode === "nearby"}
               onHover={setActiveId}
               onToggleSave={toggleSave}
             />
@@ -366,6 +347,7 @@ export function Explorer({
               activeId={activeId}
               onHover={setActiveId}
               onSelect={setActiveId}
+              showCurrentLocation={location.mode === "nearby"}
             />
           </div>
         </div>
@@ -376,14 +358,13 @@ export function Explorer({
       {mounted &&
         createPortal(
           <div
-            className="lg:hidden"
+            className="flex lg:hidden"
             style={{
               position: "fixed",
               left: 0,
               right: 0,
               bottom: "calc(74px + env(safe-area-inset-bottom))",
               zIndex: 25,
-              display: "flex",
               justifyContent: "center",
               pointerEvents: "none",
             }}

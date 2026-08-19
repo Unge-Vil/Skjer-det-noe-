@@ -31,6 +31,7 @@ export function CookieBanner() {
       // ignore
     }
     setShow(false);
+    window.dispatchEvent(new Event("sdn:cookie-consent"));
   };
 
   return (

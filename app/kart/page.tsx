@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import {
   DEFAULT_CENTER,
   DEFAULT_RADIUS_M,
@@ -7,6 +8,7 @@ import {
 import type { Category, Listing, Municipality } from "@/lib/types";
 import { getLocale } from "@/lib/i18n/server";
 import { Explorer } from "@/components/Explorer";
+import { LOCATION_COOKIE, parseLocationPreferences } from "@/lib/location";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +20,12 @@ export default async function MapPage({
   const sp = await searchParams;
   const query = sp.q ?? "";
   const category = sp.kategori ?? null;
-  const municipality = sp.kommune ?? null;
+  const preferences = parseLocationPreferences((await cookies()).get(LOCATION_COOKIE)?.value);
+  const municipality =
+    sp.kommune ??
+    (preferences.mode === "municipality"
+      ? preferences.selectedMunicipality ?? preferences.defaultMunicipality
+      : null);
 
   const configured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -45,11 +52,13 @@ export default async function MapPage({
           ? { lat: m.lat, lng: m.lng }
           : DEFAULT_CENTER;
 
-      initialListings = await fetchNearbyListings(
-        supabase,
-        { lat: center.lat, lng: center.lng, radiusM: DEFAULT_RADIUS_M, category, municipality },
-        await getLocale(),
-      );
+      if (municipality) {
+        initialListings = await fetchNearbyListings(
+          supabase,
+          { lat: center.lat, lng: center.lng, radiusM: DEFAULT_RADIUS_M, category, municipality },
+          await getLocale(),
+        );
+      }
     } catch (err) {
       console.error("Map data load failed", err);
     }

@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { cookies } from "next/headers";
 import { Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
@@ -8,6 +9,10 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { MobileTabBar } from "@/components/MobileTabBar";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { LocationProvider } from "@/components/location/LocationProvider";
+import { createClient } from "@/lib/supabase/server";
+import { LOCATION_COOKIE, parseLocationPreferences } from "@/lib/location";
+import type { Municipality } from "@/lib/types";
 
 const schibsted = Schibsted_Grotesk({
   variable: "--font-schibsted",
@@ -50,6 +55,16 @@ export default async function RootLayout({
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const user = await getUser();
+  const configured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
+  );
+  let municipalities: Municipality[] = [];
+  if (configured) {
+    const supabase = await createClient();
+    const { data } = await supabase.from("municipalities_view").select("*").order("name");
+    municipalities = (data as Municipality[]) ?? [];
+  }
+  const preferences = parseLocationPreferences((await cookies()).get(LOCATION_COOKIE)?.value);
 
   return (
     <html
@@ -63,16 +78,18 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full">
         <LocaleProvider locale={locale} dict={dict}>
-          <a href="#main" className="skip-link">
-            {dict.nav.skipToContent}
-          </a>
-          <div className="flex min-h-screen flex-col" style={{ background: "var(--bg-app)" }}>
-            <SiteHeader initialSignedIn={Boolean(user)} />
-            {children}
-            <MobileTabBar />
-          </div>
-          <CookieBanner />
-          <ServiceWorkerRegister />
+          <LocationProvider initialPreferences={preferences} municipalities={municipalities}>
+            <a href="#main" className="skip-link">
+              {dict.nav.skipToContent}
+            </a>
+            <div className="flex min-h-screen flex-col" style={{ background: "var(--bg-app)" }}>
+              <SiteHeader initialSignedIn={Boolean(user)} />
+              {children}
+              <MobileTabBar />
+            </div>
+            <CookieBanner />
+            <ServiceWorkerRegister />
+          </LocationProvider>
         </LocaleProvider>
       </body>
     </html>

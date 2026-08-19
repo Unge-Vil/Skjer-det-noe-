@@ -50,12 +50,14 @@ export default function ListingMap({
   activeId,
   onHover,
   onSelect,
+  showCurrentLocation = true,
 }: {
   center: { lat: number; lng: number };
   listings: Listing[];
   activeId?: string | null;
   onHover?: (id: string | null) => void;
   onSelect?: (id: string) => void;
+  showCurrentLocation?: boolean;
 }) {
   return (
     <MapContainer
@@ -72,7 +74,9 @@ export default function ListingMap({
 
       {/* Decorative "your location" dot — not interactive, so it stays out of
           the tab order and the target-size requirement. */}
-      <Marker position={[center.lat, center.lng]} icon={userIcon} interactive={false} keyboard={false} />
+      {showCurrentLocation && (
+        <Marker position={[center.lat, center.lng]} icon={userIcon} interactive={false} keyboard={false} />
+      )}
 
       {listings.map((l) => {
         const isActive = l.id === activeId;
