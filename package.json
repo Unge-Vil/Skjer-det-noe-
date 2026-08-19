@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@capacitor/core": "^8.4.1",
-    "@measured/puck": "0.20.2",
+    "@puckeditor/core": "^0.23.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
     "@tiptap/html": "^3.27.1",

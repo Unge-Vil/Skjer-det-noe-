@@ -3,11 +3,11 @@ import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { loc } from "@/lib/i18n/config";
-import { Render } from "@measured/puck/rsc";
+import { Render } from "@puckeditor/core/rsc";
 import { Icon } from "@/components/ds/Icon";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
 import { puckConfig, type PuckProps, type PuckRoot } from "@/lib/puck/config";
-import type { Data } from "@measured/puck";
+import type { Data } from "@puckeditor/core";
 
 export const dynamic = "force-dynamic";
 

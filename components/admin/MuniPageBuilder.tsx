@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Puck, type Data } from "@measured/puck";
-import "@measured/puck/puck.css";
+import { Puck, type Data } from "@puckeditor/core";
+import "@puckeditor/core/puck.css";
 import { createClient } from "@/lib/supabase/client";
 import { puckConfig, type PuckRoot } from "@/lib/puck/config";
 import { useI18n } from "@/components/i18n/LocaleProvider";

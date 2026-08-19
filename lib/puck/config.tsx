@@ -1,9 +1,12 @@
-import type { Config, Data } from "@measured/puck";
+import type { Config, Data } from "@puckeditor/core";
+import type { ComponentType, CSSProperties } from "react";
 
 // Block props for the municipality page builder.
 export type PuckProps = {
   Heading: { text: string; level: "2" | "3" };
   Text: { text: string };
+  RichText: { body: string };
+  Columns: { left: unknown; right: unknown };
   Image: { url: string; alt: string; caption: string };
   Button: { label: string; href: string };
   Card: { imageUrl: string; title: string; text: string; linkLabel: string; linkHref: string };
@@ -59,6 +62,20 @@ function Placeholder({ label }: { label: string }) {
 }
 
 export const puckConfig: Config<PuckProps, PuckRoot> = {
+  categories: {
+    content: {
+      title: "Innhold",
+      components: ["Heading", "Text", "RichText", "Image", "Card"],
+    },
+    links: {
+      title: "Lenker og media",
+      components: ["Button", "Video", "Embed"],
+    },
+    layout: {
+      title: "Oppsett",
+      components: ["Columns", "Divider", "Spacer"],
+    },
+  },
   root: {
     fields: {
       title: { type: "text", label: "Tittel", placeholder: "F.eks. Fritidstilbud" },
@@ -105,6 +122,30 @@ export const puckConfig: Config<PuckProps, PuckRoot> = {
       render: ({ text }) => (
         <p style={{ margin: "0 0 0.8em", lineHeight: 1.65, whiteSpace: "pre-wrap", color: "var(--text-body)" }}>{text}</p>
       ),
+    },
+    RichText: {
+      label: "Rik tekst",
+      fields: { body: { type: "richtext", label: "Innhold", initialHeight: 180 } },
+      defaultProps: { body: "Skriv inn innhold her." },
+      render: ({ body }) => <div style={{ margin: "0 0 0.8em", lineHeight: 1.65 }}>{body}</div>,
+    },
+    Columns: {
+      label: "To kolonner",
+      fields: {
+        left: { type: "slot", label: "Venstre kolonne" },
+        right: { type: "slot", label: "Høyre kolonne" },
+      },
+      defaultProps: { left: [], right: [] },
+      render: ({ left, right }) => {
+        const Left = left as ComponentType<{ style?: CSSProperties }>;
+        const Right = right as ComponentType<{ style?: CSSProperties }>;
+        return (
+          <div className="sdn-puck-columns" style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 24, margin: "0 0 0.8em" }}>
+            <Left />
+            <Right />
+          </div>
+        );
+      },
     },
     Image: {
       label: "Bilde",

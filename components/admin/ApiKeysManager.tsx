@@ -118,6 +118,20 @@ export function ApiKeysManager({ orgId, initial }: { orgId: string; initial: Api
         </label>
         <Button type="submit" loading={busy} leadingIcon="plus">{t.integrations.createKey}</Button>
       </form>
+      <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div>
+          <h3 style={{ margin: "0 0 2px", fontSize: "var(--fs-body)", fontWeight: 700 }}>{t.integrations.docsTitle}</h3>
+          <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.integrations.docsIntro}</p>
+        </div>
+        <div style={{ display: "grid", gap: 6, fontSize: "var(--fs-sm)" }}>
+          <div><code>POST /api/v1/activities</code> {t.integrations.docsActivity}</div>
+          <div><code>POST /api/v1/events</code> {t.integrations.docsEvent}</div>
+          <div><code>GET /api/v1/activities?limit=50</code> {t.integrations.docsList}</div>
+          <div><code>GET /api/v1/events?limit=50</code> {t.integrations.docsList}</div>
+        </div>
+        <pre style={{ margin: 0, overflowX: "auto", padding: 14, borderRadius: "var(--radius-md)", background: "var(--surface-sunk)", color: "var(--text-body)", fontSize: "var(--fs-xs)", lineHeight: 1.55 }}><code>{'curl -X POST https://din-portal.no/api/v1/events\n  -H "Authorization: Bearer sdn_live_..."\n  -H "Content-Type: application/json"\n  -d \'{"title":"Åpen trening","starts_at":"2026-09-01T17:00:00+02:00","category":"sports","municipality":"1103","external_ref":"klubb-123"}\''}</code></pre>
+        <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.integrations.docsDetails}</p>
+      </div>
       {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       {initial.length === 0 ? (

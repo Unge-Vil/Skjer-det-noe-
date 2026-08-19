@@ -114,6 +114,11 @@
 /* Public article wrapper has no min-height/padding from the editor chrome. */
 article.sdn-richtext { min-height: 0; padding: 0; }
 
+.sdn-puck-columns > * { min-width: 0; }
+@media (max-width: 640px) {
+  .sdn-puck-columns { grid-template-columns: 1fr !important; gap: 16px !important; }
+}
+
 /* ── App-like motion: sheets, drawers, backdrops ───────────────────────────
    All collapse under prefers-reduced-motion via the motion-token rules. */
 @keyframes sdn-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
