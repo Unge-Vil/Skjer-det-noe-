@@ -3,7 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg } from "@/lib/org";
-import { getMyProfiles } from "@/lib/profiles";
+import { getActiveProfile, getMyProfiles } from "@/lib/profiles";
 import { getAccessAreas } from "@/lib/access";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
@@ -60,6 +60,7 @@ export default async function AdminPage() {
   const locale = await getLocale();
   const t = getDictionary(locale);
   const org = await getMyOrg();
+  const activeProfile = await getActiveProfile();
 
   if (!org) {
     // Profile-only admins have no master org — send them to their profiles.
@@ -85,10 +86,18 @@ export default async function AdminPage() {
   }
 
   const supabase = await createClient();
+  const activityQuery = supabase.from("activities").select("id,title,status,image_url,weekday,start_time,end_time,recurrence_note,categories(slug)").eq("organization_id", org.id);
+  const eventQuery = supabase.from("events").select("id,title,status,image_url,starts_at,categories(slug)").eq("organization_id", org.id);
+  const directoryQuery = supabase.from("directory_listings").select("id,kind,title,status").eq("organization_id", org.id);
+  if (activeProfile?.organizationId === org.id) {
+    activityQuery.eq("profile_id", activeProfile.id);
+    eventQuery.eq("profile_id", activeProfile.id);
+    directoryQuery.eq("profile_id", activeProfile.id);
+  }
   const [actRes, evtRes, dirRes] = await Promise.all([
-    supabase.from("activities").select("id,title,status,image_url,weekday,start_time,end_time,recurrence_note,categories(slug)").eq("organization_id", org.id).order("created_at", { ascending: false }),
-    supabase.from("events").select("id,title,status,image_url,starts_at,categories(slug)").eq("organization_id", org.id).order("starts_at", { ascending: true }),
-    supabase.from("directory_listings").select("id,kind,title,status").eq("organization_id", org.id).order("created_at", { ascending: false }),
+    activityQuery.order("created_at", { ascending: false }),
+    eventQuery.order("starts_at", { ascending: true }),
+    directoryQuery.order("created_at", { ascending: false }),
   ]);
   const activities = (actRes.data as Row[]) ?? [];
   const events = (evtRes.data as Row[]) ?? [];
@@ -106,37 +115,53 @@ export default async function AdminPage() {
   ];
   const pct = Math.round((fields.filter((f) => f.done).length / fields.length) * 100);
 
-  const previewHref = `/organisasjon/${org.slug}`;
+  const previewHref = activeProfile?.organizationId === org.id
+    ? `/organisasjon/${org.slug}/${activeProfile.slug}`
+    : `/organisasjon/${org.slug}`;
+  const profileQuery = activeProfile?.organizationId === org.id ? `?profile=${activeProfile.id}` : "";
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
     { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
-    { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
-    { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
-    { href: "/admin#tjenester", label: t.directory.services, icon: "clipboard-list", badge: services.length },
-    { href: "/admin#frivilligtorg", label: t.directory.volunteer, icon: "users-round", badge: volunteers.length },
-    { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
-    { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
-    { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
-    { href: previewHref, label: t.orgadmin.preview, icon: "external-link" },
+    {
+      href: "/admin#aktiviteter",
+      label: t.kommune.content,
+      icon: "clipboard-list",
+      children: [
+        { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
+        { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
+        { href: "/admin#tjenester", label: t.directory.services, icon: "clipboard-list", badge: services.length },
+        { href: "/admin#frivilligtorg", label: t.directory.volunteer, icon: "users-round", badge: volunteers.length },
+      ],
+    },
+    {
+      href: "/admin/bilder",
+      label: "Mer",
+      icon: "list",
+      children: [
+        { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
+        { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
+        { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
+      ],
+    },
   ];
 
   return (
     <AdminShell
-      title={t.orgadmin.overview}
+      title={activeProfile?.name ?? t.orgadmin.overview}
       identity={<ContextSwitcher />}
       nav={nav}
-      footerTop={
-        <Link href="/admin/aktivitet/ny">
-          <Button fullWidth leadingIcon="plus">{t.admin.newActivity}</Button>
-        </Link>
-      }
       headerAction={
-        <a href={previewHref} target="_blank" rel="noopener noreferrer">
-          <Button variant="secondary" size="sm" leadingIcon="external-link">
-            {t.orgadmin.previewPublic}
-          </Button>
-        </a>
+        <div className="flex items-center gap-2">
+          <Link href={`/admin/aktivitet/ny${profileQuery}`}>
+            <Button size="sm" leadingIcon="plus">{t.admin.newActivity}</Button>
+          </Link>
+          <a href={previewHref} target="_blank" rel="noopener noreferrer">
+            <Button variant="secondary" size="sm" leadingIcon="external-link">
+              {t.orgadmin.previewPublic}
+            </Button>
+          </a>
+        </div>
       }
     >
       <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }} className="mx-auto w-full max-w-5xl">
@@ -207,7 +232,7 @@ export default async function AdminPage() {
         <ListSection
           id="aktiviteter"
           title={t.orgadmin.yourActivities}
-          newHref="/admin/aktivitet/ny"
+          newHref={`/admin/aktivitet/ny${profileQuery}`}
           newLabel={t.admin.newActivity}
           empty={t.admin.noActivities}
           rows={activities}
@@ -219,7 +244,7 @@ export default async function AdminPage() {
         <ListSection
           id="arrangementer"
           title={t.orgadmin.yourEvents}
-          newHref="/admin/arrangement/ny"
+          newHref={`/admin/arrangement/ny${profileQuery}`}
           newLabel={t.admin.newEvent}
           empty={t.admin.noEvents}
           rows={events}
@@ -231,7 +256,7 @@ export default async function AdminPage() {
         <DirectorySection
           id="tjenester"
           title={t.directory.services}
-          newHref="/admin/oppdrag/tjeneste/ny"
+          newHref={`/admin/oppdrag/tjeneste/ny${profileQuery}`}
           newLabel={t.directory.newService}
           empty={t.directory.noServices}
           editBase="/admin/oppdrag/tjeneste"
@@ -241,7 +266,7 @@ export default async function AdminPage() {
         <DirectorySection
           id="frivilligtorg"
           title={t.directory.volunteer}
-          newHref="/admin/oppdrag/frivillig/ny"
+          newHref={`/admin/oppdrag/frivillig/ny${profileQuery}`}
           newLabel={t.directory.newVolunteer}
           empty={t.directory.noVolunteer}
           editBase="/admin/oppdrag/frivillig"

@@ -8,12 +8,14 @@ import { Icon } from "@/components/ds/Icon";
 import { SettingsContent } from "@/components/SettingsContent";
 import { setActiveOrg } from "@/app/actions/org";
 import { setActiveMunicipality } from "@/app/actions/kommune";
+import { setActiveProfile } from "@/app/actions/profile";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 
 interface Ref {
   id: string;
   name: string;
   sub?: string;
+  orgId?: string;
 }
 
 function readCookie(name: string): string | null {
@@ -91,10 +93,10 @@ export function ContextSwitcher() {
 
       // Profiles: of orgs you're a master member of, plus your direct memberships.
       const profIds = (profMems.data ?? []).map((r) => r.profile_id as string);
-      const sel = "id,name,organizations(name)";
+      const sel = "id,name,organization_id,organizations(name)";
       const map = new Map<string, Ref>();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const add = (r: any) => map.set(r.id, { id: r.id, name: r.name, sub: r.organizations?.name ?? "" });
+      const add = (r: any) => map.set(r.id, { id: r.id, name: r.name, orgId: r.organization_id, sub: r.organizations?.name ?? "" });
       if (orgIds.length) {
         const { data } = await supabase.from("org_profiles").select(sel).in("organization_id", orgIds);
         for (const r of data ?? []) add(r);
@@ -111,7 +113,7 @@ export function ContextSwitcher() {
   }, [accountTitle]);
 
   // Active context from the route (+ context cookies).
-  const activeProfileId = pathname.startsWith("/admin/profiler/") ? pathname.split("/")[3] : null;
+  const activeProfileId = readCookie("sdn-active-profile") ?? (pathname.startsWith("/admin/profiler/") ? pathname.split("/")[3] : null);
   const onKommune = pathname.startsWith("/kommune");
   const onPlatform = pathname.startsWith("/plattform");
   const inAdminArea = pathname.startsWith("/admin") || onKommune || onPlatform;
@@ -128,7 +130,7 @@ export function ContextSwitcher() {
     contextSub = activeProfile.sub ?? t.orgadmin.departments;
   } else if (onPlatform) {
     contextLabel = t.areas.platform;
-    contextSub = t.areas.platform;
+    contextSub = "";
   } else if (onKommune) {
     contextLabel = activeMuni?.name ?? t.areas.municipality;
     contextSub = activeMuni ? t.areas.municipality : "";
@@ -143,7 +145,11 @@ export function ContextSwitcher() {
       userName.toLocaleLowerCase().includes(contextLabel.toLocaleLowerCase()),
   );
   const label = userNameLooksLikeContext ? "Kommuneadministrator" : userName || "Bruker";
-  const sub = contextSub ? `${contextLabel} ${contextSub.toLowerCase()}` : contextLabel;
+  const sub = activeProfile
+    ? `${contextLabel} · ${contextSub}`
+    : contextSub
+      ? `${contextLabel} ${contextSub.toLowerCase()}`
+      : contextLabel;
 
   const close = () => setOpen(false);
   const chooseOrg = (id: string) => {
@@ -164,7 +170,12 @@ export function ContextSwitcher() {
   };
   const chooseProfile = (id: string) => {
     close();
-    router.push(`/admin/profiler/${id}`);
+    const profile = profiles.find((item) => item.id === id);
+    startTransition(async () => {
+      await setActiveProfile(id, profile?.orgId);
+      router.push("/admin");
+      router.refresh();
+    });
   };
   const goPlatform = () => {
     close();
@@ -182,9 +193,8 @@ export function ContextSwitcher() {
   };
   const logout = async () => {
     close();
-    await createClient().auth.signOut();
-    router.push("/");
-    router.refresh();
+    const { error } = await createClient().auth.signOut({ scope: "local" });
+    if (!error) window.location.assign("/");
   };
 
   const identity = (

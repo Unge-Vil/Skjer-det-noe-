@@ -20,6 +20,10 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
   useEffect(() => {
     const supabase = createClient();
     supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSignedIn(Boolean(session?.user));
+    });
+    return () => listener.subscription.unsubscribe();
   }, []);
 
   const links = [

@@ -2,6 +2,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { getUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon, type IconName } from "@/components/ds/Icon";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
@@ -67,6 +68,26 @@ export default async function PlatformMunicipalityPage({
     supabase.rpc("list_municipality_admins"),
   ]);
 
+  const [{ data: muniOrgs }, { data: muniProfiles }] = await Promise.all([
+    supabase.from("organization_municipalities").select("organization_id").eq("municipality_id", id),
+    supabase.from("org_profiles").select("id").eq("municipality_id", id),
+  ]);
+  let objects: { name: string; metadata: unknown }[] = [];
+  try {
+    const { data } = await createAdminClient().schema("storage").from("objects").select("name,metadata").eq("bucket_id", "media");
+    objects = (data as { name: string; metadata: unknown }[]) ?? [];
+  } catch {
+    // Storage usage is an optional platform metric when service-role access is unavailable.
+  }
+  const orgPrefixes = new Set((muniOrgs ?? []).map((row) => `org/${row.organization_id}/`));
+  const profilePrefixes = new Set((muniProfiles ?? []).map((row) => `org/${row.id}/`));
+  const storageBytes = (objects ?? []).reduce((total, object) => {
+    if (![...orgPrefixes, ...profilePrefixes].some((prefix) => object.name.startsWith(prefix))) return total;
+    const metadata = object.metadata as { size?: number | string } | null;
+    const size = typeof metadata?.size === "string" ? Number(metadata.size) : metadata?.size ?? 0;
+    return total + (Number.isFinite(size) ? size : 0);
+  }, 0);
+
   const admins = ((adminRes.data as AdminRow[]) ?? []).filter((a) => a.municipality_id === id);
 
   const nav: NavItem[] = [
@@ -96,11 +117,12 @@ export default async function PlatformMunicipalityPage({
           {muni.county ? `${muni.county} · ` : ""}{t.platform.muniNumber} {muni.kommunenummer}
         </p>
 
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" style={{ marginBottom: 28 }}>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5" style={{ marginBottom: 28 }}>
           <MiniStat icon="building-2" value={orgCount.count ?? 0} label={t.platform.muniStatsOrgs} />
           <MiniStat icon="repeat" value={actCount.count ?? 0} label={t.platform.muniStatsActivities} />
           <MiniStat icon="calendar-days" value={evtCount.count ?? 0} label={t.platform.muniStatsEvents} />
           <MiniStat icon="file-text" value={pageCount.count ?? 0} label={t.platform.muniStatsPages} />
+          <MiniStat icon="image" value={formatBytes(storageBytes)} label={t.platform.muniStorage} />
         </div>
 
         <section>
@@ -110,6 +132,12 @@ export default async function PlatformMunicipalityPage({
       </div>
     </AdminShell>
   );
+}
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
+  if (bytes < 1024 * 1024 * 1024) return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  return `${(bytes / (1024 * 1024 * 1024)).toFixed(2)} GB`;
 }
 
 function MiniStat({ icon, value, label }: { icon: IconName; value: number | string; label: string }) {

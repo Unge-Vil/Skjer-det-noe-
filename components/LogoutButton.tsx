@@ -13,9 +13,8 @@ export function LogoutButton() {
       variant="secondary"
       size="sm"
       onClick={async () => {
-        await createClient().auth.signOut();
-        router.push("/");
-        router.refresh();
+        const { error } = await createClient().auth.signOut({ scope: "local" });
+        if (!error) window.location.assign("/");
       }}
     >
       {t.auth.logout}

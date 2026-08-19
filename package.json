@@ -16,6 +16,7 @@
   "dependencies": {
     "@capacitor/core": "^8.4.1",
     "@puckeditor/core": "^0.23.0",
+    "@scalar/nextjs-api-reference": "^0.11.14",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.2",
     "@tiptap/html": "^3.27.1",

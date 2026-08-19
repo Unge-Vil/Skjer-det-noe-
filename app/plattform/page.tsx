@@ -9,6 +9,7 @@ import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { MuniCreateForm } from "@/components/admin/MuniCreateForm";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
+import { platformNav } from "@/components/admin/platformNav";
 
 export const dynamic = "force-dynamic";
 
@@ -61,22 +62,25 @@ export default async function PlatformPage() {
   const statusText = (s: string) =>
     s === "published" ? t.admin.statusPublished : s === "archived" ? t.admin.statusArchived : t.admin.statusDraft;
 
-  const nav: NavItem[] = [
-    { href: "/plattform", label: t.orgadmin.overview, icon: "layout-dashboard" },
-  ];
-
   return (
     <AdminShell
       title={t.platform.title}
       identity={<ContextSwitcher />}
-      nav={nav}
+      nav={platformNav(t)}
     >
       <div className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>
       <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
         {t.platform.subtitle}
       </p>
 
-      <section className="mb-10">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" style={{ marginBottom: 28 }}>
+        <MiniStat icon="map" value={municipalities.length} label={t.platform.municipalities} />
+        <MiniStat icon="building-2" value={orgs.length} label={t.platform.allOrgs} />
+        <MiniStat icon="clock" value={orgs.filter((o) => o.status === "draft").length} label={t.admin.statusDraft} />
+        <MiniStat icon="check-circle-2" value={orgs.filter((o) => o.status === "published").length} label={t.admin.statusPublished} />
+      </div>
+
+      <section id="kommuner" className="mb-10">
         <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.createMuni}</h2>
         <div style={cardStyle}>
           <MuniCreateForm />
@@ -107,7 +111,7 @@ export default async function PlatformPage() {
         )}
       </section>
 
-      <section>
+      <section id="organisasjoner">
         <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.allOrgs}</h2>
         <div className="flex flex-col gap-2">
           {orgs.map((o) => (
@@ -124,4 +128,8 @@ export default async function PlatformPage() {
       </div>
     </AdminShell>
   );
+}
+
+function MiniStat({ icon, value, label }: { icon: NavItem["icon"]; value: number | string; label: string }) {
+  return <div style={{ ...cardStyle, padding: 16 }}><Icon name={icon} size={20} color="var(--fjord-600)" /><div style={{ marginTop: 8, fontSize: 24, fontWeight: 800 }}>{value}</div><div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div></div>;
 }

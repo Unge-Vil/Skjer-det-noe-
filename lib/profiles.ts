@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 import { parseSocialLinks, type SocialLinks } from "@/components/ds/socials";
 
 /** Fields a profile can either inherit from the master org or override. */
@@ -39,6 +40,7 @@ const OVERRIDE_COLS =
   "description,description_en,description_doc,description_doc_en,website,email,phone,address,logo_url,banner_url,social_links";
 const MASTER_COLS =
   "name,slug,description,description_en,description_doc,description_doc_en,website,email,phone,address,logo_url,banner_url,social_links";
+const ACTIVE_PROFILE_COOKIE = "sdn-active-profile";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function fieldsFrom(row: any): ProfileFields {
@@ -130,6 +132,12 @@ export async function getProfile(id: string): Promise<ProfileDetail | null> {
     master: fieldsFrom(row.organizations),
     override: fieldsFrom(row),
   };
+}
+
+/** The profile selected as the current organisation-admin context. */
+export async function getActiveProfile(): Promise<ProfileDetail | null> {
+  const id = (await cookies()).get(ACTIVE_PROFILE_COOKIE)?.value;
+  return id ? getProfile(id) : null;
 }
 
 /** Effective value for a field: the override when set, else the master value. */
