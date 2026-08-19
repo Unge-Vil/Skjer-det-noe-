@@ -17,11 +17,11 @@ export function OrgStatusButton({ id, status }: { id: string; status: string }) 
       variant={publish ? "primary" : "secondary"}
       leadingIcon={publish ? "sparkles" : undefined}
       onClick={async () => {
-        await createClient()
-          .from("organizations")
-          .update({ status: publish ? "published" : "draft" })
-          .eq("id", id);
-        router.refresh();
+        const { error } = await createClient().rpc("moderate_organization", {
+          p_organization: id,
+          p_status: publish ? "published" : "draft",
+        });
+        if (!error) router.refresh();
       }}
     >
       {publish ? t.kommune.approve : t.kommune.unpublish}

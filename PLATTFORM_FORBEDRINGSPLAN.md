@@ -25,11 +25,91 @@ Prioriteringen er:
 - Legg ved en regresjonstest for hver sikkerhetsfeil som rettes.
 - Kryss av et punkt først når akseptansekriteriene er verifisert.
 
+## Gjeldende avgrensning
+
+Cloudflare-spesifikke tiltak som KV-ratebegrensning, produksjonsobservability,
+runtime-målinger og endelig cache-/service-worker-verifikasjon utsettes til
+deployarbeidet starter. Databaseendringer og integrasjonstester kjøres mot det
+linkede Supabase-prosjektet så lenge lokal WSL/Docker ikke er tilgjengelig.
+
+## Gjennomført 19. august 2026
+
+Følgende er implementert i repoet og verifisert mot det linkede
+Supabase-prosjektet:
+
+- Plattformadministratorflagget er beskyttet med kolonnerettigheter og en
+  autorisert RPC. Vanlige brukere kan fortsatt redigere trygge profilfelt.
+- Organisasjonsmedlemmer kan ikke endre publiseringsstatus. Moderering går via
+  en RPC for riktig kommuneadministrator eller plattformadministrator.
+- `owner` og `editor` håndheves for medlemmer, rolleendringer, API-nøkler og
+  kalenderfeeds. Siste organisasjons- eller profileier kan ikke fjernes eller
+  nedgraderes.
+- Media-bøtten bruker eierskapsbaserte `org/`, `profile/` og `municipality/`-
+  stier. Bøtten håndhever tillatte bildetyper og 5 MB maksimal filstørrelse.
+- Profil, organisasjon og kommune må samsvare for aktiviteter, arrangementer og
+  katalogoppføringer. Eksisterende data ble kontrollert før håndhevingen.
+- Kalenderhenting har HTTPS-/IP-/vertsvalidering, kontroll av redirectmål,
+  timeout, bytegrense og blokkering av komprimerte svar.
+- Kalendersynk har atomisk feedlås, idempotent lagring, kontrollerte delvise
+  feil, korrekt telling, varighet og feilkategori.
+- API-et validerer støttede felt, tekstlengder, alder, koordinater, URL-er og
+  datoer før databasekall. Rå databasefeil returneres ikke til klienten.
+- Service workeren cacher bare eksplisitt offentlige ruter og bruker ny
+  cacheversjon som sletter tidligere cache.
+- Nærhetssøk har standardgrense og hard cap; forsiden henter bare seks
+  aktiviteter og tre arrangementer.
+- Fjorten ugyldige lenke/knapp-nestinger er erstattet med semantiske lenker.
+  Mobilinnstillinger har fokus inn, fokusfelle, Escape og fokusretur.
+- Forsiden har en tilgjengelig feilgrense med retry, og databasefeil vises ikke
+  lenger som falskt tomme resultater.
+- README, rollemodell, integrasjonsgrenser og testkommandoer er oppdatert.
+
+Databaseleveransen ligger i migrasjonene
+`20260819000002`–`20260819000010`. Alle lokale migrasjonsversjoner er registrert
+som anvendt i remote migrasjonshistorikk.
+
+Verifisert etter implementasjonen:
+
+- 15 lokale tester for SSRF, service-worker-policy og API-validering.
+- 8 remote integrasjonsskript for roller, moderering, media, dataintegritet,
+  feedlås og begrenset nærhetssøk.
+- `pnpm lint`, `pnpm exec tsc --noEmit` og `pnpm build` uten feil.
+- Separate read-only review-subagenter for sikkerhetsleveransene og en samlet
+  sluttreview. Blokkerende funn ble rettet før siste verifikasjon.
+
+## Gjøres senere
+
+### Før Cloudflare-deploy
+
+- Velg og implementer ratebegrensning per API-nøkkel, for eksempel Cloudflare
+  KV eller Durable Objects, og legg til stabile `429`-svar.
+- Verifiser DNS-/tilkoblingspinning i Worker-runtime for å lukke det gjenværende
+  DNS-rebinding-vinduet ved kalenderhenting.
+- Kjør produksjonsbrowser-test av service workeren: privat admininnhold skal
+  aldri ligge i Cache Storage, gammel cache skal slettes, og offentlig offline-
+  fallback skal fungere etter utlogging.
+- Etabler logging, feilsporing, varsling, backup-/restore-test, nøkkelrotasjon og
+  hendelseshåndtering.
+- Mål kalender-cron, bundle, kartlasting og Core Web Vitals i Cloudflare-runtime.
+
+### Videre produkt- og kvalitetsarbeid
+
+- Fullfør feil-, loading- og not-found-grenser for `/utforsk`, `/kart`,
+  detaljsider og administrative ruter.
+- Gjør adminmenyer, desktopinnstillinger og øvrige overlays tastaturkomplette.
+- Kjør full WCAG 2.2 AA-gjennomgang med tastatur, zoom, skjermleser, kontrast og
+  redusert bevegelse, og oppdater tilgjengelighetserklæringen.
+- Legg til CI for lint, typecheck, tester, build og isolerte database-/RLS-tester.
+- Legg til cursor/paginering i nærhetssøk og mål spørringsplaner med realistisk
+  nasjonalt datavolum.
+- Avklar og dokumenter publiseringsmodell for aktiviteter/arrangementer,
+  kommuneadministratorers redigeringsrett og eventuelle finmaskede API-scopes.
+
 ## Fase 0: Sikkerhet før lansering
 
 Disse punktene bør behandles som lanseringsblokkere.
 
-### [ ] 0.1 Hindre selv-eskalering til plattformadministrator
+### [x] 0.1 Hindre selv-eskalering til plattformadministrator
 
 **Problem:** En innlogget bruker kan oppdatere sin egen rad i `profiles`.
 `UPDATE`-rettigheten omfatter også `is_platform_admin`, slik at brukeren kan gi
@@ -55,7 +135,7 @@ seg selv plattformtilgang.
   kontrollert prosess.
 - En automatisert RLS-test dekker begge tilfellene.
 
-### [ ] 0.2 Beskytt publiseringsstatus for organisasjoner
+### [x] 0.2 Beskytt publiseringsstatus for organisasjoner
 
 **Problem:** Organisasjonsmedlemmer har bred `UPDATE`-tilgang og kan sette egen
 organisasjon til `published` uten kommunal eller plattformbasert godkjenning.
@@ -79,7 +159,7 @@ organisasjon til `published` uten kommunal eller plattformbasert godkjenning.
   organisasjonens publiseringsstatus.
 - Forsøk på direkte statusendring avvises av databasen.
 
-### [ ] 0.3 Håndhev eier- og editorrollene
+### [x] 0.3 Håndhev eier- og editorrollene
 
 **Problem:** `owner` og `editor` lagres, men autorisasjonssjekkene spør bare om
 brukeren er medlem. En editor kan derfor administrere medlemmer og integrasjoner,
@@ -104,7 +184,7 @@ og kan i verste fall fjerne siste eier.
 - En editor kan redigere innhold, men ikke administrere eiere eller API-nøkler.
 - En organisasjon kan ikke ende uten minst én eier.
 
-### [ ] 0.4 Begrens tilgang til mediefiler
+### [x] 0.4 Begrens tilgang til mediefiler
 
 **Problem:** Alle innloggede brukere kan i dag oppdatere og slette alle objekter
 i den offentlige `media`-bøtten.
@@ -131,6 +211,10 @@ i den offentlige `media`-bøtten.
 
 ### [ ] 0.5 Sikre kalenderhenting mot SSRF
 
+**Status:** HTTPS, lokale/private IP-er og vertsnavn, redirectmål, timeout,
+komprimerte svar og maksimal responsstørrelse er håndhevet og enhetstestet.
+Tilkoblingspinning mot DNS-rebinding må verifiseres/løses i Cloudflare-runtime.
+
 **Problem:** Kalenderfeed-URL-er lagres av organisasjonen og hentes senere fra
 serveren. Dette kan brukes til å kontakte interne tjenester eller svært store og
 langsomme ressurser.
@@ -156,7 +240,7 @@ langsomme ressurser.
 - Hengende eller for store svar avbrytes kontrollert.
 - Feilen vises forståelig uten å lekke intern nettverksinformasjon.
 
-### [ ] 0.6 Sikre sammenhengen mellom profil og oppføring
+### [x] 0.6 Sikre sammenhengen mellom profil og oppføring
 
 **Problem:** En profiladministrator kan administrere en oppføring basert på
 `profile_id`, uten at databasen alltid sikrer at `organization_id` og
@@ -183,6 +267,10 @@ langsomme ressurser.
 
 ### [ ] 0.7 Ikke cache private administrasjonssider
 
+**Status:** Service workeren bruker nå eksplisitt offentlig allowlist, hopper over
+private ruter/API og sletter gammel cache via ny cacheversjon. Produksjonsbrowser-
+testen etter inn-/utlogging gjenstår fordi service workeren ikke registreres i dev.
+
 **Problem:** Service workeren cacher alle vellykkede navigasjoner, inkludert
 innloggede sider under `/admin`, `/kommune` og `/plattform`.
 
@@ -205,6 +293,10 @@ innloggede sider under `/admin`, `/kommune` og `/plattform`.
 ## Fase 1: Robust produksjonsdrift
 
 ### [ ] 1.1 Stram inn API-validering
+
+**Status:** Strukturert payloadvalidering, feltgrenser, dato-/URL-/koordinatregler,
+stabile 400/422-svar og skjulte databasefeil er implementert. Ratebegrensning
+per API-nøkkel utsettes til Cloudflare KV eller tilsvarende er valgt.
 
 **Berørte områder:**
 
@@ -229,6 +321,10 @@ innloggede sider under `/admin`, `/kommune` og `/plattform`.
 
 ### [ ] 1.2 Gjør kalender- og cron-synkronisering pålitelig
 
+**Status:** Atomisk feedlås, idempotent lagring, kontroll av databasefeil,
+korrekt telling, varighet og feilkategori er implementert. Volumtest mot
+Cloudflare sine kjøretidsgrenser gjenstår.
+
 **Tiltak:**
 
 - Kontroller og håndter feil fra hver databaseoperasjon.
@@ -246,6 +342,10 @@ innloggede sider under `/admin`, `/kommune` og `/plattform`.
 - Cron-jobben holder seg innenfor Cloudflare sine kjøretidsgrenser.
 
 ### [ ] 1.3 Legg til feilgrenser og gode tomtilstander
+
+**Status:** Rotgrense med retry er lagt til, og forsiden skiller nå databasefeil
+fra tomme resultater. Egne grenser/loading-/not-found-tilstander for øvrige
+offentlige og administrative ruter gjenstår.
 
 **Tiltak:**
 
@@ -311,7 +411,7 @@ Start med grensene som kan gi størst skade:
 
 ## Fase 3: Tilgjengelighet og brukeropplevelse
 
-### [ ] 3.1 Rett ugyldige nestede interaksjoner
+### [x] 3.1 Rett ugyldige nestede interaksjoner
 
 **Problem:** Flere steder ligger `Button`-komponenten, som rendrer `<button>`,
 inni en Next.js `Link`. Det gir ugyldig HTML og uforutsigbar tastatur-/
@@ -329,6 +429,9 @@ skjermleseratferd.
 - Navigasjon fungerer med tastatur og skjermleser.
 
 ### [ ] 3.2 Gjør dialoger og drawers tastaturkomplette
+
+**Status:** Mobilinnstillinger har fokus inn, fokusfelle, Escape og fokusretur.
+Adminmenyer, desktopinnstillinger og øvrige overlays gjenstår.
 
 **Tiltak:**
 
@@ -361,6 +464,10 @@ skjermleseratferd.
 ## Fase 4: Ytelse og skalering
 
 ### [ ] 4.1 Begrens og paginer nærhetssøk
+
+**Status:** Begge RPC-er har nå standardgrense og hard cap på 500; forsiden ber
+kun om 6 aktiviteter og 3 arrangementer. Cursor/paginering og måling med
+realistisk nasjonalt datavolum gjenstår.
 
 **Problem:** RPC-ene kan returnere alle treff innenfor radiusen. Forsiden henter
 hele resultatsettet før den kutter listen i applikasjonen.
@@ -401,7 +508,7 @@ hele resultatsettet før den kutter listen i applikasjonen.
 
 ## Fase 5: Dokumentasjon og vedlikehold
 
-### [ ] 5.1 Oppdater prosjektstatusen
+### [x] 5.1 Oppdater prosjektstatusen
 
 README beskriver admin-UI som ikke bygget, selv om store deler nå finnes.
 
@@ -439,13 +546,15 @@ Bruk den smaleste relevante kontrollen under utvikling, og kjør hele settet fø
 en leveranse avsluttes:
 
 ```bash
+pnpm test
+pnpm test:integration
 pnpm lint
 pnpm exec tsc --noEmit
 pnpm build
 ```
 
-Når testfundamentet er på plass, legges også prosjektets testkommando og lokale
-Supabase/RLS-tester til her.
+`pnpm test:integration` krever Supabase-variablene i `.env` og
+`SUPABASE_TEST_PASSWORD` for de dokumenterte testkontoene.
 
 ## Beslutninger som må tas
 
@@ -455,16 +564,17 @@ Følgende produktbeslutninger bør avklares når den aktuelle leveransen starter
   etter at selve organisasjonen er godkjent?
 - Skal kommuneadministratorer kunne redigere organisasjonsinnhold, eller bare
   godkjenne og moderere det?
-- Hvilke handlinger skal være forbeholdt `owner`, og hvilke skal `editor` ha?
+- Avklart: `owner` styrer medlemmer, roller, API-nøkler og kalenderintegrasjoner.
+  `editor` kan redigere innhold, men ikke eiere eller integrasjonshemmeligheter.
 - Skal API-nøkler ha finmaskede scopes, eller er én organisasjonsomfattende
   nøkkeltype tilstrekkelig i første versjon?
 - Hvilke responstids- og tilgjengelighetsmål skal gjelde før nasjonal utrulling?
 
 ## Kort statusoversikt
 
-- [ ] Fase 0: Sikkerhet før lansering
-- [ ] Fase 1: Robust produksjonsdrift
-- [ ] Fase 2: Automatisert kvalitetskontroll
-- [ ] Fase 3: Tilgjengelighet og brukeropplevelse
-- [ ] Fase 4: Ytelse og skalering
-- [ ] Fase 5: Dokumentasjon og vedlikehold
+- [ ] Fase 0: Delvis ferdig — 0.1–0.4 og 0.6 verifisert; runtime-test for 0.5 og 0.7 gjenstår
+- [ ] Fase 1: Delvis ferdig — validering, synklås og første feilgrense levert; deploydrift gjenstår
+- [ ] Fase 2: Delvis ferdig — målrettede tester finnes; CI og isolert lokal database gjenstår
+- [ ] Fase 3: Delvis ferdig — 3.1 ferdig og mobil-dialog rettet; full WCAG-verifikasjon gjenstår
+- [ ] Fase 4: Delvis ferdig — søk er begrenset; cursor, datavolummåling og cachemåling gjenstår
+- [x] Fase 5: README, roller, sikkerhetsgrenser og verifikasjon er dokumentert

@@ -40,6 +40,10 @@ Skjemaet ligger i `supabase/migrations/`:
 | `..._functions.sql` | `nearby_activities` / `nearby_events` RPC-er (avstandssøk) + `municipalities_view` |
 | `..._reference_data.sql` | Kategorier + kommuner (Haugalandet/Rogaland til å begynne med) |
 
+Nyere migrasjoner utvider dette med innlogging, organisasjons- og kommuneadmin,
+profiler/avdelinger, publiseringsflyt, medielagring, integrasjoner og
+sikkerhetsgrenser. Legg alltid databaseendringer i en ny tidsstemplet migrasjon.
+
 `supabase/seed.sql` legger inn eksempeldata lokalt (`supabase db reset`).
 
 Lokal utvikling med Supabase CLI:
@@ -56,6 +60,29 @@ Generér typer når MCP/CLI er koblet til:
 supabase gen types typescript --linked > lib/database.types.ts
 ```
 
+## Roller og publisering
+
+- **Plattformadministrator** administrerer kommunetilganger og kan moderere alle
+  organisasjoner.
+- **Kommuneadministrator** kan godkjenne eller arkivere organisasjoner som er
+  knyttet til egen kommune.
+- **Organisasjonseier** styrer medlemmer, roller, API-nøkler og kalenderfeeds.
+- **Editor** kan redigere organisasjons-, profil- og oppføringsinnhold, men kan
+  ikke styre eiere eller integrasjonshemmeligheter.
+
+Nye organisasjoner opprettes som utkast. Organisasjonsmedlemmer kan redigere
+profilen, men bare riktig kommuneadministrator eller plattformadministrator kan
+endre organisasjonens publiseringsstatus. Databasen hindrer at siste eier fjernes
+eller nedgraderes.
+
+## Integrasjoner
+
+Det offentlige skrive-API-et bruker organisasjonsbundne Bearer-nøkler og
+validerer hele payloaden før databasekall. Kalenderfeeds kan bare administreres
+av eiere; serveren tillater kun HTTPS, avviser lokale/private mål og redirect,
+og begrenser tid og responsstørrelse. `SUPABASE_SECRET_KEY` brukes bare i
+serverruter og scripts som selv håndhever organisasjonsscope.
+
 ## Deploy til Cloudflare
 
 ```bash
@@ -71,7 +98,8 @@ Sett Supabase-variablene som Worker-secrets:
 Appen er en installerbar PWA (`app/manifest.ts` + ikoner). En enkel service
 worker (`public/sw.js`) registreres i produksjon (`ServiceWorkerRegister`):
 
-- Navigasjoner: network-first med cache-fallback, til slutt `/offline`-siden.
+- Kun eksplisitt offentlige navigasjoner caches network-first; admin-, konto- og
+  API-ruter skrives aldri til Cache Storage.
 - Statiske assets: cache-first. Eksterne kall (Supabase, kart-fliser, Brønnøysund)
   røres ikke. Lagrede favoritter ligger i localStorage og virker offline uansett.
 
@@ -95,6 +123,18 @@ De native prosjektene (`/ios`, `/android`) genereres lokalt og er gitignorert.
 Kjør `node --env-file=.env scripts/seed-test-users.mjs` (idempotent) for å
 opprette demo-brukere (passord `demo`): plattform-admin, organisasjon og
 kommune-admin. Se skriptet for detaljer.
+
+## Verifikasjon
+
+```bash
+pnpm test                 # lokale enhetstester, ingen produksjonssecrets
+pnpm test:integration     # remote Supabase; krever .env + SUPABASE_TEST_PASSWORD
+pnpm lint
+pnpm exec tsc --noEmit
+pnpm build
+```
+
+Integrasjonstestene oppretter isolerte testdata og rydder dem i `finally`.
 
 ## Designsystem
 
@@ -123,8 +163,14 @@ supabase/seed.sql     Lokale eksempeldata
 
 ## Status / videre arbeid
 
+Se `PLATTFORM_FORBEDRINGSPLAN.md` for datert leveranseloggbok, verifikasjon og
+den prioriterte listen over arbeid som er utsatt til Cloudflare-deploy eller en
+senere kvalitetsrunde.
+
 - [x] Public-opplevelsen bygget på designsystemet (liste + kart + filtre + tema)
-- [ ] Admin-UI: kommune- og organisasjons-dashboards (egne UI-kits i designet) — krever auth + write-policies
-- [ ] Sveip/«Oppdag» og detaljside-overlay fra mobil-kitet
-- [ ] Importere full liste over norske kommuner
-- [ ] Ekte bilder for aktiviteter/organisasjoner
+- [x] Organisasjons-, kommune- og plattformadministrasjon med databasehåndhevede roller
+- [x] Sveip/«Oppdag», kart, detaljsider, tjenester og frivilligtorg
+- [x] API-nøkler og kalenderimport med idempotent synkronisering
+- [x] Logo/banner-opplasting med eierskapsbaserte storage-policyer
+- [ ] Full WCAG 2.2 AA-verifikasjon og resterende dialogfokus
+- [ ] Cloudflare-ratebegrensning, observability og produksjonsmålinger

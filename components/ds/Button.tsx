@@ -3,16 +3,16 @@
 import { useState, type ButtonHTMLAttributes, type CSSProperties } from "react";
 import { Icon, type IconName } from "./Icon";
 
-type Variant = "primary" | "coral" | "secondary" | "ghost" | "danger";
-type Size = "sm" | "md" | "lg";
+export type ButtonVariant = "primary" | "coral" | "secondary" | "ghost" | "danger";
+export type ButtonSize = "sm" | "md" | "lg";
 
-const SIZES: Record<Size, { height: number | string; padding: string; font: string; radius: string; gap: number; icon: number }> = {
+export const BUTTON_SIZES: Record<ButtonSize, { height: number | string; padding: string; font: string; radius: string; gap: number; icon: number }> = {
   sm: { height: 38, padding: "0 14px", font: "var(--fs-sm)", radius: "var(--radius-sm)", gap: 6, icon: 16 },
   md: { height: "var(--tap-comfy)", padding: "0 20px", font: "var(--fs-body)", radius: "var(--radius-md)", gap: 8, icon: 20 },
   lg: { height: 56, padding: "0 28px", font: "var(--fs-body-lg)", radius: "var(--radius-md)", gap: 10, icon: 22 },
 };
 
-const VARIANTS: Record<Variant, { background: string; color: string; border: string; hoverBg: string }> = {
+const BUTTON_VARIANTS: Record<ButtonVariant, { background: string; color: string; border: string; hoverBg: string }> = {
   primary: { background: "var(--surface-brand-strong)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
   coral: { background: "var(--coral-600)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--coral-700)" },
   secondary: { background: "var(--surface-card)", color: "var(--text-brand)", border: "1.5px solid var(--border-strong)", hoverBg: "var(--brand-hover-soft)" },
@@ -21,8 +21,8 @@ const VARIANTS: Record<Variant, { background: string; color: string; border: str
 };
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "style"> {
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
   leadingIcon?: IconName;
   trailingIcon?: IconName;
   fullWidth?: boolean;
@@ -43,8 +43,8 @@ export function Button({
   style = {},
   ...rest
 }: ButtonProps) {
-  const sizes = SIZES[size];
-  const variants = VARIANTS[variant];
+  const sizes = BUTTON_SIZES[size];
+  const variants = BUTTON_VARIANTS[variant];
   const [hover, setHover] = useState(false);
   const isDisabled = disabled || loading;
 

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon, type IconName } from "@/components/ds/Icon";
-import { Button } from "@/components/ds/Button";
+import { LinkButton } from "@/components/ds/LinkButton";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = { title: "For kommuner – Skjer det noe?" };
@@ -82,7 +82,7 @@ export default async function ForKommunerPage() {
 
         <section style={{ ...card, background: "var(--surface-brand-soft)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
           <p style={{ margin: 0, fontWeight: 700, fontSize: "var(--fs-h4)" }}>Vil dere ha deres egen portal?</p>
-          <a href="mailto:org@ungevil.no"><Button leadingIcon="mail">Ta kontakt</Button></a>
+          <LinkButton href="mailto:org@ungevil.no" leadingIcon="mail">Ta kontakt</LinkButton>
         </section>
       </main>
       <SiteFooter />

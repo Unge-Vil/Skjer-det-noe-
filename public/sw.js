@@ -3,8 +3,11 @@
    - same-origin static assets: cache-first with background refresh
    - cross-origin (Supabase API, OSM tiles, Brønnøysund) is left untouched
    Favourites live in localStorage, so they work offline regardless. */
-const CACHE = "sdn-v1";
+importScripts("/sw-cache-policy.js");
+
+const CACHE = "sdn-v2";
 const PRECACHE = ["/offline", "/manifest.webmanifest", "/icon.svg"];
+const { isCacheableResponse, isPublicNavigation } = self.SW_CACHE_POLICY;
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -30,13 +33,21 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // skip cross-origin
+  if (url.pathname.startsWith("/api/")) return;
 
   if (req.mode === "navigate") {
+    if (!isPublicNavigation(url.pathname)) {
+      event.respondWith(fetch(req).catch(() => caches.match("/offline")));
+      return;
+    }
+
     event.respondWith(
       fetch(req)
         .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
+          if (isCacheableResponse(res)) {
+            const copy = res.clone();
+            caches.open(CACHE).then((c) => c.put(req, copy));
+          }
           return res;
         })
         .catch(() => caches.match(req).then((r) => r || caches.match("/offline"))),
@@ -53,8 +64,10 @@ self.addEventListener("fetch", (event) => {
         (cached) =>
           cached ||
           fetch(req).then((res) => {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(req, copy));
+            if (isCacheableResponse(res)) {
+              const copy = res.clone();
+              caches.open(CACHE).then((c) => c.put(req, copy));
+            }
             return res;
           }),
       ),

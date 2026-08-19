@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { syncFeed } from "@/lib/feeds";
+import { syncFeed, type SyncResult } from "@/lib/feeds";
 
 export const dynamic = "force-dynamic";
 
@@ -16,9 +16,15 @@ export async function POST(req: Request) {
   }
 
   const admin = createAdminClient();
-  const { data: feeds } = await admin.from("calendar_feeds").select("id").eq("active", true);
+  const { data: feeds, error } = await admin.from("calendar_feeds").select("id").eq("active", true);
+  if (error) {
+    return NextResponse.json(
+      { feeds: 0, results: [], error: "feed_list_failed" },
+      { status: 500 },
+    );
+  }
 
-  const results: { id: string; ok: boolean; imported: number; error?: string }[] = [];
+  const results: Array<{ id: string } & SyncResult> = [];
   for (const f of feeds ?? []) {
     const r = await syncFeed(f.id as string);
     results.push({ id: f.id as string, ...r });

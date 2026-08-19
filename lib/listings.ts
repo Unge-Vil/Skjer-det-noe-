@@ -24,6 +24,8 @@ export interface NearbyFilters {
   radiusM?: number;
   category?: string | null;
   municipality?: string | null;
+  activityLimit?: number;
+  eventLimit?: number;
 }
 
 /**
@@ -44,8 +46,8 @@ export async function fetchNearbyListings(
   };
 
   const [activitiesRes, eventsRes] = await Promise.all([
-    supabase.rpc("nearby_activities", params),
-    supabase.rpc("nearby_events", params),
+    supabase.rpc("nearby_activities", { ...params, p_limit: filters.activityLimit ?? 50 }),
+    supabase.rpc("nearby_events", { ...params, p_limit: filters.eventLimit ?? 50 }),
   ]);
 
   if (activitiesRes.error) throw activitiesRes.error;

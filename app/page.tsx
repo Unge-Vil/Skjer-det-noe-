@@ -37,17 +37,25 @@ export default async function Home() {
         supabase.from("categories").select("*").order("sort_order"),
         fetchNearbyListings(
           supabase,
-          { lat: DEFAULT_CENTER.lat, lng: DEFAULT_CENTER.lng, radiusM: 50000 },
+          {
+            lat: DEFAULT_CENTER.lat,
+            lng: DEFAULT_CENTER.lng,
+            radiusM: 50000,
+            activityLimit: 6,
+            eventLimit: 3,
+          },
           locale,
         ),
         fetchOrganisations(supabase, 4),
       ]);
+      if (catRes.error) throw catRes.error;
       categories = (catRes.data as Category[]) ?? [];
       events = listings.filter((l) => l.kind === "event").slice(0, 3);
       activities = listings.filter((l) => l.kind === "activity").slice(0, 6);
       organisations = orgs;
     } catch (err) {
       console.error("Landing data load failed", err);
+      throw new Error("Landing data unavailable");
     }
   }
 

@@ -1,10 +1,9 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/auth";
 import { getMyOrg } from "@/lib/org";
 import { getActiveProfile } from "@/lib/profiles";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
-import { Button } from "@/components/ds/Button";
+import { LinkButton } from "@/components/ds/LinkButton";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { ProfileForm } from "@/components/admin/ProfileForm";
@@ -31,8 +30,8 @@ export default async function ProfilePage() {
       nav={orgAdminNav(t)}
       headerAction={
         <div className="flex items-center gap-2">
-          <Link href="/admin/aktivitet/ny"><Button size="sm" leadingIcon="plus">{t.admin.newActivity}</Button></Link>
-          <a href={previewHref} target="_blank" rel="noopener noreferrer"><Button variant="secondary" size="sm" leadingIcon="external-link">{t.orgadmin.previewPublic}</Button></a>
+          <LinkButton href="/admin/aktivitet/ny" size="sm" leadingIcon="plus">{t.admin.newActivity}</LinkButton>
+          <LinkButton href={previewHref} target="_blank" rel="noopener noreferrer" variant="secondary" size="sm" leadingIcon="external-link">{t.orgadmin.previewPublic}</LinkButton>
         </div>
       }
     >

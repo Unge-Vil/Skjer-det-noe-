@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   }
 
   const admin = createAdminClient();
-  const result = await upsertListingFromApi(admin, key.organizationId, key.autoPublish, "event", body as Record<string, unknown>);
+  const result = await upsertListingFromApi(admin, key.organizationId, key.autoPublish, "event", body);
   return NextResponse.json(result.body, { status: result.status });
 }
 

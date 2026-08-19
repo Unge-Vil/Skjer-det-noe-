@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon, type IconName } from "@/components/ds/Icon";
@@ -14,6 +14,13 @@ export function MobileTabBar() {
   const pathname = usePathname();
   const [savedCount, setSavedCount] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsTriggerRef = useRef<HTMLButtonElement>(null);
+  const settingsSheetRef = useRef<HTMLDivElement>(null);
+
+  const closeSettings = () => {
+    setSettingsOpen(false);
+    requestAnimationFrame(() => settingsTriggerRef.current?.focus());
+  };
 
   // Refresh the saved badge on navigation (favourites live in localStorage).
   useEffect(() => {
@@ -30,8 +37,12 @@ export function MobileTabBar() {
   // Close the settings sheet on Escape (keyboard parity).
   useEffect(() => {
     if (!settingsOpen) return;
+    settingsSheetRef.current?.querySelector<HTMLElement>("button, [href], input, select, textarea")?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSettingsOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeSettings();
+      }
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
@@ -59,7 +70,7 @@ export function MobileTabBar() {
           <button
             type="button"
             aria-label={t.nav.closeSettings}
-            onClick={() => setSettingsOpen(false)}
+            onClick={closeSettings}
             className="sdn-backdrop"
             style={{
               position: "fixed",
@@ -70,7 +81,24 @@ export function MobileTabBar() {
             }}
           />
           <div
+            ref={settingsSheetRef}
             className="sdn-sheet"
+            onKeyDown={(event) => {
+              if (event.key !== "Tab") return;
+              const focusable = settingsSheetRef.current?.querySelectorAll<HTMLElement>(
+                "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])",
+              );
+              if (!focusable?.length) return;
+              const first = focusable[0];
+              const last = focusable[focusable.length - 1];
+              if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last.focus();
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first.focus();
+              }
+            }}
             style={{
               position: "fixed",
               left: 0,
@@ -91,7 +119,7 @@ export function MobileTabBar() {
               <button
                 type="button"
                 aria-label={t.nav.closeSettings}
-                onClick={() => setSettingsOpen(false)}
+                onClick={closeSettings}
                 style={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -179,6 +207,7 @@ export function MobileTabBar() {
         })}
 
         <button
+          ref={settingsTriggerRef}
           type="button"
           aria-haspopup="dialog"
           aria-expanded={settingsOpen}

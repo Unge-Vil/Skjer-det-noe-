@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon, type IconName } from "@/components/ds/Icon";
-import { Button } from "@/components/ds/Button";
+import { LinkButton } from "@/components/ds/LinkButton";
 import { SiteFooter } from "@/components/SiteFooter";
 
 export const metadata: Metadata = { title: "For organisasjoner – Skjer det noe?" };
@@ -83,8 +83,8 @@ export default async function ForOrganisasjonerPage() {
         <section style={{ ...card, background: "var(--surface-brand-soft)", display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 16 }}>
           <p style={{ margin: 0, fontWeight: 700, fontSize: "var(--fs-h4)" }}>Klar til å legge ut aktivitetene deres?</p>
           <div className="flex flex-wrap gap-3">
-            <Link href="/registrer"><Button leadingIcon="sparkles">Registrer organisasjon</Button></Link>
-            <Link href="/logg-inn"><Button variant="secondary">{t.nav.login}</Button></Link>
+            <LinkButton href="/registrer" leadingIcon="sparkles">Registrer organisasjon</LinkButton>
+            <LinkButton href="/logg-inn" variant="secondary">{t.nav.login}</LinkButton>
           </div>
         </section>
       </main>

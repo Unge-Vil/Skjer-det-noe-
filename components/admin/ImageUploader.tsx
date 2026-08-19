@@ -66,6 +66,11 @@ export function ImageUploader({
     if (!file) return;
     setError(null);
     setWarning(null);
+    if (!["image/png", "image/jpeg", "image/webp"].includes(file.type) || file.size > 5 * 1024 * 1024) {
+      setError(t.orgadmin.uploadError);
+      e.target.value = "";
+      return;
+    }
     await checkRatio(file);
     setBusy(true);
     try {

@@ -11,6 +11,7 @@ import { weekdayName, formatTimeRange, formatEventDate } from "@/lib/format";
 import type { Locale } from "@/lib/i18n/config";
 import type { Dictionary } from "@/lib/i18n/dictionaries/nb";
 import { Button } from "@/components/ds/Button";
+import { LinkButton } from "@/components/ds/LinkButton";
 import { Icon } from "@/components/ds/Icon";
 import { IconButton } from "@/components/ds/IconButton";
 import { StatusLabel } from "@/components/ds/StatusLabel";
@@ -79,7 +80,7 @@ export default async function AdminPage() {
         </div>
         <div style={{ ...card, padding: 28 }}>
           <p style={{ margin: "0 0 16px", color: "var(--text-body)" }}>{t.admin.noOrg}</p>
-          <Link href="/registrer"><Button leadingIcon="sparkles">{t.admin.registerOrg}</Button></Link>
+          <LinkButton href="/registrer" leadingIcon="sparkles">{t.admin.registerOrg}</LinkButton>
         </div>
       </main>
     );
@@ -288,7 +289,7 @@ function DirectorySection({
     <section id={id} style={card}>
       <div className="flex items-center justify-between" style={{ padding: "16px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
         <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{title}</h2>
-        <Link href={newHref}><Button variant="secondary" size="sm" leadingIcon="plus">{newLabel}</Button></Link>
+        <LinkButton href={newHref} variant="secondary" size="sm" leadingIcon="plus">{newLabel}</LinkButton>
       </div>
       {rows.length === 0 ? (
         <p style={{ padding: "16px 18px", margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{empty}</p>
@@ -336,7 +337,7 @@ function ListSection({
     <section id={id} style={card}>
       <div className="flex items-center justify-between" style={{ padding: "16px 18px", borderBottom: "1px solid var(--border-subtle)" }}>
         <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{title}</h2>
-        <Link href={newHref}><Button variant="secondary" size="sm" leadingIcon="plus">{newLabel}</Button></Link>
+        <LinkButton href={newHref} variant="secondary" size="sm" leadingIcon="plus">{newLabel}</LinkButton>
       </div>
       {rows.length === 0 ? (
         <p style={{ padding: "16px 18px", margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{empty}</p>

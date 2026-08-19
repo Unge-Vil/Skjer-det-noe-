@@ -5,6 +5,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import type { BrregOrg } from "@/lib/brreg";
 import { Button } from "@/components/ds/Button";
+import { LinkButton } from "@/components/ds/LinkButton";
 import { Icon } from "@/components/ds/Icon";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 
@@ -203,7 +204,7 @@ export default function RegisterPage() {
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <Icon name="info" size={28} color="var(--text-brand)" />
             <p style={{ margin: 0, fontSize: "var(--fs-body)", lineHeight: 1.5 }}>{t.register.confirmEmail}</p>
-            <Link href="/logg-inn"><Button>{t.auth.login}</Button></Link>
+            <LinkButton href="/logg-inn">{t.auth.login}</LinkButton>
           </div>
         )}
 
@@ -272,7 +273,7 @@ export default function RegisterPage() {
             <Icon name="sparkles" size={28} color="var(--success-text)" />
             <h2 style={{ margin: 0, fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.register.successTitle}</h2>
             <p style={{ margin: 0, fontSize: "var(--fs-body)", lineHeight: 1.5 }}>{t.register.successBody}</p>
-            <Link href="/admin"><Button>{t.register.toDashboard}</Button></Link>
+            <LinkButton href="/admin">{t.register.toDashboard}</LinkButton>
           </div>
         )}
       </div>

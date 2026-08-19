@@ -1,7 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { makeSlug, pointEwkt } from "@/lib/slug";
+import { validateListingPayload, type ListingKind } from "@/lib/api/validation";
 
-export type ListingKind = "event" | "activity";
+export type { ListingKind } from "@/lib/api/validation";
 
 export interface ApiResult {
   status: number;
@@ -53,11 +54,22 @@ async function resolveRefs(
 
   const municipality = str(body.municipality);
   if (municipality) {
-    const { data } = await db
+    const { data: byNumber, error: numberError } = await db
       .from("municipalities")
       .select("id")
-      .or(`kommunenummer.eq.${municipality},slug.eq.${municipality}`)
+      .eq("kommunenummer", municipality)
       .maybeSingle();
+    if (numberError) return { status: 500, body: { error: "internal_error", message: "Failed to resolve municipality" } };
+    let data = byNumber;
+    if (!data) {
+      const { data: bySlug, error: slugError } = await db
+        .from("municipalities")
+        .select("id")
+        .eq("slug", municipality)
+        .maybeSingle();
+      if (slugError) return { status: 500, body: { error: "internal_error", message: "Failed to resolve municipality" } };
+      data = bySlug;
+    }
     if (!data) return bad(`Unknown municipality (kommunenummer or slug): ${municipality}`);
     municipality_id = data.id as string;
   }
@@ -97,9 +109,21 @@ export async function upsertListingFromApi(
   orgId: string,
   autoPublish: boolean,
   kind: ListingKind,
-  body: Body,
+  input: unknown,
   source = "api",
 ): Promise<ApiResult> {
+  const validation = validateListingPayload(kind, input);
+  if (!validation.ok) {
+    return {
+      status: 422,
+      body: {
+        error: "validation_error",
+        message: "One or more fields are invalid",
+        details: validation.errors,
+      },
+    };
+  }
+  const body = validation.body;
   const title = str(body.title);
   if (!title) return bad("title is required");
 
@@ -153,7 +177,7 @@ export async function upsertListingFromApi(
     if (endsOn) {
       const d = new Date(endsOn);
       if (Number.isNaN(d.getTime())) return bad(`ends_on is not a valid date: ${endsOn}`);
-      row.ends_on = endsOn;
+      row.ends_on = new Date(endsOn).toISOString().slice(0, 10);
     }
   }
 
@@ -169,7 +193,7 @@ export async function upsertListingFromApi(
       .maybeSingle();
     if (existing) {
       const { error } = await db.from(table).update(row).eq("id", existing.id);
-      if (error) return { status: 500, body: { error: "db_error", message: error.message } };
+      if (error) return { status: 500, body: { error: "internal_error", message: "Failed to save listing" } };
       return { status: 200, body: publicPayload(kind, existing.id as string, existing.slug as string, row.status) };
     }
   }
@@ -180,7 +204,7 @@ export async function upsertListingFromApi(
     .insert({ ...row, slug, organization_id: orgId })
     .select("id,slug")
     .single();
-  if (error) return { status: 500, body: { error: "db_error", message: error.message } };
+  if (error) return { status: 500, body: { error: "internal_error", message: "Failed to save listing" } };
   return { status: 201, body: publicPayload(kind, data.id as string, data.slug as string, row.status) };
 }
 
@@ -205,6 +229,6 @@ export async function listOrgListings(
     .eq("organization_id", orgId)
     .order(order, { ascending: false })
     .limit(Math.min(Math.max(limit, 1), 100));
-  if (error) return { status: 500, body: { error: "db_error", message: error.message } };
+  if (error) return { status: 500, body: { error: "internal_error", message: "Failed to list listings" } };
   return { status: 200, body: { data } };
 }
