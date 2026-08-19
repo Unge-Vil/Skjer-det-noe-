@@ -96,6 +96,7 @@ export const en: Dictionary = {
   },
   areas: {
     label: "Switch area",
+    admin: "Administration",
     org: "Organisation",
     municipality: "Municipality",
     platform: "Platform",

@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Avatar } from "@/components/ds/Avatar";
 import { Icon } from "@/components/ds/Icon";
+import { SettingsContent } from "@/components/SettingsContent";
 import { setActiveOrg } from "@/app/actions/org";
 import { setActiveMunicipality } from "@/app/actions/kommune";
 import { useI18n } from "@/components/i18n/LocaleProvider";
@@ -26,6 +27,7 @@ function readCookie(name: string): string | null {
  *  identity everywhere. */
 export function ContextSwitcher() {
   const { t } = useI18n();
+  const accountTitle = t.account.title;
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -52,6 +54,8 @@ export function ContextSwitcher() {
   const [profiles, setProfiles] = useState<Ref[]>([]);
   const [munis, setMunis] = useState<Ref[]>([]);
   const [platform, setPlatform] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
     const supabase = createClient();
@@ -61,6 +65,12 @@ export function ContextSwitcher() {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) return;
+      setUserName(
+        user.user_metadata?.full_name ||
+          user.user_metadata?.name ||
+          user.email?.split("@")[0] ||
+          accountTitle,
+      );
 
       const [memberOrgs, profMems, muniAdmins, prof] = await Promise.all([
         supabase.from("organization_members").select("organizations(id,name)").eq("user_id", user.id),
@@ -98,34 +108,42 @@ export function ContextSwitcher() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [accountTitle]);
 
   // Active context from the route (+ context cookies).
   const activeProfileId = pathname.startsWith("/admin/profiler/") ? pathname.split("/")[3] : null;
   const onKommune = pathname.startsWith("/kommune");
   const onPlatform = pathname.startsWith("/plattform");
+  const inAdminArea = pathname.startsWith("/admin") || onKommune || onPlatform;
 
   const activeOrg = orgs.find((o) => o.id === readCookie("sdn-active-org")) ?? orgs[0];
   const activeMuni = munis.find((m) => m.id === readCookie("sdn-active-muni")) ?? munis[0];
   const activeProfile = activeProfileId ? profiles.find((p) => p.id === activeProfileId) : null;
 
   // Best label even before data loads (avoids a flash of the wrong name).
-  let label = t.orgadmin.organisation;
-  let sub = "";
+  let contextLabel = t.orgadmin.organisation;
+  let contextSub = "";
   if (activeProfile) {
-    label = activeProfile.name;
-    sub = activeProfile.sub ?? "";
+    contextLabel = activeProfile.name;
+    contextSub = activeProfile.sub ?? t.orgadmin.departments;
   } else if (onPlatform) {
-    label = t.areas.platform;
+    contextLabel = t.areas.platform;
+    contextSub = t.areas.platform;
   } else if (onKommune) {
-    label = activeMuni?.name ?? t.areas.municipality;
-    sub = t.areas.municipality;
+    contextLabel = activeMuni?.name ?? t.areas.municipality;
+    contextSub = activeMuni ? t.areas.municipality : "";
   } else {
-    label = activeOrg?.name ?? t.areas.org;
-    sub = t.areas.org;
+    contextLabel = activeOrg?.name ?? t.areas.org;
+    contextSub = activeOrg ? t.areas.org : "";
   }
 
-  const total = orgs.length + profiles.length + munis.length + (platform ? 1 : 0);
+  const userNameLooksLikeContext = Boolean(
+    userName &&
+      contextLabel !== t.areas.municipality &&
+      userName.toLocaleLowerCase().includes(contextLabel.toLocaleLowerCase()),
+  );
+  const label = userNameLooksLikeContext ? "Kommuneadministrator" : userName || "Bruker";
+  const sub = contextSub ? `${contextLabel} ${contextSub.toLowerCase()}` : contextLabel;
 
   const close = () => setOpen(false);
   const chooseOrg = (id: string) => {
@@ -152,6 +170,22 @@ export function ContextSwitcher() {
     close();
     router.push("/plattform");
   };
+  const goAdmin = () => {
+    close();
+    if (munis.length > 0) router.push("/kommune");
+    else if (platform) router.push("/plattform");
+    else router.push("/admin");
+  };
+  const goAccount = () => {
+    close();
+    router.push("/konto");
+  };
+  const logout = async () => {
+    close();
+    await createClient().auth.signOut();
+    router.push("/");
+    router.refresh();
+  };
 
   const identity = (
     <>
@@ -163,13 +197,8 @@ export function ContextSwitcher() {
     </>
   );
 
-  // Only one thing to manage → static identity (no dropdown), no "create profile".
-  if (total <= 1 && !platform) {
-    return <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14 }}>{identity}</div>;
-  }
-
   return (
-    <div ref={ref} style={{ position: "relative", marginTop: 14 }}>
+    <div ref={ref} style={{ position: "relative" }}>
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -233,6 +262,13 @@ export function ContextSwitcher() {
             </>
           )}
 
+          {!inAdminArea && (orgs.length > 0 || profiles.length > 0 || munis.length > 0 || platform) && (
+            <button type="button" role="menuitem" onClick={goAdmin} style={menuActionStyle}>
+              <Icon name="layout-dashboard" size={16} />
+              {t.areas.admin}
+            </button>
+          )}
+
           {(orgs.length > 0 || profiles.length > 0) && (
             <button
               type="button"
@@ -261,11 +297,55 @@ export function ContextSwitcher() {
               {t.orgadmin.createProfile}
             </button>
           )}
+          <button type="button" role="menuitem" onClick={goAccount} style={menuActionStyle}>
+            <Icon name="user" size={16} />
+            {t.account.title}
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            aria-expanded={settingsOpen}
+            onClick={() => setSettingsOpen((value) => !value)}
+            style={menuActionStyle}
+          >
+            <Icon name="settings" size={16} />
+            {t.nav.settings}
+            <span style={{ display: "inline-flex", transform: settingsOpen ? "rotate(180deg)" : undefined }}>
+              <Icon name="chevron-down" size={14} color="var(--text-muted)" />
+            </span>
+          </button>
+          {settingsOpen && (
+            <div style={{ padding: "8px 6px 4px", borderTop: "1px solid var(--border-subtle)" }}>
+              <SettingsContent />
+            </div>
+          )}
+          <button type="button" role="menuitem" onClick={logout} style={{ ...menuActionStyle, color: "var(--danger-text)" }}>
+            <Icon name="door-open" size={16} />
+            {t.auth.logout}
+          </button>
         </div>
       )}
     </div>
   );
 }
+
+const menuActionStyle = {
+  width: "100%",
+  display: "flex",
+  alignItems: "center",
+  gap: 8,
+  marginTop: 4,
+  padding: "9px 10px",
+  border: "none",
+  borderTop: "1px solid var(--border-subtle)",
+  borderRadius: "var(--radius-sm)",
+  background: "transparent",
+  color: "var(--text-brand)",
+  fontSize: "var(--fs-sm)",
+  fontWeight: 700,
+  cursor: "pointer",
+  textAlign: "left" as const,
+};
 
 function Heading({ children }: { children: React.ReactNode }) {
   return (

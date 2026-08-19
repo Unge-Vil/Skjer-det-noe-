@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
+import { getUser } from "@/lib/auth";
 import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { SiteHeader } from "@/components/SiteHeader";
 import { MobileTabBar } from "@/components/MobileTabBar";
@@ -48,6 +49,7 @@ export default async function RootLayout({
 }>) {
   const locale = await getLocale();
   const dict = getDictionary(locale);
+  const user = await getUser();
 
   return (
     <html
@@ -65,7 +67,7 @@ export default async function RootLayout({
             {dict.nav.skipToContent}
           </a>
           <div className="flex min-h-screen flex-col" style={{ background: "var(--bg-app)" }}>
-            <SiteHeader />
+            <SiteHeader initialSignedIn={Boolean(user)} />
             {children}
             <MobileTabBar />
           </div>

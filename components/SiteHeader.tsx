@@ -5,22 +5,22 @@ import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ds/Wordmark";
 import { Icon } from "@/components/ds/Icon";
 import { SettingsMenu } from "@/components/SettingsMenu";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
-export function SiteHeader() {
+export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: boolean }) {
   const { t } = useI18n();
   const pathname = usePathname();
+  const [signedIn, setSignedIn] = useState<boolean | null>(initialSignedIn);
+  const inAdminArea = pathname.startsWith("/admin") || pathname.startsWith("/kommune") || pathname.startsWith("/plattform");
+  const showContextMenu = inAdminArea || signedIn === true;
 
-  // Dashboards provide their own chrome (AdminShell).
-  if (
-    pathname === "/admin" ||
-    pathname === "/admin/profil" ||
-    pathname === "/admin/bilder" ||
-    pathname === "/admin/innstillinger" ||
-    pathname === "/kommune" ||
-    pathname === "/plattform"
-  )
-    return null;
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setSignedIn(Boolean(data.user)));
+  }, []);
 
   const links = [
     { href: "/", label: t.nav.home },
@@ -69,29 +69,36 @@ export function SiteHeader() {
           })}
         </nav>
 
-        {/* Settings + login are desktop-only; on mobile settings lives in the
-            bottom tab bar and there is no login. */}
+        {/* Settings and account access are desktop-only; on mobile settings
+          lives in the bottom tab bar. */}
         <div className="ml-auto hidden items-center gap-2 sm:flex">
-          <SettingsMenu />
-          <Link
-            href="/logg-inn"
-            aria-label={t.nav.login}
-            title={t.nav.login}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 40,
-              height: 40,
-              borderRadius: "var(--radius-pill)",
-              border: "1.5px solid var(--border-strong)",
-              background: "var(--surface-card)",
-              color: "var(--text-brand)",
-              textDecoration: "none",
-            }}
-          >
-            <Icon name="door-open" size={18} />
-          </Link>
+          {showContextMenu && (
+            <div style={{ maxWidth: 260, minWidth: 190 }}>
+              <ContextSwitcher />
+            </div>
+          )}
+          {!showContextMenu && <SettingsMenu />}
+          {!showContextMenu && (
+            <Link
+              href={signedIn ? "/konto" : "/logg-inn"}
+              aria-label={signedIn ? t.account.title : t.nav.login}
+              title={signedIn ? t.account.title : t.nav.login}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 40,
+                height: 40,
+                borderRadius: "var(--radius-pill)",
+                border: "1.5px solid var(--border-strong)",
+                background: "var(--surface-card)",
+                color: "var(--text-brand)",
+                textDecoration: "none",
+              }}
+            >
+              <Icon name={signedIn ? "user" : "door-open"} size={18} />
+            </Link>
+          )}
         </div>
       </div>
     </header>

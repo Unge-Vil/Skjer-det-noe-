@@ -94,6 +94,7 @@ export const nb = {
   },
   areas: {
     label: "Bytt område",
+    admin: "Administrasjon",
     org: "Organisasjon",
     municipality: "Kommune",
     platform: "Plattform",
