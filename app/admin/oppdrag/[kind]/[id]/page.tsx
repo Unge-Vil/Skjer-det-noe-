@@ -4,6 +4,9 @@ import { getMyOrg } from "@/lib/org";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { DirectoryForm, type DirectoryInitial } from "@/components/admin/DirectoryForm";
+import { AdminShell } from "@/components/admin/AdminShell";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
+import { orgAdminNav } from "@/components/admin/orgAdminNav";
 
 export const dynamic = "force-dynamic";
 
@@ -56,16 +59,18 @@ export default async function DirectoryFormPage({
         : t.directory.editVolunteer;
 
   return (
-    <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
-      <h1 style={{ margin: "0 0 20px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>{heading}</h1>
-      <DirectoryForm
-        kind={kind}
-        orgId={org.id}
-        categories={cats ?? []}
-        municipalities={org.municipalities}
-        initial={initial}
-        returnHref="/admin"
-      />
-    </main>
+    <AdminShell title={heading} identity={<ContextSwitcher />} nav={orgAdminNav(t)}>
+      <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
+        <h1 style={{ margin: "0 0 20px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>{heading}</h1>
+        <DirectoryForm
+          kind={kind}
+          orgId={org.id}
+          categories={cats ?? []}
+          municipalities={org.municipalities}
+          initial={initial}
+          returnHref="/admin"
+        />
+      </main>
+    </AdminShell>
   );
 }

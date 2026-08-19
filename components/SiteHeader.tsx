@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ds/Wordmark";
-import { Icon } from "@/components/ds/Icon";
 import { SettingsMenu } from "@/components/SettingsMenu";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { useI18n } from "@/components/i18n/LocaleProvider";
@@ -46,7 +45,7 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
         borderBottom: "1px solid var(--border-subtle)",
       }}
     >
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-3">
+      <div className="flex w-full items-center gap-3 px-4 py-3">
         <Link href="/" aria-label="Skjer det noe?" style={{ textDecoration: "none" }}>
           <Wordmark size={20} withMark />
         </Link>
@@ -74,7 +73,7 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
           })}
         </nav>
 
-        <div className="ml-auto sm:ml-2">
+        <div className="ml-auto">
           <LocationMenu />
         </div>
 
@@ -87,27 +86,6 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
             </div>
           )}
           {!showContextMenu && <SettingsMenu />}
-          {!showContextMenu && (
-            <Link
-              href={signedIn ? "/konto" : "/logg-inn"}
-              aria-label={signedIn ? t.account.title : t.nav.login}
-              title={signedIn ? t.account.title : t.nav.login}
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 40,
-                height: 40,
-                borderRadius: "var(--radius-pill)",
-                border: "1.5px solid var(--border-strong)",
-                background: "var(--surface-card)",
-                color: "var(--text-brand)",
-                textDecoration: "none",
-              }}
-            >
-              <Icon name={signedIn ? "user" : "door-open"} size={18} />
-            </Link>
-          )}
         </div>
       </div>
     </header>

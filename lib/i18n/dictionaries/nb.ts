@@ -104,6 +104,7 @@ export const nb = {
     about: "Om",
     privacy: "Personvern",
     terms: "Vilkår",
+    privacyTerms: "Personvern og vilkår",
     accessibility: "Tilgjengelighet",
     forOrg: "For organisasjoner",
     forMuni: "For kommuner",

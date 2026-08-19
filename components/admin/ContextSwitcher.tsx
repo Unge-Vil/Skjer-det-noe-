@@ -116,7 +116,6 @@ export function ContextSwitcher() {
   const activeProfileId = readCookie("sdn-active-profile") ?? (pathname.startsWith("/admin/profiler/") ? pathname.split("/")[3] : null);
   const onKommune = pathname.startsWith("/kommune");
   const onPlatform = pathname.startsWith("/plattform");
-  const inAdminArea = pathname.startsWith("/admin") || onKommune || onPlatform;
 
   const activeOrg = orgs.find((o) => o.id === readCookie("sdn-active-org")) ?? orgs[0];
   const activeMuni = munis.find((m) => m.id === readCookie("sdn-active-muni")) ?? munis[0];
@@ -180,12 +179,6 @@ export function ContextSwitcher() {
   const goPlatform = () => {
     close();
     router.push("/plattform");
-  };
-  const goAdmin = () => {
-    close();
-    if (munis.length > 0) router.push("/kommune");
-    else if (platform) router.push("/plattform");
-    else router.push("/admin");
   };
   const goAccount = () => {
     close();
@@ -272,41 +265,6 @@ export function ContextSwitcher() {
             </>
           )}
 
-          {!inAdminArea && (orgs.length > 0 || profiles.length > 0 || munis.length > 0 || platform) && (
-            <button type="button" role="menuitem" onClick={goAdmin} style={menuActionStyle}>
-              <Icon name="layout-dashboard" size={16} />
-              {t.areas.admin}
-            </button>
-          )}
-
-          {(orgs.length > 0 || profiles.length > 0) && (
-            <button
-              type="button"
-              onClick={() => {
-                close();
-                router.push("/admin/profiler");
-              }}
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginTop: 4,
-                padding: "9px 10px",
-                border: "none",
-                borderTop: "1px solid var(--border-subtle)",
-                borderRadius: "var(--radius-sm)",
-                background: "transparent",
-                color: "var(--text-brand)",
-                fontSize: "var(--fs-sm)",
-                fontWeight: 700,
-                cursor: "pointer",
-              }}
-            >
-              <Icon name="plus" size={16} />
-              {t.orgadmin.createProfile}
-            </button>
-          )}
           <button type="button" role="menuitem" onClick={goAccount} style={menuActionStyle}>
             <Icon name="user" size={16} />
             {t.account.title}

@@ -106,6 +106,7 @@ export const en: Dictionary = {
     about: "About",
     privacy: "Privacy",
     terms: "Terms",
+    privacyTerms: "Privacy and terms",
     accessibility: "Accessibility",
     forOrg: "For organisations",
     forMuni: "For municipalities",

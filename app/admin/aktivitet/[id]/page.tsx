@@ -7,6 +7,9 @@ import { DEFAULT_CENTER } from "@/lib/listings";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { ActivityForm, type ActivityInitial } from "@/components/admin/ActivityForm";
 import type { CoOrg } from "@/components/admin/CoOrganizerEditor";
+import { AdminShell } from "@/components/admin/AdminShell";
+import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
+import { orgAdminNav } from "@/components/admin/orgAdminNav";
 
 export const dynamic = "force-dynamic";
 
@@ -82,22 +85,23 @@ export default async function ActivityFormPage({
     initialCoOrganizers = await fetchCoOrgs(supabase, id);
   }
 
+  const title = id === "ny" ? t.form.createActivity : t.form.editActivity;
   return (
-    <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
-      <h1 style={{ margin: "0 0 20px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>
-        {id === "ny" ? t.form.createActivity : t.form.editActivity}
-      </h1>
-      <ActivityForm
-        orgId={orgId}
-        categories={cats ?? []}
-        municipalities={municipalities}
-        defaultCenter={DEFAULT_CENTER}
-        initial={initial}
-        initialCoOrganizers={initialCoOrganizers}
-        lockedMunicipality={lockedMunicipality}
-        profileId={scopedProfileId}
-        returnHref={returnHref}
-      />
-    </main>
+    <AdminShell title={title} identity={<ContextSwitcher />} nav={orgAdminNav(t)}>
+      <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
+        <h1 style={{ margin: "0 0 20px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>{title}</h1>
+        <ActivityForm
+          orgId={orgId}
+          categories={cats ?? []}
+          municipalities={municipalities}
+          defaultCenter={DEFAULT_CENTER}
+          initial={initial}
+          initialCoOrganizers={initialCoOrganizers}
+          lockedMunicipality={lockedMunicipality}
+          profileId={scopedProfileId}
+          returnHref={returnHref}
+        />
+      </main>
+    </AdminShell>
   );
 }
