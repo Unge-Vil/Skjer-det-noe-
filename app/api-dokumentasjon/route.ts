@@ -1,10 +1,7 @@
-import { ApiReference } from "@scalar/nextjs-api-reference";
+import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
-export const GET = ApiReference({
-  url: "/api/openapi.json",
-  pageTitle: "API-dokumentasjon – Skjer det noe?",
-  theme: "default",
-  hideModels: false,
-});
+export function GET() {
+  return NextResponse.redirect("https://unge-vil.gitbook.io/skjer-det-noe/api-reference/", 308);
+}

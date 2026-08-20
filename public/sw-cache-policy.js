@@ -1,7 +1,6 @@
 (function exposeCachePolicy(scope) {
   const PUBLIC_EXACT = new Set([
     "/",
-    "/api-dokumentasjon",
     "/for-kommuner",
     "/for-organisasjoner",
     "/frivilligtorg",

@@ -42,7 +42,7 @@ export default async function MunicipalityApiIntegrationPage() {
             <h1 style={{ margin: 0, fontSize: "var(--fs-h2)", fontWeight: 800 }}>API</h1>
           </div>
           <p style={{ margin: "0 0 20px", lineHeight: 1.6, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>Bruk Kommune-API for å hente publiserte aktiviteter og arrangementer fra kommunen i egne tjenester.</p>
-          <Link href="/api-dokumentasjon#tag/Kommune-API" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 18, padding: "14px 16px", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", textDecoration: "none" }}>
+          <Link href="https://unge-vil.gitbook.io/skjer-det-noe/api-reference/kommune-api" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, marginBottom: 18, padding: "14px 16px", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", textDecoration: "none" }}>
             <span><strong style={{ display: "block", marginBottom: 3 }}>Kommune-API-dokumentasjon</strong><span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>Endpoint, parametere og autentisering med `sdn_muni_`-nøkkel.</span></span>
             <span style={{ color: "var(--text-link)", fontWeight: 700, fontSize: "var(--fs-sm)", whiteSpace: "nowrap" }}>Åpne dokumentasjon →</span>
           </Link>

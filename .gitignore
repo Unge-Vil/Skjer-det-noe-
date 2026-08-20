@@ -34,6 +34,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# local MCP credentials
+.mcp.json
+
 # local test accounts
 testkontoer.md
 

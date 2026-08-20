@@ -49,6 +49,7 @@ export function SiteFooter() {
         </a>
       </span>
       <nav aria-label={t.footer.about} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+        <a href="https://unge-vil.gitbook.io/skjer-det-noe/help-center/" style={linkStyle}>Hjelp</a>
         <Link href="/om" style={linkStyle}>{t.footer.about}</Link>
         <Link href="/personvern-og-vilkar" style={linkStyle}>{t.footer.privacyTerms}</Link>
         <Link href={signedIn ? "/konto" : "/logg-inn"} style={accountLinkStyle}>

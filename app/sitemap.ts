@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { absoluteUrl } from "@/lib/seo";
+import { HELP_ARTICLES } from "@/lib/help";
 
 export const revalidate = 3600;
 
@@ -48,6 +49,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "daily",
       priority: 1,
     },
+    {
+      url: absoluteUrl("/hjelp"),
+      changeFrequency: "weekly",
+      priority: 0.6,
+    },
+    ...HELP_ARTICLES.map((article) => ({
+      url: absoluteUrl(`/hjelp/${article.slug}`),
+      lastModified: article.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.5,
+    })),
     ...((activities.data ?? []).map((activity) => ({
       url: absoluteUrl(`/aktivitet/${activity.slug}`),
       lastModified: activity.updated_at,
