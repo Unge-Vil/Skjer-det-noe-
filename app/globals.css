@@ -130,3 +130,49 @@ article.sdn-richtext { min-height: 0; padding: 0; }
 .sdn-backdrop { animation: sdn-fade var(--dur-base) var(--ease-soft) both; }
 @keyframes sdn-pop { from { opacity: 0; transform: translateY(-4px) scale(0.985); } to { opacity: 1; transform: none; } }
 .sdn-pop { animation: sdn-pop var(--dur-base) var(--ease-enter) both; transform-origin: top right; }
+
+.sdn-horizontal-scroll {
+  overscroll-behavior-x: contain;
+  scrollbar-color: var(--border-strong) transparent;
+  scrollbar-width: thin;
+}
+
+.sdn-horizontal-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.sdn-horizontal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sdn-horizontal-scroll::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.sdn-admin-nav {
+  scrollbar-width: none !important;
+  overscroll-behavior-x: contain;
+}
+
+.sdn-admin-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.sdn-admin-form-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+  background: var(--bg-app);
+  border-top: 1px solid var(--border-subtle);
+}
+
+@media (min-width: 641px) {
+  .sdn-admin-form-actions {
+    position: static;
+    padding: 0;
+    background: transparent;
+    border-top: 0;
+  }
+}

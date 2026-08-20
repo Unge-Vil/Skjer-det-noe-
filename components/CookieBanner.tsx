@@ -57,7 +57,7 @@ export function CookieBanner() {
         boxShadow: "var(--shadow-lg)",
       }}
     >
-      <p style={{ margin: 0, flex: "1 1 240px", fontSize: "var(--fs-sm)", color: "var(--text-body)" }}>
+      <p style={{ margin: 0, minWidth: 0, flex: "1 1 0", fontSize: "var(--fs-sm)", color: "var(--text-body)" }}>
         {t.cookie.body}{" "}
         <Link href="/personvern" style={{ color: "var(--text-link)", fontWeight: 600 }}>
           {t.cookie.more}

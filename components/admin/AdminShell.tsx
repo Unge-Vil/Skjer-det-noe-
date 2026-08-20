@@ -31,6 +31,7 @@ export function AdminShell({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [openNav, setOpenNav] = useState<string | null>(null);
+  const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -40,11 +41,22 @@ export function AdminShell({
     if (restoreFocus) requestAnimationFrame(() => trigger?.focus());
   };
 
+  // Anchor the fixed-positioned menu to its trigger, clamped to the viewport.
+  const toggleNav = (label: string, trigger: HTMLElement) => {
+    setOpenNav((value) => {
+      if (value === label) return null;
+      const rect = trigger.getBoundingClientRect();
+      const width = 220;
+      setMenuPos({ top: rect.bottom + 6, left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)) });
+      return label;
+    });
+  };
+
   useEffect(() => {
     if (!openNav) return;
     menuRef.current?.querySelector<HTMLElement>("a, button")?.focus();
     const closeOnOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) closeNav(false);
+      if (navRef.current && !navRef.current.contains(event.target as Node) && menuRef.current && !menuRef.current.contains(event.target as Node)) closeNav(false);
     };
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -52,11 +64,16 @@ export function AdminShell({
         closeNav();
       }
     };
+    const closeOnShift = () => closeNav(false);
     document.addEventListener("mousedown", closeOnOutside);
     document.addEventListener("keydown", closeOnEscape);
+    window.addEventListener("resize", closeOnShift);
+    window.addEventListener("scroll", closeOnShift, true);
     return () => {
       document.removeEventListener("mousedown", closeOnOutside);
       document.removeEventListener("keydown", closeOnEscape);
+      window.removeEventListener("resize", closeOnShift);
+      window.removeEventListener("scroll", closeOnShift, true);
     };
   }, [openNav]);
 
@@ -75,9 +92,9 @@ export function AdminShell({
   return (
     <div className="flex min-h-screen flex-col" style={{ background: "var(--bg-app)" }}>
       <header style={{ background: "var(--surface-card)", borderBottom: "1px solid var(--border-subtle)" }}>
-        <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2 sm:px-6">
+        <div className="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2 sm:flex-row sm:items-center sm:gap-3 sm:px-6">
           <div className="min-w-0 flex-1 overflow-visible">
-          <nav ref={navRef} aria-label={title} className="flex min-w-0 flex-wrap gap-1 overflow-visible">
+          <nav ref={navRef} aria-label={title} className="sdn-admin-nav flex min-w-0 gap-1 overflow-x-auto overflow-y-hidden">
           {nav.map((n) => {
             const active = isActive(n);
             if (n.children) {
@@ -87,7 +104,7 @@ export function AdminShell({
                     type="button"
                     aria-haspopup="dialog"
                     aria-expanded={openNav === n.label}
-                    onClick={() => setOpenNav((value) => value === n.label ? null : n.label)}
+                    onClick={(event) => toggleNav(n.label, event.currentTarget)}
                     style={{ ...navItemStyle, background: active ? "var(--surface-brand-soft)" : "transparent", color: active ? "var(--text-brand)" : "var(--text-body)" }}
                   >
                     <Icon name={n.icon} size={17} color="var(--icon-nav)" />
@@ -95,7 +112,7 @@ export function AdminShell({
                     <Icon name="chevron-down" size={14} color="var(--text-muted)" />
                   </button>
                   {openNav === n.label && (
-                    <div ref={menuRef} role="dialog" aria-label={n.label} style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 40, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
+                    <div ref={menuRef} role="dialog" aria-label={n.label} style={{ position: "fixed", top: menuPos?.top ?? 0, left: menuPos?.left ?? 0, zIndex: 50, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
                       {n.children.map((child) => {
                         const childActive = !child.href.includes("#") && isHrefActive(child.href);
                         return <Link key={child.label} href={child.href} onClick={() => closeNav(false)} aria-current={childActive ? "page" : undefined} style={{ ...navItemStyle, width: "100%", background: childActive ? "var(--surface-brand-soft)" : "transparent", color: childActive ? "var(--text-brand)" : "var(--text-body)" }}><Icon name={child.icon} size={17} color="var(--icon-nav)" /><span>{child.label}</span>{child.badge ? <span style={badgeStyle}>{child.badge}</span> : null}</Link>;
@@ -133,5 +150,5 @@ export function AdminShell({
   );
 }
 
-const navItemStyle = { display: "inline-flex", alignItems: "center", gap: 8, flex: "none", padding: "8px 12px", border: "none", borderRadius: "var(--radius-md)", textDecoration: "none", fontSize: 14, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" } as const;
+const navItemStyle = { display: "inline-flex", alignItems: "center", gap: 4, flex: "none", padding: "8px 6px", border: "none", borderRadius: "var(--radius-md)", textDecoration: "none", fontSize: 13, fontWeight: 600, cursor: "pointer", whiteSpace: "nowrap" } as const;
 const badgeStyle = { minWidth: 20, padding: "1px 6px", textAlign: "center" as const, borderRadius: "var(--radius-pill)", background: "var(--stone-100)", color: "var(--stone-700)", fontSize: 12, fontWeight: 700 };

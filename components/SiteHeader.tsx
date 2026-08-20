@@ -11,6 +11,8 @@ import { createClient } from "@/lib/supabase/client";
 import { LocationMenu } from "@/components/location/LocationMenu";
 import { findMunicipality } from "@/lib/location";
 import { useLocation } from "@/components/location/LocationProvider";
+import { Icon } from "@/components/ds/Icon";
+import { isAdminArea } from "@/lib/adminPaths";
 
 export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: boolean }) {
   const { t } = useI18n();
@@ -19,7 +21,7 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
   const defaultMunicipality = findMunicipality(location.municipalities, location.defaultMunicipality);
   const myMunicipalityHref = defaultMunicipality?.slug ? `/kommune/${defaultMunicipality.slug}` : "/kommuner";
   const [signedIn, setSignedIn] = useState<boolean | null>(initialSignedIn);
-  const inAdminArea = pathname.startsWith("/admin") || pathname.startsWith("/kommune") || pathname.startsWith("/plattform");
+  const inAdminArea = isAdminArea(pathname);
   const showContextMenu = inAdminArea || signedIn === true;
 
   useEffect(() => {
@@ -53,6 +55,28 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
         <Link href="/" aria-label="Skjer det noe?" style={{ textDecoration: "none" }}>
           <Wordmark size={20} withMark />
         </Link>
+        {inAdminArea && (
+          <Link
+            href="/"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 5,
+              minHeight: 36,
+              padding: "0 10px",
+              border: "1px solid var(--border-subtle)",
+              borderRadius: "var(--radius-md)",
+              color: "var(--text-brand)",
+              fontSize: "var(--fs-sm)",
+              fontWeight: 650,
+              textDecoration: "none",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <Icon name="arrow-left" size={15} />
+            {t.nav.backToSite}
+          </Link>
+        )}
 
         <nav aria-label={t.nav.home} className="ml-3 hidden items-center gap-1 sm:flex">
           {links.map((l) => {
@@ -77,7 +101,7 @@ export function SiteHeader({ initialSignedIn = false }: { initialSignedIn?: bool
           })}
         </nav>
 
-        <div className="ml-auto">
+        <div className={inAdminArea ? "ml-auto hidden sm:block" : "ml-auto"}>
           <LocationMenu />
         </div>
 

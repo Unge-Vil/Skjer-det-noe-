@@ -9,6 +9,7 @@ import { useI18n } from "@/components/i18n/LocaleProvider";
 import { createClient } from "@/lib/supabase/client";
 import { findMunicipality } from "@/lib/location";
 import { useLocation } from "@/components/location/LocationProvider";
+import { isAdminArea } from "@/lib/adminPaths";
 
 const SAVED_KEY = "sdn-saved";
 
@@ -80,12 +81,7 @@ export function MobileTabBar() {
   }, []);
 
   // Hide the tab bar inside the admin areas (own chrome).
-  if (
-    pathname.startsWith("/admin") ||
-    pathname.startsWith("/kommune") ||
-    pathname.startsWith("/plattform")
-  )
-    return null;
+  if (isAdminArea(pathname)) return null;
 
   const tabs: { href: string; label: string; icon: IconName; badge?: number }[] = [
     { href: "/", label: t.nav.home, icon: "house" },

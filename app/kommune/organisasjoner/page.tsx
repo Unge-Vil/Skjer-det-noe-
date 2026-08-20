@@ -114,7 +114,29 @@ export default async function KommuneOrganisationsPage({
         {organisations.length === 0 ? (
           <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.noOrganizations}</p>
         ) : (
-          <div style={{ overflowX: "auto", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)" }}>
+          <>
+          <ul className="flex flex-col gap-2.5 sm:hidden" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+            {organisations.map((org) => (
+              <li key={org.id} style={{ border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)", padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
+                  <span style={{ minWidth: 0 }}>
+                    <Link href={`/organisasjon/${org.slug}`} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>{org.name}</Link>
+                    {org.is_volunteer && (
+                      <span style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 500 }}>
+                        <Icon name="sparkles" size={12} /> {t.kommune.volunteer}
+                      </span>
+                    )}
+                  </span>
+                  <span style={{ flex: "none", fontSize: "var(--fs-xs)", fontWeight: 700, color: org.status === "published" ? "var(--text-brand)" : "var(--text-muted)" }}>{org.status === "published" ? t.kommune.approvedFilter : t.kommune.notApprovedFilter}</span>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 10 }}>
+                  <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>{org.org_number ? `${t.kommune.orgNumber}: ${org.org_number}` : "–"}</span>
+                  <OrgStatusButton id={org.id} status={org.status} />
+                </div>
+              </li>
+            ))}
+          </ul>
+          <div className="hidden sm:block" style={{ overflowX: "auto", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)" }}>
             <table style={{ width: "100%", minWidth: 620, borderCollapse: "collapse", fontSize: "var(--fs-sm)" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", textAlign: "left", fontSize: "var(--fs-xs)" }}>
@@ -143,6 +165,7 @@ export default async function KommuneOrganisationsPage({
               </tbody>
             </table>
           </div>
+          </>
         )}
       </main>
     </AdminShell>

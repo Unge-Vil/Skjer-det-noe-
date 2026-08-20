@@ -133,7 +133,6 @@ export default async function AdminPage() {
   const nav: NavItem[] = [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
-    { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
     {
       href: "/admin/innhold",
       label: t.kommune.content,
@@ -150,6 +149,7 @@ export default async function AdminPage() {
       label: "Mer",
       icon: "list",
       children: [
+        { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
         { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
         { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
         { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
@@ -167,7 +167,7 @@ export default async function AdminPage() {
           <Link href={`/admin/aktivitet/ny${profileQuery}`}>
             <Button size="sm" leadingIcon="plus">{t.admin.newActivity}</Button>
           </Link>
-          <a href={previewHref} target="_blank" rel="noopener noreferrer">
+          <a className="hidden sm:block" href={previewHref} target="_blank" rel="noopener noreferrer">
             <Button variant="secondary" size="sm" leadingIcon="external-link">
               {t.orgadmin.previewPublic}
             </Button>

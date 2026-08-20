@@ -337,7 +337,16 @@ export function ActivityForm({
 
       {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
-      <div style={{ display: "flex", gap: 10 }}>
+      <div
+        className="sdn-admin-form-actions sticky bottom-0 z-10 sm:static"
+        style={{
+          display: "flex",
+          gap: 10,
+          padding: "12px 0 calc(12px + env(safe-area-inset-bottom))",
+          background: "var(--bg-app)",
+          borderTop: "1px solid var(--border-subtle)",
+        }}
+      >
         <Button type="submit" loading={busy}>{busy ? t.form.saving : t.form.save}</Button>
         <Button type="button" variant="ghost" onClick={() => router.push(returnHref)}>{t.form.cancel}</Button>
       </div>

@@ -297,8 +297,8 @@ export function Explorer({
 
       {/* Category chips */}
       <div
-        className="mx-auto w-full max-w-6xl"
-        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "8px 16px", scrollbarWidth: "none" }}
+        className="sdn-horizontal-scroll mx-auto w-full max-w-6xl"
+        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "8px 16px", scrollbarWidth: "thin" }}
       >
         <FilterChip selected={category === null} onClick={() => setCategory(null)}>
           {t.explorer.all}
@@ -323,8 +323,8 @@ export function Explorer({
           wraps on desktop). */}
       <div className="mx-auto w-full max-w-6xl px-3 py-2 lg:px-4">
         <div
-          className="flex items-center gap-2 overflow-x-auto lg:flex-wrap"
-          style={{ scrollbarWidth: "none" }}
+          className="sdn-horizontal-scroll flex items-center gap-2 overflow-x-auto lg:flex-wrap"
+          style={{ scrollbarWidth: "thin" }}
         >
           <span className="inline-flex shrink-0 items-center gap-2" style={{ minHeight: 38, padding: "0 12px", borderRadius: "var(--radius-pill)", background: "var(--surface-brand-soft)", color: "var(--text-brand)", fontSize: "var(--fs-sm)", fontWeight: 650 }}>
             <Icon name={location.mode === "nearby" ? "locate-fixed" : "map-pin"} size={16} />

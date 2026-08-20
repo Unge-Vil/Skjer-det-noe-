@@ -23,16 +23,13 @@ export function LocationPrimer() {
 
   useEffect(() => {
     if (location.primerSeen) return;
-    const reveal = () => {
+    queueMicrotask(() => {
       try {
         if (localStorage.getItem(COOKIE_CONSENT_KEY)) setVisible(true);
       } catch {
         setVisible(true);
       }
-    };
-    queueMicrotask(reveal);
-    window.addEventListener("sdn:cookie-consent", reveal);
-    return () => window.removeEventListener("sdn:cookie-consent", reveal);
+    });
   }, [location.primerSeen]);
 
   const canSuggestDefault = Boolean(

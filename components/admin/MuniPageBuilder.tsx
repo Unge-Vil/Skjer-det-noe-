@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Puck, type Data } from "@puckeditor/core";
 import "@puckeditor/core/puck.css";
 import { createClient } from "@/lib/supabase/client";
 import { puckConfig, type PuckRoot } from "@/lib/puck/config";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { Icon } from "@/components/ds/Icon";
 
 function slugify(s: string): string {
   return s
@@ -32,6 +33,16 @@ export function MuniPageBuilder({
   const router = useRouter();
   const supabase = createClient();
   const [error, setError] = useState<string | null>(null);
+  const [tooNarrow, setTooNarrow] = useState(false);
+
+  // The Puck editor's side panels are unusable below tablet width — gate it.
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const update = () => setTooNarrow(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
   const save = async (data: Data) => {
     setError(null);
@@ -85,6 +96,38 @@ export function MuniPageBuilder({
       {error && (
         <p role="alert" style={{ margin: 0, padding: "8px 16px", color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>
       )}
+      {tooNarrow ? (
+        <div
+          style={{
+            flex: 1,
+            minHeight: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 12,
+            padding: "32px 24px",
+            textAlign: "center",
+          }}
+        >
+          <span
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              justifyContent: "center",
+              width: 56,
+              height: 56,
+              borderRadius: "var(--radius-pill)",
+              background: "var(--surface-brand-soft)",
+              color: "var(--text-brand)",
+            }}
+          >
+            <Icon name="monitor" size={26} color="var(--icon-brand)" />
+          </span>
+          <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.kommune.builderDesktopTitle}</h2>
+          <p style={{ margin: 0, maxWidth: 340, lineHeight: 1.6, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.builderDesktopHint}</p>
+        </div>
+      ) : (
       <div style={{ flex: 1, minHeight: 0 }}>
         <Puck
           config={puckConfig}
@@ -117,6 +160,7 @@ export function MuniPageBuilder({
           }}
         />
       </div>
+      )}
     </div>
   );
 }

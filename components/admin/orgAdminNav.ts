@@ -5,7 +5,6 @@ export function orgAdminNav(t: Dictionary): NavItem[] {
   return [
     { href: "/admin", label: t.orgadmin.overview, icon: "layout-dashboard" },
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
-    { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
     {
       href: "/admin/innhold",
       label: t.kommune.content,
@@ -22,6 +21,7 @@ export function orgAdminNav(t: Dictionary): NavItem[] {
       label: "Mer",
       icon: "list",
       children: [
+        { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
         { href: "/admin/bilder", label: t.orgadmin.media, icon: "image" },
         { href: "/admin/integrasjoner", label: t.orgadmin.integrations, icon: "plug" },
         { href: "/admin/innstillinger", label: t.orgadmin.settings, icon: "settings" },
