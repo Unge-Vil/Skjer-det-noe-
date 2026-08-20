@@ -2,7 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
@@ -30,6 +30,7 @@ const labelStyle: CSSProperties = {
 export default function LoginPage() {
   const { t } = useI18n();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -46,7 +47,8 @@ export default function LoginPage() {
       setError(t.auth.loginError);
       return;
     }
-    router.push("/admin");
+    const next = searchParams.get("next");
+    router.push(next?.startsWith("/oauth/authorize?") ? next : "/admin");
     router.refresh();
   };
 

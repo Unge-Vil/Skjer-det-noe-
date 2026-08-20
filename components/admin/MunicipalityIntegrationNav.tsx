@@ -11,6 +11,7 @@ export function MunicipalityIntegrationNav() {
   const items = [
     { href: "/kommune/integrasjoner", label: t.orgadmin.integrations, icon: "plug" as const },
     { href: "/kommune/integrasjoner/api", label: "API", icon: "key" as const },
+    { href: "/kommune/integrasjoner/embeds", label: "Innebygging", icon: "monitor" as const },
     { href: "/kommune/integrasjoner/mcp", label: t.integrations.mcpTitle, icon: "sparkles" as const },
   ];
 

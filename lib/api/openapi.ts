@@ -3,42 +3,69 @@ export const openApiDocument = {
   info: {
     title: "Skjer det noe? API",
     version: "1.0.0",
-    description: "Publiser og hent organisasjonens aktiviteter og arrangementer.",
+    description: "To adskilte API-er: Organisasjons-API for å publisere egne oppføringer, og Kommune-API for å hente kommunens publiserte innhold.",
   },
   servers: [{ url: "/" }],
-  security: [{ bearerAuth: [] }],
+  tags: [
+    { name: "Organisasjons-API", description: "Opprett, oppdater og hent organisasjonens egne aktiviteter og arrangementer." },
+    { name: "Kommune-API", description: "Hent publiserte aktiviteter og arrangementer innenfor kommunen som API-nøkkelen tilhører." },
+  ],
   paths: {
     "/api/v1/activities": {
       post: {
+        tags: ["Organisasjons-API"],
         summary: "Opprett eller oppdater aktivitet",
         operationId: "upsertActivity",
+        security: [{ organizationBearerAuth: [] }],
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/ActivityInput" } } } },
         responses: { "200": response("Aktivitet lagret"), "400": response("Ugyldig forespørsel"), "401": response("Ugyldig API-nøkkel") },
       },
       get: {
+        tags: ["Organisasjons-API"],
         summary: "List organisasjonens aktiviteter",
         operationId: "listActivities",
+        security: [{ organizationBearerAuth: [] }],
         parameters: [{ $ref: "#/components/parameters/Limit" }],
         responses: { "200": response("Aktiviteter"), "401": response("Ugyldig API-nøkkel") },
       },
     },
     "/api/v1/events": {
       post: {
+        tags: ["Organisasjons-API"],
         summary: "Opprett eller oppdater arrangement",
         operationId: "upsertEvent",
+        security: [{ organizationBearerAuth: [] }],
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/EventInput" } } } },
         responses: { "200": response("Arrangement lagret"), "400": response("Ugyldig forespørsel"), "401": response("Ugyldig API-nøkkel") },
       },
       get: {
+        tags: ["Organisasjons-API"],
         summary: "List organisasjonens arrangementer",
         operationId: "listEvents",
+        security: [{ organizationBearerAuth: [] }],
         parameters: [{ $ref: "#/components/parameters/Limit" }],
         responses: { "200": response("Arrangementer"), "401": response("Ugyldig API-nøkkel") },
       },
     },
+    "/api/v1/municipality/listings": {
+      get: {
+        tags: ["Kommune-API"],
+        summary: "List kommunens publiserte aktiviteter eller arrangementer",
+        operationId: "listMunicipalityListings",
+        security: [{ municipalityBearerAuth: [] }],
+        parameters: [
+          { name: "kind", in: "query", description: "Type oppføring. Standard er aktiviteter.", required: false, schema: { type: "string", enum: ["activities", "events"], default: "activities" } },
+          { $ref: "#/components/parameters/Limit" },
+        ],
+        responses: { "200": response("Kommunens publiserte oppføringer"), "401": response("Ugyldig kommune-API-nøkkel") },
+      },
+    },
   },
   components: {
-    securitySchemes: { bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "sdn_live_..." } },
+    securitySchemes: {
+      organizationBearerAuth: { type: "http", scheme: "bearer", bearerFormat: "sdn_live_...", description: "Organisasjonsnøkkel. Har bare tilgang til organisasjonen nøkkelen tilhører." },
+      municipalityBearerAuth: { type: "http", scheme: "bearer", bearerFormat: "sdn_muni_...", description: "Kommune-API-nøkkel. Leser bare publisert innhold i kommunen nøkkelen tilhører." },
+    },
     parameters: { Limit: { name: "limit", in: "query", description: "Maksimalt antall oppføringer", required: false, schema: { type: "integer", default: 50, minimum: 1, maximum: 100 } } },
     schemas: {
       ActivityInput: {

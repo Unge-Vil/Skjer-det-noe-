@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { Schibsted_Grotesk, Spline_Sans_Mono } from "next/font/google";
 import "./globals.css";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
@@ -52,6 +52,24 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const requestHeaders = await headers();
+  // Embeds are framed on third-party sites: no site chrome, no providers, and
+  // the theme comes from the embed config (localStorage is partitioned away).
+  if (requestHeaders.get("x-sdn-embed") === "1") {
+    return (
+      <html
+        lang="nb"
+        data-theme={requestHeaders.get("x-sdn-embed-theme") ?? "auto"}
+        suppressHydrationWarning
+        className={`${schibsted.variable} ${splineMono.variable} h-full antialiased`}
+      >
+        <body className="min-h-full" style={{ background: "transparent" }}>
+          {children}
+        </body>
+      </html>
+    );
+  }
+
   const locale = await getLocale();
   const dict = getDictionary(locale);
   const user = await getUser();

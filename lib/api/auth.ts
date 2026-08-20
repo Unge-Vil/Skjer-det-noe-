@@ -7,6 +7,11 @@ export interface ResolvedKey {
   autoPublish: boolean;
 }
 
+export interface ResolvedMunicipalityKey {
+  id: string;
+  municipalityId: string;
+}
+
 /** Extract a bearer token from an `Authorization: Bearer …` header. */
 export function bearerToken(req: Request): string | null {
   const h = req.headers.get("authorization") ?? req.headers.get("Authorization");
@@ -21,7 +26,7 @@ export function bearerToken(req: Request): string | null {
  * Uses the service-role client, so it must only be called from server routes.
  */
 export async function resolveApiKey(token: string | null): Promise<ResolvedKey | null> {
-  if (!token || !isKeyShape(token)) return null;
+  if (!token || !isKeyShape(token, "organization")) return null;
   const admin = createAdminClient();
   const hash = await hashKey(token);
   const { data } = await admin
@@ -36,4 +41,20 @@ export async function resolveApiKey(token: string | null): Promise<ResolvedKey |
     organizationId: data.organization_id as string,
     autoPublish: data.auto_publish as boolean,
   };
+}
+
+/** Resolve a municipality-scoped key. Organisation keys can never authenticate
+ * this API, even if their hash appears in a different key table. */
+export async function resolveMunicipalityApiKey(token: string | null): Promise<ResolvedMunicipalityKey | null> {
+  if (!token || !isKeyShape(token, "municipality")) return null;
+  const admin = createAdminClient();
+  const hash = await hashKey(token);
+  const { data } = await admin
+    .from("municipality_api_keys")
+    .select("id,municipality_id,revoked_at")
+    .eq("key_hash", hash)
+    .maybeSingle();
+  if (!data || data.revoked_at) return null;
+  await admin.from("municipality_api_keys").update({ last_used_at: new Date().toISOString() }).eq("id", data.id);
+  return { id: data.id as string, municipalityId: data.municipality_id as string };
 }

@@ -77,11 +77,33 @@ eller nedgraderes.
 
 ## Integrasjoner
 
-Det offentlige skrive-API-et bruker organisasjonsbundne Bearer-nøkler og
-validerer hele payloaden før databasekall. Kalenderfeeds kan bare administreres
-av eiere; serveren tillater kun HTTPS, avviser lokale/private mål og redirect,
-og begrenser tid og responsstørrelse. `SUPABASE_SECRET_KEY` brukes bare i
-serverruter og scripts som selv håndhever organisasjonsscope.
+API-dokumentasjonen er tilgjengelig på `/api-dokumentasjon` og er bevisst delt
+etter rolle:
+
+- **Organisasjons-API** bruker `sdn_live_`-nøkler og lar en organisasjon
+  opprette, oppdatere og hente sine egne aktiviteter og arrangementer på
+  `/api/v1/activities` og `/api/v1/events`.
+- **Kommune-API** bruker separate `sdn_muni_`-nøkler og kan bare hente
+  publiserte aktiviteter eller arrangementer i nøkkelens kommune fra
+  `/api/v1/municipality/listings`. Det har ingen skrive- eller
+  modereringsadgang.
+
+Kalenderfeeds kan bare administreres av eiere; serveren tillater kun HTTPS,
+avviser lokale/private mål og redirect, og begrenser tid og responsstørrelse.
+`SUPABASE_SECRET_KEY` brukes bare i serverruter og scripts som selv håndhever
+scope.
+
+### MCP preview
+
+`POST /api/mcp` er et stateless MCP-endepunkt i preview. Det støtter
+`initialize`, `tools/list` og `tools/call`, og tilbyr foreløpig bare de
+offentlige discovery-toolsene `list_categories` og `list_municipalities`.
+Det kan testes lokalt med en MCP-klient som støtter HTTP mot
+`http://localhost:3000/api/mcp`.
+
+Kontoavgrensede organisasjons- og kommune-tools krever delegert OAuth og er
+ikke eksponert i preview-endepunktet. Ikke bruk API-nøkler i MCP-klientens
+konfigurasjon eller i samtaler med en modell.
 
 ## Deploy til Cloudflare
 

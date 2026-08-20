@@ -27,14 +27,19 @@ export default async function MunicipalityIntegrationsPage() {
       icon: "key",
       title: "API",
       body: "Kommune-API for automatisering og integrasjoner.",
-      status: t.integrations.mcpComing,
+    },
+    {
+      href: "/kommune/integrasjoner/embeds",
+      icon: "monitor",
+      title: "Innebygging",
+      body: "Widgets for kommunens nettsider og infoskjermer.",
     },
     {
       href: "/kommune/integrasjoner/mcp",
       icon: "sparkles",
       title: t.integrations.mcpTitle,
-      body: "Koble AI-verktøy til kommunens innhold på en kontrollert måte.",
-      status: t.integrations.mcpComing,
+      body: "Utforsk offentlig katalogdata fra AI-verktøy via MCP-preview.",
+      status: "Preview",
     },
   ];
 
@@ -49,7 +54,7 @@ export default async function MunicipalityIntegrationsPage() {
         <div style={{ marginBottom: 24 }}>
           <h1 style={{ margin: "0 0 6px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>{t.orgadmin.integrations}</h1>
           <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
-            Velg en integrasjon for kommunen. Flere funksjoner kommer snart.
+            Koble kommunens systemer til publisert innhold og utforsk MCP-integrasjonen.
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
