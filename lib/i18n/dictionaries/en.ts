@@ -684,6 +684,7 @@ export const en: Dictionary = {
     loading: "Loading…",
     all: "All",
     empty: "No results here. Try increasing the radius or changing filters.",
+    loadError: "Couldn't load the content right now. Please try again later.",
     notConfigured:
       "Supabase isn't configured yet. Add the environment variables in .env.local.",
     geoUnsupported: "Location isn't supported in this browser.",

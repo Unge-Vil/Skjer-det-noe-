@@ -36,6 +36,7 @@ export default async function DiscoverPage({
   let categories: Category[] = [];
   let municipalities: Municipality[] = [];
   let initialListings: Listing[] = [];
+  let loadError = false;
 
   if (configured) {
     try {
@@ -44,6 +45,7 @@ export default async function DiscoverPage({
         supabase.from("categories").select("*").order("sort_order"),
         supabase.from("municipalities_view").select("*").order("name"),
       ]);
+      if (catRes.error || munRes.error) throw catRes.error ?? munRes.error;
       categories = (catRes.data as Category[]) ?? [];
       municipalities = (munRes.data as Municipality[]) ?? [];
 
@@ -61,6 +63,7 @@ export default async function DiscoverPage({
         );
       }
     } catch (err) {
+      loadError = true;
       console.error("Explore data load failed", err);
     }
   }
@@ -71,6 +74,7 @@ export default async function DiscoverPage({
       categories={categories}
       municipalities={municipalities}
       configured={configured}
+      loadError={loadError}
       initialQuery={query}
       initialCategory={category}
       initialMunicipality={municipality}

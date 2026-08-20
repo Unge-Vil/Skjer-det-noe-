@@ -140,20 +140,21 @@ export function EventForm({
       listingId = (res.data?.id as string) ?? null;
     }
 
+    let coOrganizerError: unknown = null;
     if (!error && listingId) {
-      await syncCoOrganizers(
+      ({ error: coOrganizerError } = await syncCoOrganizers(
         supabase,
         "event_co_organizers",
         "event_id",
         listingId,
         initialCoOrganizers.map((o) => o.id),
         coOrgs.map((o) => o.id),
-      );
+      ));
     }
 
     setBusy(false);
-    if (error) {
-      console.error(error);
+    if (error || coOrganizerError) {
+      console.error(error ?? coOrganizerError);
       setError(t.form.saveError);
       return;
     }

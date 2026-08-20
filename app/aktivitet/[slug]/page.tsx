@@ -82,7 +82,8 @@ export default async function ActivityDetailPage({
   const [row, locale] = await Promise.all([fetchActivity(slug), getLocale()]);
   if (!row) notFound();
   const supabase = await createClient();
-  await supabase.rpc("log_view", { p_type: "activity", p_id: row.id });
+  const { error: analyticsError } = await supabase.rpc("log_view", { p_type: "activity", p_id: row.id });
+  if (analyticsError) console.error("Failed to log activity view", analyticsError);
   const title = loc(locale, row.title, row.title_en) ?? row.title;
   const description = loc(locale, row.description, row.description_en);
   return (

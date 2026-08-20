@@ -80,7 +80,8 @@ export default async function EventDetailPage({
   const [row, locale] = await Promise.all([fetchEvent(slug), getLocale()]);
   if (!row) notFound();
   const supabase = await createClient();
-  await supabase.rpc("log_view", { p_type: "event", p_id: row.id });
+  const { error: analyticsError } = await supabase.rpc("log_view", { p_type: "event", p_id: row.id });
+  if (analyticsError) console.error("Failed to log event view", analyticsError);
   const title = loc(locale, row.title, row.title_en) ?? row.title;
   const description = loc(locale, row.description, row.description_en);
   const organizer = Array.isArray(row.organizations) ? row.organizations[0] : row.organizations;

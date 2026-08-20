@@ -687,6 +687,7 @@ export const nb = {
     loading: "Laster…",
     all: "Alle",
     empty: "Ingen treff her. Prøv å øke radius eller endre filter.",
+    loadError: "Kunne ikke laste innholdet akkurat nå. Prøv igjen senere.",
     notConfigured:
       "Supabase er ikke konfigurert ennå. Legg inn miljøvariablene i .env.local.",
     geoUnsupported: "Posisjon støttes ikke i denne nettleseren.",

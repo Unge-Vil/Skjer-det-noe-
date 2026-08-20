@@ -63,6 +63,7 @@ export function Explorer({
   categories,
   municipalities,
   configured,
+  loadError = false,
   initialQuery = "",
   initialCategory = null,
   initialMunicipality = null,
@@ -76,6 +77,7 @@ export function Explorer({
   categories: Category[];
   municipalities: Municipality[];
   configured: boolean;
+  loadError?: boolean;
   initialQuery?: string;
   initialCategory?: string | null;
   initialMunicipality?: string | null;
@@ -361,7 +363,11 @@ export function Explorer({
         <div
           className={`sdn-stagger ${showMap && view === "map" ? "hidden" : "block"} space-y-3 px-3 py-2 lg:block ${showMap ? "lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto" : ""} lg:p-2`}
         >
-          {!configured && (
+          {loadError ? (
+            <p role="alert" style={{ color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>
+              {t.explorer.loadError}
+            </p>
+          ) : !configured && (
             <div
               style={{
                 borderRadius: "var(--radius-lg)",

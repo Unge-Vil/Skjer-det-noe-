@@ -4,7 +4,7 @@ import { fetchEmbedConfig } from "@/lib/embeds";
 
 const EMBED_PATH = /^\/embed\/([A-Za-z0-9_-]{8,32})(\/|$)/;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const match = EMBED_PATH.exec(request.nextUrl.pathname);
   if (match) return embedResponse(request, match[1]);
   return updateSession(request);

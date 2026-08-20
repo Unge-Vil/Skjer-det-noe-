@@ -19,12 +19,15 @@ export default async function MunicipalitiesPage() {
   );
 
   let municipalities: Municipality[] = [];
+  let loadError = false;
   if (configured) {
     try {
       const supabase = await createClient();
-      const { data } = await supabase.from("municipalities_view").select("id,name,slug,county,kommunenummer,lat,lng").order("name");
+      const { data, error } = await supabase.from("municipalities_view").select("id,name,slug,county,kommunenummer,lat,lng").order("name");
+      if (error) throw error;
       municipalities = (data as Municipality[]) ?? [];
     } catch (err) {
+      loadError = true;
       console.error("Municipality list load failed", err);
     }
   }
@@ -41,7 +44,11 @@ export default async function MunicipalitiesPage() {
           </p>
         </header>
 
-        {municipalities.length === 0 ? (
+        {loadError ? (
+          <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>
+            {t.explorer.loadError}
+          </p>
+        ) : municipalities.length === 0 ? (
           <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
             {t.explorer.notConfigured}
           </p>
