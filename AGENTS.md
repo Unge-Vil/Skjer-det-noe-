@@ -32,6 +32,12 @@ Leisure-activity directory (Unge Vil). See README.md for full overview.
   both Norwegian and English variants documented when both are published; the
   Norwegian variant is the default, while English variants are maintained
   manually and must stay aligned with the Norwegian content and API behaviour.
+  GitBook content is always customer-facing: never publish internal notes,
+  implementation details, agent instructions, speculative roadmap items,
+  security-team language, or references to private systems. Rewrite technical
+  constraints as clear user guidance with a purpose, practical steps and
+  customer-relevant limitations. Keep internal engineering decisions in the
+  repository or private project documentation instead.
 - **Design system:** "Skjer det noe?" tokens in `app/ds-tokens/*.css` (imported
   by `globals.css`); primitives in `components/ds/`. Use CSS vars (`--fjord-*`,
   `--accent`, `--surface-card`, `--text-*`) — never invent brand colours. Icons
