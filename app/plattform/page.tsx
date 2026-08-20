@@ -10,6 +10,7 @@ import { MuniCreateForm } from "@/components/admin/MuniCreateForm";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { platformNav } from "@/components/admin/platformNav";
+import { getPlatformAnalytics } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -55,6 +56,7 @@ export default async function PlatformPage() {
     supabase.from("organizations").select("id,name,status").order("status").order("name"),
     supabase.from("municipalities_view").select("id,name").order("name"),
   ]);
+  const analytics = await getPlatformAnalytics();
 
   const orgs = (orgRes.data as Org[]) ?? [];
   const municipalities = (muniRes.data as Muni[]) ?? [];
@@ -79,6 +81,26 @@ export default async function PlatformPage() {
         <MiniStat icon="clock" value={orgs.filter((o) => o.status === "draft").length} label={t.admin.statusDraft} />
         <MiniStat icon="check-circle-2" value={orgs.filter((o) => o.status === "published").length} label={t.admin.statusPublished} />
       </div>
+
+      <section style={{ ...cardStyle, marginBottom: 28 }} aria-labelledby="platform-analytics-title">
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <h2 id="platform-analytics-title" style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.platform.analyticsTitle}</h2>
+            <p style={{ margin: "4px 0 16px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.platform.analyticsSubtitle}</p>
+          </div>
+          <Icon name="eye" size={22} color="var(--fjord-600)" />
+        </div>
+        {analytics ? (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+            <MiniStat icon="eye" value={analytics.total_views} label={t.platform.analyticsTotal} />
+            <MiniStat icon="building-2" value={analytics.organization_views} label={t.platform.analyticsOrganizations} />
+            <MiniStat icon="repeat" value={analytics.activity_views} label={t.platform.analyticsActivities} />
+            <MiniStat icon="calendar-days" value={analytics.event_views} label={t.platform.analyticsEvents} />
+          </div>
+        ) : (
+          <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.platform.analyticsUnavailable}</p>
+        )}
+      </section>
 
       <section id="kommuner" className="mb-10">
         <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{t.platform.createMuni}</h2>

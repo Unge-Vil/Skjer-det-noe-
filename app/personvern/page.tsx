@@ -5,7 +5,7 @@ export const metadata: Metadata = { title: "Personvern – Skjer det noe?" };
 
 export default function PersonvernPage() {
   return (
-    <LegalPage title="Personvernerklæring" updated="19. august 2026">
+    <LegalPage title="Personvernerklæring" updated="20. august 2026">
       <p>
         «Skjer det noe?» er en tjeneste fra Unge Vil som hjelper deg å finne faste aktiviteter og
         arrangementer i nærheten. Vi er opptatt av å samle inn så få personopplysninger som mulig.
@@ -29,7 +29,8 @@ export default function PersonvernPage() {
         </li>
         <li>
           Vi teller anonyme sidevisninger for å se hvilke oppføringer som er populære. Disse tallene knyttes
-          ikke til deg som person.
+          ikke til deg som person. Vi bruker ikke Google Analytics, sporingspiksler eller analytics-cookies.
+          Rådata slettes etter 90 dager, og administratorer får bare se aggregerte tall for sitt område.
         </li>
         <li>
           Hvis du bruker «nær meg», sendes posisjonen midlertidig til tjenesten for å sortere oppføringer etter

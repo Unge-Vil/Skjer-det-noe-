@@ -20,6 +20,7 @@ import { DeleteButton } from "@/components/admin/DeleteButton";
 import { AdminShell, type NavItem } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { categoryDef } from "@/components/ds/categories";
+import { getOrgAnalytics } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,15 @@ const card = {
   borderRadius: "var(--radius-lg)",
   boxShadow: "var(--shadow-sm)",
 } as const;
+
+function AnalyticsStat({ label, value }: { label: string; value: number }) {
+  return (
+    <div style={{ borderLeft: "3px solid var(--fjord-400)", paddingLeft: 12 }}>
+      <div style={{ fontSize: 22, fontWeight: 800 }}>{value.toLocaleString("nb-NO")}</div>
+      <div style={{ color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>{label}</div>
+    </div>
+  );
+}
 
 function StatusBadge({ status, t }: { status: string; t: Dictionary }) {
   return status === "published" ? (
@@ -104,7 +114,7 @@ export default async function AdminPage() {
   const events = (evtRes.data as Row[]) ?? [];
   const services = ((dirRes.data as Row[]) ?? []).filter((r) => r.kind === "service");
   const volunteers = ((dirRes.data as Row[]) ?? []).filter((r) => r.kind === "volunteer");
-  const { data: views } = await supabase.rpc("org_view_count_30d", { p_org: org.id });
+  const analytics = await getOrgAnalytics(org.id);
 
   // Profile completeness
   const fields = [
@@ -202,7 +212,7 @@ export default async function AdminPage() {
             <div className="grid grid-cols-3 gap-4">
               <MiniStat icon="repeat" value={activities.length} label={t.admin.activities} />
               <MiniStat icon="calendar-days" value={events.length} label={t.admin.events} />
-              <MiniStat icon="eye" value={(views as number) ?? 0} label={t.orgadmin.views} />
+              <MiniStat icon="eye" value={analytics?.total_views ?? 0} label={t.orgadmin.views} />
             </div>
             <div style={{ ...card, padding: 18, flex: 1 }}>
               <h2 style={{ margin: "0 0 12px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.approvalTitle}</h2>
@@ -229,6 +239,33 @@ export default async function AdminPage() {
             </div>
           </section>
         </div>
+
+        <section style={{ ...card, padding: 20 }} aria-labelledby="analytics-title">
+          <div className="mb-4 flex items-start justify-between gap-4">
+            <div>
+              <h2 id="analytics-title" style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.analyticsTitle}</h2>
+              <p style={{ margin: "4px 0 0", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.orgadmin.analyticsSubtitle}</p>
+            </div>
+            <Icon name="check-circle-2" size={22} color="var(--success-text)" />
+          </div>
+          {analytics ? (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <AnalyticsStat label={t.orgadmin.analyticsTotal} value={analytics.total_views} />
+              <AnalyticsStat label={t.orgadmin.analyticsOrg} value={analytics.organization_views} />
+              <AnalyticsStat label={t.orgadmin.analyticsActivities} value={analytics.activity_views} />
+              <AnalyticsStat label={t.orgadmin.analyticsEvents} value={analytics.event_views} />
+            </div>
+          ) : (
+            <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.orgadmin.analyticsUnavailable}</p>
+          )}
+          {analytics && (
+            <p style={{ margin: "16px 0 0", color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>
+              {t.orgadmin.analyticsPeriod} · {analytics.previous_total_views === 0
+                ? t.orgadmin.analyticsNoComparison
+                : `${analytics.total_views >= analytics.previous_total_views ? "+" : ""}${Math.round(((analytics.total_views - analytics.previous_total_views) / analytics.previous_total_views) * 100)}% ${t.orgadmin.analyticsCompared}`}
+            </p>
+          )}
+        </section>
 
         <ListSection
           id="aktiviteter"

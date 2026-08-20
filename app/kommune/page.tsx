@@ -10,6 +10,7 @@ import { OrgStatusButton } from "@/components/admin/OrgStatusButton";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { kommuneNav } from "@/components/admin/kommuneNav";
+import { getMunicipalityAnalytics } from "@/lib/analytics";
 
 export const dynamic = "force-dynamic";
 
@@ -68,6 +69,7 @@ export default async function KommunePage() {
       .eq("municipality_id", active.id)
       .eq("status", "published"),
   ]);
+  const analytics = await getMunicipalityAnalytics(active.id);
 
   const byId = new Map<string, Org>();
   for (const row of omRes.data ?? []) {
@@ -111,6 +113,26 @@ export default async function KommunePage() {
           <MiniStat icon="calendar-days" value={evtCount.count ?? 0} label={t.kommune.statEvents} />
           <MiniStat icon="file-text" value={pageCount.count ?? 0} label={t.kommune.statPages} />
         </div>
+
+        <section style={{ ...cardStyle, marginBottom: 28 }} aria-labelledby="municipality-analytics-title">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 id="municipality-analytics-title" style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.kommune.analyticsTitle}</h2>
+              <p style={{ margin: "4px 0 16px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.analyticsSubtitle}</p>
+            </div>
+            <Icon name="eye" size={22} color="var(--fjord-600)" />
+          </div>
+          {analytics ? (
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+              <MiniStat icon="eye" value={analytics.total_views} label={t.kommune.analyticsTotal} />
+              <MiniStat icon="building-2" value={analytics.organization_views} label={t.kommune.analyticsOrganizations} />
+              <MiniStat icon="repeat" value={analytics.activity_views} label={t.kommune.analyticsActivities} />
+              <MiniStat icon="calendar-days" value={analytics.event_views} label={t.kommune.analyticsEvents} />
+            </div>
+          ) : (
+            <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.analyticsUnavailable}</p>
+          )}
+        </section>
 
         <div className="grid gap-4 md:grid-cols-2">
           <section style={cardStyle}>

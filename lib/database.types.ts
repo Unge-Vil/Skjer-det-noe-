@@ -370,6 +370,36 @@ export type Database = {
       }
     }
     Functions: {
+      municipality_analytics_30d: {
+        Args: { p_municipality: string }
+        Returns: {
+          activity_views: number
+          event_views: number
+          organization_views: number
+          previous_total_views: number
+          total_views: number
+        }[]
+      }
+      org_analytics_30d: {
+        Args: { p_org: string }
+        Returns: {
+          activity_views: number
+          event_views: number
+          organization_views: number
+          previous_total_views: number
+          total_views: number
+        }[]
+      }
+      platform_analytics_30d: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          activity_views: number
+          event_views: number
+          organization_views: number
+          previous_total_views: number
+          total_views: number
+        }[]
+      }
       nearby_activities: {
         Args: {
           p_category?: string
