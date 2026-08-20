@@ -9,7 +9,7 @@ import { absoluteUrl, jsonLd, listingMetadata } from "@/lib/seo";
 export const dynamic = "force-dynamic";
 
 const SELECT =
-  "id,slug,updated_at,title,title_en,description,description_en,address,accessibility,area,price,age_min,age_max,url,image_url,starts_at,ends_at,organizations!events_organization_id_fkey(name,slug),categories(slug),municipalities(name,kommunenummer),event_co_organizers(organizations(name,slug))";
+  "id,slug,updated_at,title,title_en,description,description_en,address,accessibility,area,price,age_min,age_max,url,image_url,starts_at,ends_at,organizations!events_organization_id_fkey(name,slug),categories(slug),municipalities(name,kommunenummer),event_co_organizers(organizations(name,slug)),listing_exceptions!listing_exceptions_event_id_fkey(occurrence_date,kind,message,reason,start_time,end_time)";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toDetail(row: any, locale: Locale): DetailData {
@@ -33,6 +33,7 @@ function toDetail(row: any, locale: Locale): DetailData {
     imageUrl: row.image_url,
     startsAt: row.starts_at,
     endsAt: row.ends_at,
+    exceptions: row.listing_exceptions ?? [],
     coOrganizers: (row.event_co_organizers ?? [])
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .map((c: any) => c.organizations)

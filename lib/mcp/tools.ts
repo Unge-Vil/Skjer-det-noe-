@@ -1,4 +1,5 @@
 import { upsertListingFromApi, type ListingKind } from "@/lib/api/listings";
+import { listListingExceptions, upsertListingException } from "@/lib/api/exceptions";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { canUseMunicipality, canUseOrganization, hasMcpScope, type McpScope } from "@/lib/mcp/auth";
 
@@ -23,6 +24,8 @@ export const authenticatedTools = [
   tool("get_activity", "Hent én aktivitet i en organisasjon du administrerer.", { organization_id: identifier, activity_id: identifier }, ["organization_id", "activity_id"]),
   tool("create_or_update_event", "Opprett eller oppdater et arrangementsutkast i en organisasjon du administrerer. Oppdateringer bruker external_ref.", { organization_id: identifier, listing: { type: "object", description: "Samme felt som Organisasjons-API EventInput." } }, ["organization_id", "listing"], false),
   tool("create_or_update_activity", "Opprett eller oppdater et aktivitetsutkast i en organisasjon du administrerer. Oppdateringer bruker external_ref.", { organization_id: identifier, listing: { type: "object", description: "Samme felt som Organisasjons-API ActivityInput." } }, ["organization_id", "listing"], false),
+  tool("create_or_update_listing_exception", "Opprett eller oppdater et avvik for ett arrangement eller én fast aktivitet. Bruk occurrence_date for datoen det gjelder.", { organization_id: identifier, exception: { type: "object", description: "Felter: listing_kind, listing_id, occurrence_date, kind, message, reason, start_time, end_time, external_ref." } }, ["organization_id", "exception"], false),
+  tool("list_listing_exceptions", "List avvik for ett arrangement eller én fast aktivitet.", { organization_id: identifier, listing_kind: { type: "string", enum: ["event", "activity"] }, listing_id: identifier }, ["organization_id", "listing_kind", "listing_id"]),
   tool("list_municipality_activities", "List publiserte aktiviteter i en kommune du administrerer.", { municipality_id: identifier, limit }, ["municipality_id"]),
   tool("list_municipality_events", "List publiserte arrangementer i en kommune du administrerer.", { municipality_id: identifier, limit }, ["municipality_id"]),
   tool("list_municipality_organisations", "List organisasjoner knyttet til en kommune du administrerer.", { municipality_id: identifier, limit }, ["municipality_id"]),
@@ -54,6 +57,20 @@ export async function callAuthenticatedTool(name: string, input: unknown, scope:
 
 async function callOrganizationTool(name: string, args: JsonObject, organizationId: string): Promise<ToolResult> {
   const admin = createAdminClient();
+  if (name === "create_or_update_listing_exception") {
+    const exception = isObject(args.exception) ? args.exception : null;
+    if (!exception) return failure("exception mangler eller er ugyldig.");
+    const result = await upsertListingException(admin, organizationId, exception, "mcp");
+    return result.status < 400 ? success(result.body) : failure(result.body.message ?? "Kunne ikke lagre avviket.", result.body);
+  }
+  if (name === "list_listing_exceptions") {
+    const kind = stringArg(args, "listing_kind");
+    const listingId = stringArg(args, "listing_id");
+    if (kind !== "event" && kind !== "activity") return failure("listing_kind må være event eller activity.");
+    if (!listingId) return failure("listing_id mangler.");
+    const result = await listListingExceptions(admin, organizationId, kind, listingId);
+    return result.status < 400 ? success(result.body) : failure(result.body.message ?? "Kunne ikke hente avvik.", result.body);
+  }
   if (name === "list_organisation_profiles") {
     const { data, error } = await admin.from("org_profiles").select("id,name,slug,municipality_id,created_at,updated_at").eq("organization_id", organizationId).order("name");
     return databaseResult(data, error?.message);

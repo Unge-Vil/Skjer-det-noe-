@@ -10,6 +10,7 @@ import type { CoOrg } from "@/components/admin/CoOrganizerEditor";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { ContextSwitcher } from "@/components/admin/ContextSwitcher";
 import { orgAdminNav } from "@/components/admin/orgAdminNav";
+import { ExceptionManager } from "@/components/admin/ExceptionManager";
 
 export const dynamic = "force-dynamic";
 
@@ -101,6 +102,7 @@ export default async function ActivityFormPage({
           profileId={scopedProfileId}
           returnHref={returnHref}
         />
+        {id !== "ny" && <ExceptionManager listingKind="activity" listingId={id} organizationId={orgId} />}
       </main>
     </AdminShell>
   );

@@ -45,6 +45,24 @@ export interface DetailData {
   startsAt?: string | null;
   endsAt?: string | null;
   coOrganizers?: { name: string; slug: string | null }[];
+  exceptions?: ListingException[];
+}
+
+interface ListingException {
+  occurrence_date: string;
+  kind: "cancelled" | "closed" | "changed" | "notice";
+  message: string | null;
+  reason: string | null;
+  start_time: string | null;
+  end_time: string | null;
+}
+
+function exceptionText(exception: ListingException, locale: string): { title: string; body: string | null; icon: IconName; color: string; background: string } {
+  const norwegian = locale !== "en";
+  if (exception.kind === "cancelled") return { title: norwegian ? "Avlyst" : "Cancelled", body: exception.message || exception.reason, icon: "ban", color: "var(--status-danger-text)", background: "var(--status-danger-bg)" };
+  if (exception.kind === "closed") return { title: norwegian ? "Stengt denne datoen" : "Closed on this date", body: exception.message || exception.reason, icon: "door-open", color: "var(--status-sol-text)", background: "var(--status-sol-bg)" };
+  if (exception.kind === "changed") return { title: norwegian ? "Endret denne datoen" : "Changed on this date", body: exception.message || exception.reason, icon: "clock", color: "var(--status-sol-text)", background: "var(--status-sol-bg)" };
+  return { title: norwegian ? "Viktig informasjon" : "Important information", body: exception.message || exception.reason, icon: "info", color: "var(--text-brand)", background: "var(--surface-brand-soft)" };
 }
 
 function Fact({ icon, label, value }: { icon: IconName; label: string; value: string }) {
@@ -113,6 +131,8 @@ export function DetailView({ data }: { data: DetailData }) {
   if (ageValue) statuses.push({ icon: "users-round", label: ageValue });
 
   const mapHref = `/kart${data.municipalityNumber ? `?kommune=${data.municipalityNumber}` : ""}`;
+  const today = new Date().toISOString().slice(0, 10);
+  const visibleExceptions = (data.exceptions ?? []).filter((exception) => exception.occurrence_date >= today);
 
   return (
     <main id="main" className="flex-1">
@@ -184,6 +204,21 @@ export function DetailView({ data }: { data: DetailData }) {
             ))}
           </div>
         )}
+
+        {visibleExceptions.map((exception) => {
+          const text = exceptionText(exception, locale);
+          const date = new Date(`${exception.occurrence_date}T00:00:00Z`).toLocaleDateString(locale === "en" ? "en-GB" : "nb-NO", { day: "numeric", month: "long", year: "numeric" });
+          const changedTime = exception.start_time && exception.end_time ? ` ${exception.start_time.slice(0, 5)}–${exception.end_time.slice(0, 5)}` : "";
+          return (
+            <div key={`${exception.occurrence_date}-${exception.kind}`} style={{ display: "flex", gap: 10, padding: 16, background: text.background, borderRadius: "var(--radius-lg)", color: text.color }}>
+              <Icon name={text.icon} size={20} color={text.color} />
+              <div>
+                <strong>{text.title}: {date}{changedTime}</strong>
+                {text.body && <p style={{ margin: "4px 0 0", fontSize: "var(--fs-sm)", lineHeight: 1.5 }}>{text.body}</p>}
+              </div>
+            </div>
+          );
+        })}
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {timeValue && <Fact icon="clock" label={t.detail.time} value={timeValue} />}
