@@ -85,8 +85,15 @@ Verifisert etter implementasjonen:
   adressen i Cloudflare og verifiser at `robots.txt`, `sitemap.xml`, canonical
   metadata og JSON-LD bruker denne adressen. Verifiser deretter domenet i Google
   Search Console og Bing Webmaster Tools før sitemap sendes inn.
-- Velg og implementer ratebegrensning per API-nøkkel, for eksempel Cloudflare
-  KV eller Durable Objects, og legg til stabile `429`-svar.
+- [x] Etabler baseline-ratebegrensning i app-rutene med stabile `429`-svar og
+  `Retry-After` for offentlige oppslag, OAuth-endepunkter og API-nøkkelruter.
+- [ ] Flytt ratebegrensning til Cloudflare edge (Durable Objects/KV) med delt,
+  global teller per nøkkel/IP på tvers av instanser.
+- [ ] Speil rutepolicyen i Cloudflare (offentlig feed/oppslag, OAuth,
+  organisasjons-API, kommune-API, manuell feed-sync) og verifiser at terskler
+  matcher dokumenterte grenser.
+- [ ] Legg til observability for ratebegrensning i Cloudflare: antall 429,
+  toppnøkler/IP-er, og alarm ved vedvarende avvisningsrate.
 - Verifiser DNS-/tilkoblingspinning i Worker-runtime for å lukke det gjenværende
   DNS-rebinding-vinduet ved kalenderhenting.
 - Kjør produksjonsbrowser-test av service workeren: privat admininnhold skal

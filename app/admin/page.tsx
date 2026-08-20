@@ -135,14 +135,14 @@ export default async function AdminPage() {
     { href: "/admin/profil", label: t.orgadmin.profile, icon: "building-2" },
     { href: "/admin/profiler", label: t.orgadmin.departments, icon: "building-2" },
     {
-      href: "/admin#aktiviteter",
+      href: "/admin/innhold",
       label: t.kommune.content,
       icon: "clipboard-list",
       children: [
-        { href: "/admin#aktiviteter", label: t.admin.activities, icon: "repeat", badge: activities.length },
-        { href: "/admin#arrangementer", label: t.admin.events, icon: "calendar-days", badge: events.length },
-        { href: "/admin#tjenester", label: t.directory.services, icon: "clipboard-list", badge: services.length },
-        { href: "/admin#frivilligtorg", label: t.directory.volunteer, icon: "users-round", badge: volunteers.length },
+        { href: "/admin/innhold?kind=activity", label: t.admin.activities, icon: "repeat", badge: activities.length },
+        { href: "/admin/innhold?kind=event", label: t.admin.events, icon: "calendar-days", badge: events.length },
+        { href: "/admin/innhold?kind=service", label: t.directory.services, icon: "clipboard-list", badge: services.length },
+        { href: "/admin/innhold?kind=volunteer", label: t.directory.volunteer, icon: "users-round", badge: volunteers.length },
       ],
     },
     {

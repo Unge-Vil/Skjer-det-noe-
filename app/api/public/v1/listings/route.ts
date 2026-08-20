@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { absoluteUrl } from "@/lib/seo";
 import { createClient } from "@/lib/supabase/server";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -75,6 +76,14 @@ function responseItem(kind: Kind, row: PublicRow) {
 
 /** GET /api/public/v1/listings — public, published listings for syndication. */
 export async function GET(request: Request) {
+  const limited = enforceRateLimit({
+    bucket: "api_public_listings",
+    key: limitKey([clientIp(request)]),
+    max: 60,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   const url = new URL(request.url);
   const kindParam = url.searchParams.get("kind") ?? "activity";
   if (!KINDS.includes(kindParam as Kind)) {

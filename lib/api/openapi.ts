@@ -19,7 +19,7 @@ export const openApiDocument = {
         operationId: "upsertActivity",
         security: [{ organizationBearerAuth: [] }],
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/ActivityInput" } } } },
-        responses: { "200": response("Aktivitet lagret"), "400": response("Ugyldig forespørsel"), "401": response("Ugyldig API-nøkkel") },
+        responses: { "200": response("Aktivitet lagret"), "400": response("Ugyldig forespørsel"), "401": response("Ugyldig API-nøkkel"), "429": rateLimitedResponse() },
       },
       get: {
         tags: ["Organisasjons-API"],
@@ -27,7 +27,7 @@ export const openApiDocument = {
         operationId: "listActivities",
         security: [{ organizationBearerAuth: [] }],
         parameters: [{ $ref: "#/components/parameters/Limit" }],
-        responses: { "200": response("Aktiviteter"), "401": response("Ugyldig API-nøkkel") },
+        responses: { "200": response("Aktiviteter"), "401": response("Ugyldig API-nøkkel"), "429": rateLimitedResponse() },
       },
     },
     "/api/v1/events": {
@@ -37,7 +37,7 @@ export const openApiDocument = {
         operationId: "upsertEvent",
         security: [{ organizationBearerAuth: [] }],
         requestBody: { required: true, content: { "application/json": { schema: { $ref: "#/components/schemas/EventInput" } } } },
-        responses: { "200": response("Arrangement lagret"), "400": response("Ugyldig forespørsel"), "401": response("Ugyldig API-nøkkel") },
+        responses: { "200": response("Arrangement lagret"), "400": response("Ugyldig forespørsel"), "401": response("Ugyldig API-nøkkel"), "429": rateLimitedResponse() },
       },
       get: {
         tags: ["Organisasjons-API"],
@@ -45,7 +45,7 @@ export const openApiDocument = {
         operationId: "listEvents",
         security: [{ organizationBearerAuth: [] }],
         parameters: [{ $ref: "#/components/parameters/Limit" }],
-        responses: { "200": response("Arrangementer"), "401": response("Ugyldig API-nøkkel") },
+        responses: { "200": response("Arrangementer"), "401": response("Ugyldig API-nøkkel"), "429": rateLimitedResponse() },
       },
     },
     "/api/v1/municipality/listings": {
@@ -58,7 +58,7 @@ export const openApiDocument = {
           { name: "kind", in: "query", description: "Type oppføring. Standard er aktiviteter.", required: false, schema: { type: "string", enum: ["activities", "events"], default: "activities" } },
           { $ref: "#/components/parameters/Limit" },
         ],
-        responses: { "200": response("Kommunens publiserte oppføringer"), "401": response("Ugyldig kommune-API-nøkkel") },
+        responses: { "200": response("Kommunens publiserte oppføringer"), "401": response("Ugyldig kommune-API-nøkkel"), "429": rateLimitedResponse() },
       },
     },
     "/api/public/v1/listings": {
@@ -72,7 +72,7 @@ export const openApiDocument = {
           { name: "offset", in: "query", description: "Startposisjon for neste side.", required: false, schema: { type: "integer", default: 0, minimum: 0 } },
           { $ref: "#/components/parameters/Limit" },
         ],
-        responses: { "200": response("Publiserte oppføringer med canonical URL og oppdateringstid"), "400": response("Ugyldig filter") },
+        responses: { "200": response("Publiserte oppføringer med canonical URL og oppdateringstid"), "400": response("Ugyldig filter"), "429": rateLimitedResponse() },
       },
     },
   },
@@ -116,4 +116,29 @@ export const openApiDocument = {
 
 function response(description: string) {
   return { description, content: { "application/json": { schema: { type: "object", additionalProperties: true } } } };
+}
+
+function rateLimitedResponse() {
+  return {
+    description: "For mange forespørsler.",
+    headers: {
+      "Retry-After": {
+        description: "Sekunder til nytt forsøk.",
+        schema: { type: "string" },
+      },
+    },
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            error: { type: "string", example: "rate_limited" },
+            message: { type: "string", example: "For mange foresporsler. Prov igjen senere." },
+            retryAfter: { type: "integer", example: 60 },
+          },
+          required: ["error", "message", "retryAfter"],
+        },
+      },
+    },
+  };
 }

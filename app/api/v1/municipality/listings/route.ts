@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { bearerToken, resolveMunicipalityApiKey } from "@/lib/api/auth";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -8,8 +9,24 @@ type ListingKind = "activities" | "events";
 
 /** GET /api/v1/municipality/listings — return published listings in this key's municipality. */
 export async function GET(req: Request) {
+  const ipLimited = enforceRateLimit({
+    bucket: "api_v1_municipality_listings_get_ip",
+    key: limitKey([clientIp(req)]),
+    max: 120,
+    windowMs: 60_000,
+  });
+  if (ipLimited) return ipLimited;
+
   const key = await resolveMunicipalityApiKey(bearerToken(req));
   if (!key) return NextResponse.json({ error: "invalid_key" }, { status: 401 });
+
+  const keyLimited = enforceRateLimit({
+    bucket: "api_v1_municipality_listings_get_key",
+    key: limitKey([key.id]),
+    max: 120,
+    windowMs: 60_000,
+  });
+  if (keyLimited) return keyLimited;
 
   const url = new URL(req.url);
   const kind = url.searchParams.get("kind") === "events" ? "events" : "activities";

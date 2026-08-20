@@ -1,10 +1,19 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { mcpResourceUrl, newSecret, secretHash, tokenLifetime, validPkceVerifier } from "@/lib/mcp/oauth";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  const limited = enforceRateLimit({
+    bucket: "api_oauth_token_ip",
+    key: limitKey([clientIp(request)]),
+    max: 30,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   const form = await request.formData();
   const grantType = form.get("grant_type");
   if (grantType === "authorization_code") return exchangeCode(form, request);

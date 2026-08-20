@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { fetchEmbedConfig, fetchEmbedListings, type EmbedListingRow } from "@/lib/embeds";
 import { absoluteUrl } from "@/lib/seo";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -45,9 +46,17 @@ function itemXml(row: EmbedListingRow): string {
 
 /** Public RSS feed for the published listings configured by an embed. */
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ publicId: string }> },
 ) {
+  const limited = enforceRateLimit({
+    bucket: "api_public_rss",
+    key: limitKey([clientIp(request)]),
+    max: 30,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   const { publicId } = await params;
   const config = await fetchEmbedConfig(publicId);
   if (!config) {

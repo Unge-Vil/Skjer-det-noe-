@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 interface MunicipalityResponse {
   kommunenummer?: string;
@@ -8,6 +9,14 @@ interface MunicipalityResponse {
 }
 
 export async function GET(request: NextRequest) {
+  const limited = enforceRateLimit({
+    bucket: "api_municipality_lookup",
+    key: limitKey([clientIp(request)]),
+    max: 20,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   const lat = Number(request.nextUrl.searchParams.get("lat"));
   const lng = Number(request.nextUrl.searchParams.get("lng"));
   if (!Number.isFinite(lat) || !Number.isFinite(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {

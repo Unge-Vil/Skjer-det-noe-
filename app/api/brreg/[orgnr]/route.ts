@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { lookupBrreg, normalizeOrgNumber } from "@/lib/brreg";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 /** GET /api/brreg/:orgnr — look up an organisation in Brønnøysund. */
 export async function GET(
-  _req: Request,
+  req: Request,
   { params }: { params: Promise<{ orgnr: string }> },
 ) {
+  const limited = enforceRateLimit({
+    bucket: "api_brreg_lookup",
+    key: limitKey([clientIp(req)]),
+    max: 20,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   const { orgnr } = await params;
 
   if (!normalizeOrgNumber(orgnr)) {

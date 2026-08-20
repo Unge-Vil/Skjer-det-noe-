@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { isSafeRedirectUri, newSecret } from "@/lib/mcp/oauth";
+import { clientIp, enforceRateLimit, limitKey } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 /** OAuth dynamic client registration for public MCP clients. */
 export async function POST(request: Request) {
+  const limited = enforceRateLimit({
+    bucket: "api_oauth_register",
+    key: limitKey([clientIp(request)]),
+    max: 10,
+    windowMs: 60_000,
+  });
+  if (limited) return limited;
+
   let body: { client_name?: unknown; redirect_uris?: unknown };
   try { body = await request.json(); } catch { return NextResponse.json({ error: "invalid_client_metadata" }, { status: 400 }); }
   const clientName = typeof body.client_name === "string" ? body.client_name.trim().slice(0, 120) : "MCP-klient";

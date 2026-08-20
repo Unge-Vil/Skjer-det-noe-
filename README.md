@@ -102,6 +102,12 @@ avviser lokale/private mål og redirect, og begrenser tid og responsstørrelse.
 `SUPABASE_SECRET_KEY` brukes bare i serverruter og scripts som selv håndhever
 scope.
 
+Rate limiting er aktiv i app-rutene for offentlige feeds/oppslag, OAuth-endepunkter
+og API-nokkelruter. Dette er en baseline-beskyttelse for lokal/pre-prod.
+Ved Cloudflare-deploy skal samme policy flyttes til edge-laget for global,
+distribuert handheving.
+Detaljert policy og Cloudflare-migrering: `docs/rate-limiting.md`.
+
 ### MCP preview
 
 `POST /api/mcp` er et stateless MCP-endepunkt i preview. Det støtter
