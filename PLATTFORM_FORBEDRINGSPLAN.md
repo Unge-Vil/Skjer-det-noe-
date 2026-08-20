@@ -81,6 +81,10 @@ Verifisert etter implementasjonen:
 
 ### Før Cloudflare-deploy
 
+- [ ] Sett `NEXT_PUBLIC_SITE_URL` til den ene kanoniske offentlige HTTPS-
+  adressen i Cloudflare og verifiser at `robots.txt`, `sitemap.xml`, canonical
+  metadata og JSON-LD bruker denne adressen. Verifiser deretter domenet i Google
+  Search Console og Bing Webmaster Tools før sitemap sendes inn.
 - Velg og implementer ratebegrensning per API-nøkkel, for eksempel Cloudflare
   KV eller Durable Objects, og legg til stabile `429`-svar.
 - Verifiser DNS-/tilkoblingspinning i Worker-runtime for å lukke det gjenværende

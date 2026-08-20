@@ -3,12 +3,13 @@ export const openApiDocument = {
   info: {
     title: "Skjer det noe? API",
     version: "1.0.0",
-    description: "To adskilte API-er: Organisasjons-API for å publisere egne oppføringer, og Kommune-API for å hente kommunens publiserte innhold.",
+    description: "Tre adskilte API-er: Organisasjons-API for å publisere egne oppføringer, Kommune-API for å hente kommunens publiserte innhold, og en offentlig feed for publiserte oppføringer.",
   },
   servers: [{ url: "/" }],
   tags: [
     { name: "Organisasjons-API", description: "Opprett, oppdater og hent organisasjonens egne aktiviteter og arrangementer." },
     { name: "Kommune-API", description: "Hent publiserte aktiviteter og arrangementer innenfor kommunen som API-nøkkelen tilhører." },
+    { name: "Offentlig feed", description: "Les publiserte oppføringer med canonical URL-er for distribusjon og attribusjon." },
   ],
   paths: {
     "/api/v1/activities": {
@@ -58,6 +59,20 @@ export const openApiDocument = {
           { $ref: "#/components/parameters/Limit" },
         ],
         responses: { "200": response("Kommunens publiserte oppføringer"), "401": response("Ugyldig kommune-API-nøkkel") },
+      },
+    },
+    "/api/public/v1/listings": {
+      get: {
+        tags: ["Offentlig feed"],
+        summary: "List publiserte offentlige oppføringer",
+        operationId: "listPublicListings",
+        parameters: [
+          { name: "kind", in: "query", description: "Type oppføring.", required: false, schema: { type: "string", enum: ["activity", "event", "service", "volunteer"], default: "activity" } },
+          { name: "municipality", in: "query", description: "Kommunenummer, for eksempel 1103.", required: false, schema: { type: "string", pattern: "^[0-9]{4}$" } },
+          { name: "offset", in: "query", description: "Startposisjon for neste side.", required: false, schema: { type: "integer", default: 0, minimum: 0 } },
+          { $ref: "#/components/parameters/Limit" },
+        ],
+        responses: { "200": response("Publiserte oppføringer med canonical URL og oppdateringstid"), "400": response("Ugyldig filter") },
       },
     },
   },

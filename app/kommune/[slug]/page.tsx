@@ -7,6 +7,8 @@ import { Icon } from "@/components/ds/Icon";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
 import { RichTextContent } from "@/components/RichTextContent";
 import { isEmptyDoc } from "@/lib/tiptap";
+import { absoluteUrl, jsonLd, listingMetadata } from "@/lib/seo";
+import { parseSocialLinks } from "@/components/ds/socials";
 
 export const dynamic = "force-dynamic";
 
@@ -38,8 +40,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const data = await fetchMuni(slug);
-  const name = data?.muni.name;
-  return { title: name ? `${name} – Skjer det noe?` : "Skjer det noe?" };
+  if (!data) return { title: "Skjer det noe?" };
+  return listingMetadata({
+    title: data.muni.name,
+    description: data.muni.description,
+    imageUrl: null,
+    pathname: `/kommune/${slug}`,
+  });
 }
 
 export default async function MunicipalityPage({
@@ -60,6 +67,8 @@ export default async function MunicipalityPage({
   const descPlain = loc(locale, m.description, m.description_en);
   const descDoc =
     locale === "en" && !isEmptyDoc(m.description_doc_en) ? m.description_doc_en : m.description_doc;
+  const canonical = absoluteUrl(`/kommune/${slug}`);
+  const socialLinks = Object.values(parseSocialLinks(muni.social_links));
 
   const contact: { icon: Parameters<typeof Icon>[0]["name"]; label: string; value: string; href?: string }[] = [];
   if (m.website) contact.push({ icon: "arrow-right", label: t.detail.website, value: m.website, href: m.website });
@@ -68,7 +77,24 @@ export default async function MunicipalityPage({
   if (m.address) contact.push({ icon: "map-pin", label: t.orgadmin.fAddress, value: m.address });
 
   return (
-    <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: muni.name,
+            url: canonical,
+            description: descPlain ?? undefined,
+            email: m.email ?? undefined,
+            telephone: m.phone ?? undefined,
+            address: m.address ?? undefined,
+            sameAs: socialLinks.length > 0 ? socialLinks : undefined,
+          }),
+        }}
+      />
+      <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 py-8">
       <p style={{ margin: "0 0 8px", display: "flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>
         <Icon name="map-pin" size={15} />
         {muni.county ?? t.form.municipality}
@@ -140,6 +166,7 @@ export default async function MunicipalityPage({
       )}
 
       <p style={{ marginTop: 24, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{t.footer.tagline}</p>
-    </main>
+      </main>
+    </>
   );
 }

@@ -10,6 +10,8 @@ import { ListingCard } from "@/components/ListingCard";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
 import { RichTextContent } from "@/components/RichTextContent";
 import { isEmptyDoc } from "@/lib/tiptap";
+import { absoluteUrl, jsonLd, listingMetadata } from "@/lib/seo";
+import { parseSocialLinks } from "@/components/ds/socials";
 
 export const dynamic = "force-dynamic";
 
@@ -33,9 +35,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const org = await fetchOrg(slug);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const name = (org as any)?.name;
-  return { title: name ? `${name} – Skjer det noe?` : "Skjer det noe?" };
+  if (!org) return { title: "Skjer det noe?" };
+  return listingMetadata({
+    title: org.name,
+    description: org.description,
+    imageUrl: org.banner_url ?? org.logo_url,
+    pathname: `/organisasjon/${slug}`,
+  });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -143,6 +149,8 @@ export default async function OrganisationPage({
     locale === "en" && !isEmptyDoc(orgAny.description_doc_en)
       ? orgAny.description_doc_en
       : orgAny.description_doc;
+  const canonical = absoluteUrl(`/organisasjon/${slug}`);
+  const socialLinks = Object.values(parseSocialLinks(orgAny.social_links));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const profiles: { name: string; slug: string }[] = ((org as any).org_profiles ?? [])
@@ -150,7 +158,24 @@ export default async function OrganisationPage({
     .map((p: { name: string; slug: string }) => ({ name: p.name, slug: p.slug }));
 
   return (
-    <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: org.name,
+            url: canonical,
+            description: orgDescription ?? undefined,
+            logo: org.logo_url ?? undefined,
+            image: org.banner_url ?? org.logo_url ?? undefined,
+            address: org.address ?? undefined,
+            sameAs: socialLinks.length > 0 ? socialLinks : undefined,
+          }),
+        }}
+      />
+      <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
       <header className="mb-8">
         {org.banner_url && (
           <div style={{ position: "relative", aspectRatio: "4 / 1", borderRadius: "var(--radius-lg)", overflow: "hidden", marginBottom: 16, background: "var(--fjord-100)" }}>
@@ -226,7 +251,8 @@ export default async function OrganisationPage({
           <DirectoryLinks title={t.directory.volunteer} base="/frivillig" items={volunteers} />
         </>
       )}
-    </main>
+      </main>
+    </>
   );
 }
 

@@ -13,6 +13,7 @@ import { LocationProvider } from "@/components/location/LocationProvider";
 import { createClient } from "@/lib/supabase/server";
 import { LOCATION_COOKIE, parseLocationPreferences } from "@/lib/location";
 import type { Municipality } from "@/lib/types";
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
 
 const schibsted = Schibsted_Grotesk({
   variable: "--font-schibsted",
@@ -27,9 +28,15 @@ const splineMono = Spline_Sans_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Skjer det noe?",
+  metadataBase: new URL(SITE_URL),
+  title: SITE_NAME,
   description:
     "Finn faste aktiviteter, arrangementer og organisasjoner i nærheten av deg.",
+  openGraph: {
+    type: "website",
+    locale: "nb_NO",
+    siteName: SITE_NAME,
+  },
   appleWebApp: {
     capable: true,
     title: "Skjer det noe?",
@@ -93,6 +100,17 @@ export default async function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: SITE_NAME,
+              url: SITE_URL,
+            }).replace(/</g, "\\u003c"),
+          }}
+        />
       </head>
       <body className="min-h-full">
         <LocaleProvider locale={locale} dict={dict}>

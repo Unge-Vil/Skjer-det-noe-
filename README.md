@@ -23,8 +23,10 @@ pnpm dev                     # http://localhost:3000
 
 Miljøvariabler (se `.env.example`): `NEXT_PUBLIC_SUPABASE_URL` og
 `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` brukes av både nettleser- og
-server-klienten. `SUPABASE_SECRET_KEY` er kun server-side (aldri eksponert) og
-trengs bare for admin-skriving/skript som omgår RLS.
+server-klienten. Sett `NEXT_PUBLIC_SITE_URL` til den kanoniske HTTPS-adressen i
+produksjon; den brukes i metadata, `robots.txt` og `sitemap.xml`.
+`SUPABASE_SECRET_KEY` er kun server-side (aldri eksponert) og trengs bare for
+admin-skriving/skript som omgår RLS.
 
 Uten Supabase-variabler kjører appen fortsatt, men viser en
 "ikke konfigurert"-melding i stedet for data.
@@ -87,6 +89,13 @@ etter rolle:
   publiserte aktiviteter eller arrangementer i nøkkelens kommune fra
   `/api/v1/municipality/listings`. Det har ingen skrive- eller
   modereringsadgang.
+- **Offentlig feed** er skrivebeskyttet og krever ikke nøkkel:
+  `GET /api/public/v1/listings?kind=activity`. Den returnerer bare publiserte
+  oppføringer, med canonical URL, oppdateringstid og avsender. Bruk `kind`
+  (`activity`, `event`, `service` eller `volunteer`), valgfritt
+  `municipality=<kommunenummer>`, samt `limit` og `offset` for sideinndeling.
+  Behold canonical URL ved videreformidling; utkast og private kontaktdata
+  eksponeres aldri.
 
 Kalenderfeeds kan bare administreres av eiere; serveren tillater kun HTTPS,
 avviser lokale/private mål og redirect, og begrenser tid og responsstørrelse.

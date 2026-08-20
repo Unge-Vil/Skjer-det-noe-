@@ -10,6 +10,7 @@ import { ListingCard } from "@/components/ListingCard";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
 import { RichTextContent } from "@/components/RichTextContent";
 import { isEmptyDoc } from "@/lib/tiptap";
+import { absoluteUrl, jsonLd, listingMetadata } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -58,8 +59,13 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug, profil } = await params;
   const data = await fetchProfile(slug, profil);
-  const title = data ? `${data.org.name} – ${data.profile.name}` : "Skjer det noe?";
-  return { title: `${title} – Skjer det noe?` };
+  if (!data) return { title: "Skjer det noe?" };
+  return listingMetadata({
+    title: `${data.org.name} - ${data.profile.name}`,
+    description: data.eff.description,
+    imageUrl: data.eff.banner_url ?? data.eff.logo_url,
+    pathname: `/organisasjon/${slug}/${profil}`,
+  });
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,9 +135,26 @@ export default async function DepartmentPublicPage({
   const description = loc(locale, eff.description, eff.description_en);
   const descDoc =
     locale === "en" && !isEmptyDoc(eff.description_doc_en) ? eff.description_doc_en : eff.description_doc;
+  const canonical = absoluteUrl(`/organisasjon/${slug}/${profil}`);
 
   return (
-    <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: jsonLd({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            name: `${org.name} - ${profile.name}`,
+            url: canonical,
+            description: description ?? undefined,
+            logo: eff.logo_url ?? undefined,
+            image: eff.banner_url ?? eff.logo_url ?? undefined,
+            address: eff.address ?? undefined,
+          }),
+        }}
+      />
+      <main id="main" className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">
       <header className="mb-8">
         {eff.banner_url && (
           <div style={{ position: "relative", aspectRatio: "4 / 1", borderRadius: "var(--radius-lg)", overflow: "hidden", marginBottom: 16, background: "var(--fjord-100)" }}>
@@ -177,7 +200,8 @@ export default async function DepartmentPublicPage({
       <Section title={t.orgpage.activities} listings={activities} empty={t.orgpage.empty} />
       <div className="h-8" />
       <Section title={t.orgpage.events} listings={events} empty={t.orgpage.empty} />
-    </main>
+      </main>
+    </>
   );
 }
 
