@@ -22,6 +22,13 @@ Leisure-activity directory (Unge Vil). See README.md for full overview.
   `dynamic(..., { ssr: false })` from the client `Explorer`.
 - **Hosting:** Cloudflare via `@opennextjs/cloudflare` (`pnpm cf:*`).
 - **Language:** UI copy is Norwegian (bokmål).
+- **Documentation:** GitBook is the source of truth for public help, guides,
+  product information, changelog and API documentation. When a change affects
+  user workflows, admin workflows, municipal or organisation features, public
+  content, integrations or API contracts, update the relevant GitBook pages in
+  the same work item through a GitBook change request. Keep guides, links,
+  examples and API documentation aligned with the implemented behaviour; remove
+  template or outdated content when it no longer describes the product.
 - **Design system:** "Skjer det noe?" tokens in `app/ds-tokens/*.css` (imported
   by `globals.css`); primitives in `components/ds/`. Use CSS vars (`--fjord-*`,
   `--accent`, `--surface-card`, `--text-*`) — never invent brand colours. Icons

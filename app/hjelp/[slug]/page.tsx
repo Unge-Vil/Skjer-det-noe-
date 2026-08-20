@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 
-export function generateStaticParams() {
-  return [];
-}
+export const dynamic = "force-dynamic";
 
 export default async function HelpArticlePage({ params }: { params: Promise<{ slug: string }> }) {
   await params;
