@@ -13,6 +13,7 @@ export function IntegrationNav() {
     { href: "/admin/integrasjoner/api", label: "API", icon: "key" as const },
     { href: "/admin/integrasjoner/kalender", label: "Kalender-feeds", icon: "calendar-days" as const },
     { href: "/admin/integrasjoner/embeds", label: "Innebygging", icon: "monitor" as const },
+    { href: "/admin/integrasjoner/rss", label: "RSS-feed", icon: "rss" as const },
     { href: "/admin/integrasjoner/mcp", label: t.integrations.mcpTitle, icon: "sparkles" as const },
   ];
   return (

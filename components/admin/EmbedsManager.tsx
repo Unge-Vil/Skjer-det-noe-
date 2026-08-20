@@ -270,6 +270,7 @@ export function EmbedsManager({ owner, initial }: { owner: EmbedOwner; initial: 
           const snippet = embed.kind === "kiosk"
             ? `${baseUrl}/embed/${embed.public_id}/skjerm`
             : embedSnippet(baseUrl, embed.public_id);
+          const rssUrl = `${baseUrl}/api/public/v1/feeds/${embed.public_id}/rss`;
           return (
             <section key={embed.id} style={{ ...card, display: "flex", flexDirection: "column", gap: 12, opacity: embed.active ? 1 : 0.6 }}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
@@ -313,6 +314,30 @@ export function EmbedsManager({ owner, initial }: { owner: EmbedOwner; initial: 
                   </code>
                 </details>
               )}
+
+              <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4, fontSize: "var(--fs-sm)", fontWeight: 600 }}>
+                    <Icon name="rss" size={16} />
+                    RSS-feed
+                  </div>
+                  <code style={{ display: "block", overflowX: "auto", whiteSpace: "pre-wrap", wordBreak: "break-all", padding: "10px 12px", borderRadius: "var(--radius-sm)", background: "var(--surface-sunk)", fontSize: "var(--fs-xs)" }}>
+                    {rssUrl}
+                  </code>
+                  <p style={{ margin: "6px 0 0", color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>
+                    Lim inn URL-en i nettsidens publiseringsverktøy for å vise nye oppføringer automatisk.
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="sm"
+                  leadingIcon={copied === `rss-${embed.id}` ? "check" : "copy"}
+                  onClick={() => copy(`rss-${embed.id}`, rssUrl)}
+                >
+                  {copied === `rss-${embed.id}` ? "Kopiert" : "Kopier"}
+                </Button>
+              </div>
 
               <details>
                 <summary style={{ cursor: "pointer", fontSize: "var(--fs-sm)", fontWeight: 600 }}>Forhåndsvisning</summary>

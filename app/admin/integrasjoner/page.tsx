@@ -24,6 +24,7 @@ export default async function IntegrationsPage() {
       { href: "/admin/integrasjoner/api", icon: "key", title: "API", body: t.integrations.apiHint },
       { href: "/admin/integrasjoner/kalender", icon: "calendar-days", title: "Kalender-feeds", body: t.integrations.feedsHint },
       { href: "/admin/integrasjoner/embeds", icon: "monitor", title: "Innebygging", body: "Widgets for egen nettside og infoskjerm." },
+      { href: "/admin/integrasjoner/rss", icon: "rss", title: "RSS-feed", body: "Publiser aktiviteter og arrangementer automatisk på egen nettside." },
       { href: "/admin/integrasjoner/mcp", icon: "sparkles", title: t.integrations.mcpTitle, body: "Utforsk offentlig katalogdata fra AI-verktøy via MCP-preview.", status: "Preview" },
     ];
 

@@ -35,6 +35,12 @@ export default async function MunicipalityIntegrationsPage() {
       body: "Widgets for kommunens nettsider og infoskjermer.",
     },
     {
+      href: "/kommune/integrasjoner/rss",
+      icon: "rss",
+      title: "RSS-feed",
+      body: "Publiser aktiviteter og arrangementer automatisk på kommunens nettside.",
+    },
+    {
       href: "/kommune/integrasjoner/mcp",
       icon: "sparkles",
       title: t.integrations.mcpTitle,
