@@ -13,7 +13,7 @@ const card = {
   padding: 20,
 } as const;
 
-export function AccountActions({ userId, email }: { userId: string; email: string }) {
+export function AccountActions({ userId, email, fullName }: { userId: string; email: string; fullName: string }) {
   const { t } = useI18n();
   const router = useRouter();
   const supabase = createClient();
@@ -65,9 +65,13 @@ export function AccountActions({ userId, email }: { userId: string; email: strin
     <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <section style={{ ...card }}>
         <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
+          {t.account.name}
+        </div>
+        <div style={{ marginTop: 4, fontWeight: 600 }}>{fullName || t.account.notSet}</div>
+        <div style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.04em" }}>
           {t.account.email}
         </div>
-        <div style={{ marginTop: 4, fontWeight: 600 }}>{email}</div>
+        <div style={{ marginTop: 4, fontWeight: 600 }}>{email || t.account.notSet}</div>
       </section>
 
       <section style={{ ...card, display: "flex", flexDirection: "column", gap: 12 }}>

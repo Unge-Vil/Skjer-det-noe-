@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
     return [
       // Admin and auth surfaces must never be framed. /embed/* is deliberately
       // excluded — middleware sets its frame-ancestors per embed.
-      ...["/admin/:path*", "/kommune/:path*", "/plattform/:path*", "/logg-inn", "/registrer", "/konto/:path*"].map(
+      ...["/admin/:path*", "/kommune/:path*", "/plattform/:path*", "/logg-inn", "/registrer", "/glemt-passord", "/oppdater-passord", "/konto/:path*"].map(
         (source) => ({ source, headers: NO_FRAMING }),
       ),
       {

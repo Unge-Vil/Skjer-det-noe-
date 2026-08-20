@@ -4,6 +4,26 @@
 # repo, so migrations under supabase/migrations are applied on push.
 project_id = "skjer-det-noe"
 
+[auth]
+site_url = "https://skjerdetnoe.no"
+additional_redirect_urls = [
+	"http://localhost:3000/**",
+	"https://skjerdetnoe.no/**",
+	"https://www.skjerdetnoe.no/**",
+]
+enable_confirmations = true
+double_confirm_changes = true
+secure_password_change = false
+max_frequency = "1m0s"
+otp_length = 8
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[vector]
+enabled = false
+
 [db]
 major_version = 17
 

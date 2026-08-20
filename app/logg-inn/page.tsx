@@ -105,6 +105,12 @@ export default function LoginPage() {
           </Button>
         </form>
 
+        <p style={{ margin: "16px 0 0", fontSize: "var(--fs-sm)" }}>
+          <Link href="/glemt-passord" style={{ color: "var(--text-link)", fontWeight: 600 }}>
+            {t.auth.forgotPassword}
+          </Link>
+        </p>
+
         <p style={{ margin: "20px 0 0", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>
           {t.auth.noAccount}{" "}
           <Link href="/registrer" style={{ color: "var(--text-link)", fontWeight: 600 }}>

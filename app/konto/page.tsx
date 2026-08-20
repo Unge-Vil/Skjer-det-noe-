@@ -4,6 +4,8 @@ import { getUser } from "@/lib/auth";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { Icon } from "@/components/ds/Icon";
 import { AccountActions } from "@/components/admin/AccountActions";
+import { MfaSettings } from "@/components/admin/MfaSettings";
+import { createClient } from "@/lib/supabase/server";
 
 export const dynamic = "force-dynamic";
 
@@ -12,6 +14,9 @@ export default async function AccountPage() {
   if (!user) redirect("/logg-inn");
 
   const t = getDictionary(await getLocale());
+  const supabase = await createClient();
+  const { data: profile } = await supabase.from("profiles").select("full_name").eq("id", user.id).maybeSingle();
+  const fullName = profile?.full_name ?? user.user_metadata?.full_name ?? "";
 
   return (
     <main id="main" className="mx-auto w-full max-w-2xl flex-1 px-4 py-10">
@@ -24,7 +29,10 @@ export default async function AccountPage() {
       </Link>
       <h1 style={{ margin: "16px 0 4px", fontSize: "var(--fs-h1)", fontWeight: 800 }}>{t.account.title}</h1>
       <p style={{ margin: "0 0 24px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.account.subtitle}</p>
-      <AccountActions userId={user.id} email={user.email ?? ""} />
+      <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+        <MfaSettings />
+        <AccountActions userId={user.id} email={user.email ?? ""} fullName={fullName} />
+      </div>
     </main>
   );
 }
