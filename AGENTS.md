@@ -28,7 +28,10 @@ Leisure-activity directory (Unge Vil). See README.md for full overview.
   content, integrations or API contracts, update the relevant GitBook pages in
   the same work item through a GitBook change request. Keep guides, links,
   examples and API documentation aligned with the implemented behaviour; remove
-  template or outdated content when it no longer describes the product.
+  template or outdated content when it no longer describes the product. Keep
+  both Norwegian and English variants documented when both are published; the
+  Norwegian variant is the default, while English variants are maintained
+  manually and must stay aligned with the Norwegian content and API behaviour.
 - **Design system:** "Skjer det noe?" tokens in `app/ds-tokens/*.css` (imported
   by `globals.css`); primitives in `components/ds/`. Use CSS vars (`--fjord-*`,
   `--accent`, `--surface-card`, `--text-*`) — never invent brand colours. Icons
