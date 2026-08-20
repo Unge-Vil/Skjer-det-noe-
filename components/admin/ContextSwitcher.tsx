@@ -35,14 +35,25 @@ export function ContextSwitcher() {
   const [open, setOpen] = useState(false);
   const [pending, startTransition] = useTransition();
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const close = (restoreFocus = true) => {
+    setOpen(false);
+    if (restoreFocus) requestAnimationFrame(() => triggerRef.current?.focus());
+  };
 
   useEffect(() => {
     if (!open) return;
+    panelRef.current?.querySelector<HTMLElement>("button, [href], input, select, textarea")?.focus();
     const onClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) close(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+      }
     };
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
@@ -150,9 +161,8 @@ export function ContextSwitcher() {
       ? `${contextLabel} ${contextSub.toLowerCase()}`
       : contextLabel;
 
-  const close = () => setOpen(false);
   const chooseOrg = (id: string) => {
-    close();
+    close(false);
     startTransition(async () => {
       await setActiveOrg(id);
       router.push("/admin");
@@ -160,7 +170,7 @@ export function ContextSwitcher() {
     });
   };
   const chooseMuni = (id: string) => {
-    close();
+    close(false);
     startTransition(async () => {
       await setActiveMunicipality(id);
       router.push("/kommune");
@@ -168,7 +178,7 @@ export function ContextSwitcher() {
     });
   };
   const chooseProfile = (id: string) => {
-    close();
+    close(false);
     const profile = profiles.find((item) => item.id === id);
     startTransition(async () => {
       await setActiveProfile(id, profile?.orgId);
@@ -177,15 +187,15 @@ export function ContextSwitcher() {
     });
   };
   const goPlatform = () => {
-    close();
+    close(false);
     router.push("/plattform");
   };
   const goAccount = () => {
-    close();
+    close(false);
     router.push("/konto");
   };
   const logout = async () => {
-    close();
+    close(false);
     const { error } = await createClient().auth.signOut({ scope: "local" });
     if (!error) window.location.assign("/");
   };
@@ -203,10 +213,12 @@ export function ContextSwitcher() {
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        aria-haspopup="menu"
+        aria-haspopup="dialog"
+        aria-controls="context-switcher"
         aria-label={t.areas.label}
         style={{
           width: "100%",
@@ -226,7 +238,10 @@ export function ContextSwitcher() {
       </button>
       {open && (
         <div
-          role="menu"
+          ref={panelRef}
+          id="context-switcher"
+          role="dialog"
+          aria-label={t.areas.label}
           className="sdn-pop"
           style={{
             position: "absolute",
@@ -265,13 +280,12 @@ export function ContextSwitcher() {
             </>
           )}
 
-          <button type="button" role="menuitem" onClick={goAccount} style={menuActionStyle}>
+          <button type="button" onClick={goAccount} style={menuActionStyle}>
             <Icon name="user" size={16} />
             {t.account.title}
           </button>
           <button
             type="button"
-            role="menuitem"
             aria-expanded={settingsOpen}
             onClick={() => setSettingsOpen((value) => !value)}
             style={menuActionStyle}
@@ -287,7 +301,7 @@ export function ContextSwitcher() {
               <SettingsContent />
             </div>
           )}
-          <button type="button" role="menuitem" onClick={logout} style={{ ...menuActionStyle, color: "var(--danger-text)" }}>
+          <button type="button" onClick={logout} style={{ ...menuActionStyle, color: "var(--danger-text)" }}>
             <Icon name="door-open" size={16} />
             {t.auth.logout}
           </button>
@@ -327,7 +341,6 @@ function Row({ name, sub, active, onClick }: { name: string; sub?: string; activ
   return (
     <button
       type="button"
-      role="menuitem"
       onClick={onClick}
       style={{
         width: "100%",
@@ -337,8 +350,8 @@ function Row({ name, sub, active, onClick }: { name: string; sub?: string; activ
         padding: "8px 10px",
         border: "none",
         borderRadius: "var(--radius-sm)",
-        background: active ? "var(--fjord-50)" : "transparent",
-        color: active ? "var(--fjord-700)" : "var(--text-body)",
+        background: active ? "var(--surface-brand-soft)" : "transparent",
+        color: active ? "var(--text-brand)" : "var(--text-body)",
         fontSize: "var(--fs-sm)",
         fontWeight: active ? 700 : 500,
         cursor: "pointer",

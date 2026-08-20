@@ -148,8 +148,8 @@ function Toggle({ active, left, onClick, children }: { active: boolean; left?: b
         fontSize: "var(--fs-xs)",
         fontWeight: 600,
         cursor: "pointer",
-        background: active ? "var(--fjord-50)" : "transparent",
-        color: active ? "var(--fjord-700)" : "var(--text-muted)",
+        background: active ? "var(--surface-brand-soft)" : "transparent",
+        color: active ? "var(--text-brand)" : "var(--text-muted)",
       }}
     >
       {children}

@@ -34,8 +34,8 @@ export default async function PlatformOrganisationsPage({ searchParams }: { sear
 }
 
 const labelStyle = { fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--text-muted)" } as const;
-const inputStyle = { width: "100%", minHeight: 42, padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" } as const;
-const buttonStyle = { minHeight: 42, padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "white", fontWeight: 700, cursor: "pointer" } as const;
+const inputStyle = { width: "100%", minHeight: "var(--tap-comfy)", padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" } as const;
+const buttonStyle = { minHeight: "var(--tap-comfy)", padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "var(--text-on-brand)", fontWeight: 700, cursor: "pointer" } as const;
 const tableWrap = { overflowX: "auto", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)" } as const;
 const tableStyle = { width: "100%", minWidth: 640, borderCollapse: "collapse", fontSize: "var(--fs-sm)" } as const;
 const th = { padding: "11px 16px", borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", textAlign: "left", fontSize: "var(--fs-xs)" } as const;

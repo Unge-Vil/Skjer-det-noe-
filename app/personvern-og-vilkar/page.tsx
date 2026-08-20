@@ -69,22 +69,24 @@ export default function PersonvernOgVilkarPage() {
       <h2 id="tilgjengelighet">Tilgjengelighet</h2>
       <p>
         «Skjer det noe?» skal kunne brukes av alle, uansett forutsetninger. Tjenesten er utviklet med universell
-        utforming som utgangspunkt og følger kravene i WCAG 2.1 og 2.2 på nivå AA.
+        utforming som utgangspunkt, og vi arbeider mot WCAG 2.2 på nivå AA.
       </p>
 
       <h3>Hva vi har gjort</h3>
       <ul>
-        <li>Tekst og bakgrunn har tilstrekkelig kontrast i lyst og mørkt tema.</li>
-        <li>Alt innhold kan brukes med tastatur, med synlig fokusmarkering.</li>
+        <li>Vi kontrollerer sentrale fargekombinasjoner automatisk i lyst og mørkt tema.</li>
+        <li>Vi tester de viktigste offentlige sidene automatisk for WCAG A- og AA-brudd.</li>
+        <li>De sentrale kontrollene kan brukes med tastatur og har synlig fokusmarkering.</li>
         <li>Farge brukes aldri alene for å formidle status eller kategorier.</li>
-        <li>Sidene fungerer med skjermleser, forstørring og redusert bevegelse.</li>
+        <li>Redusert bevegelse er støttet.</li>
       </ul>
 
       <h3>Kjente begrensninger og tilbakemeldinger</h3>
       <p>
         Innhold fra kommuner og organisasjoner kan variere i tilgjengelighet. Opplever du noe som er vanskelig
         å bruke, kontakt oss på <a href="mailto:org@ungevil.no">org@ungevil.no</a>, så retter vi det så raskt
-        som mulig. Kommunene er selv ansvarlige for sine lovpålagte tilgjengelighetserklæringer.
+        som mulig. Manuell skjermleser-, zoom- og reflow-testing pågår fortsatt. Kommunene er selv ansvarlige
+        for sine lovpålagte tilgjengelighetserklæringer.
       </p>
     </LegalPage>
   );

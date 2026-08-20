@@ -8,7 +8,7 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANTS: Record<Variant, { background: string; color: string; border: string; hoverBg: string }> = {
   ghost: { background: "transparent", color: "var(--text-brand)", border: "1px solid transparent", hoverBg: "var(--brand-hover-soft)" },
-  solid: { background: "var(--surface-brand-strong)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
+  solid: { background: "var(--surface-brand-strong)", color: "var(--text-on-brand)", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
   outline: { background: "var(--surface-card)", color: "var(--text-brand)", border: "1.5px solid var(--border-strong)", hoverBg: "var(--brand-hover-soft)" },
 };
 
@@ -50,12 +50,12 @@ export function IconButton({
         width: dim,
         height: dim,
         flex: "none",
-        color: variants.color,
-        background: hover && !disabled ? variants.hoverBg : variants.background,
-        border: variants.border,
+        color: disabled ? "var(--control-disabled-text)" : variants.color,
+        background: disabled ? "var(--control-disabled-bg)" : hover ? variants.hoverBg : variants.background,
+        border: disabled ? "1px solid var(--control-disabled-border)" : variants.border,
         borderRadius: "var(--radius-pill)",
         cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.5 : 1,
+        opacity: 1,
         transition: "background var(--dur-fast) var(--ease-soft)",
         ...style,
       }}

@@ -13,11 +13,11 @@ export const BUTTON_SIZES: Record<ButtonSize, { height: number | string; padding
 };
 
 const BUTTON_VARIANTS: Record<ButtonVariant, { background: string; color: string; border: string; hoverBg: string }> = {
-  primary: { background: "var(--surface-brand-strong)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
-  coral: { background: "var(--coral-600)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--coral-700)" },
+  primary: { background: "var(--surface-brand-strong)", color: "var(--text-on-brand)", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
+  coral: { background: "var(--coral-600)", color: "var(--text-on-coral)", border: "1px solid transparent", hoverBg: "var(--coral-700)" },
   secondary: { background: "var(--surface-card)", color: "var(--text-brand)", border: "1.5px solid var(--border-strong)", hoverBg: "var(--brand-hover-soft)" },
   ghost: { background: "transparent", color: "var(--text-brand)", border: "1px solid transparent", hoverBg: "var(--brand-hover-soft)" },
-  danger: { background: "var(--danger-500)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--danger-600)" },
+  danger: { background: "var(--danger-500)", color: "var(--text-on-brand)", border: "1px solid transparent", hoverBg: "var(--danger-600)" },
 };
 
 interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "style"> {
@@ -68,12 +68,12 @@ export function Button({
         fontSize: sizes.font,
         fontWeight: "var(--fw-semibold)",
         lineHeight: 1,
-        color: isDisabled ? "var(--stone-500)" : variants.color,
-        background: isDisabled ? "var(--stone-200)" : hover ? variants.hoverBg : variants.background,
-        border: isDisabled ? "1px solid transparent" : variants.border,
+        color: isDisabled ? "var(--control-disabled-text)" : variants.color,
+        background: isDisabled ? "var(--control-disabled-bg)" : hover ? variants.hoverBg : variants.background,
+        border: isDisabled ? "1px solid var(--control-disabled-border)" : variants.border,
         borderRadius: sizes.radius,
         cursor: isDisabled ? "not-allowed" : "pointer",
-        opacity: isDisabled ? 0.65 : 1,
+        opacity: 1,
         transform: hover && !isDisabled ? "var(--lift)" : "none",
         boxShadow:
           hover && !isDisabled && variant === "primary"

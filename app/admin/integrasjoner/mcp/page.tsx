@@ -23,7 +23,7 @@ export default async function McpIntegrationPage() {
     <main id="main" className="mx-auto w-full max-w-4xl" style={{ padding: 24 }}>
       <IntegrationNav />
       <div style={{ maxWidth: 760 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}><Icon name="sparkles" size={24} color="var(--fjord-600)" /><h1 style={{ margin: 0, fontSize: "var(--fs-h2)", fontWeight: 800 }}>{t.integrations.mcpTitle}</h1></div>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}><Icon name="sparkles" size={24} color="var(--icon-brand)" /><h1 style={{ margin: 0, fontSize: "var(--fs-h2)", fontWeight: 800 }}>{t.integrations.mcpTitle}</h1></div>
         <p style={{ margin: "0 0 20px", color: "var(--text-muted)", fontSize: "var(--fs-sm)", lineHeight: 1.6 }}>MCP-serveren lar AI-verktøy hente strukturert informasjon fra Skjer det noe? uten at de må tolke nettsider.</p>
         <McpConnectionGuide scope="organization" />
       </div>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
+import { StatusLabel } from "@/components/ds/StatusLabel";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { generateKey, hashKey, keyPrefix } from "@/lib/apiKeys";
 import { inputStyle, labelStyle } from "./formStyles";
@@ -118,14 +119,14 @@ export function ApiKeysManager({ orgId, initial }: { orgId: string; initial: Api
         </label>
         <Button type="submit" loading={busy} leadingIcon="plus">{t.integrations.createKey}</Button>
       </form>
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       {initial.length === 0 ? (
         <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.integrations.noKeys}</p>
       ) : (
         <div className="flex flex-col gap-2">
           {initial.map((k) => (
-            <div key={k.id} className="flex flex-wrap items-center justify-between gap-3" style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", opacity: k.revoked_at ? 0.55 : 1 }}>
+            <div key={k.id} className="flex flex-wrap items-center justify-between gap-3" style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
               <div className="min-w-0">
                 <p style={{ margin: 0, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
                   <Icon name="key" size={14} />
@@ -137,7 +138,7 @@ export function ApiKeysManager({ orgId, initial }: { orgId: string; initial: Api
                 </p>
               </div>
               {k.revoked_at ? (
-                <span style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)", fontWeight: 600 }}>{t.integrations.revoked}</span>
+                <StatusLabel label={t.integrations.revoked} icon="ban" tone="danger" size="sm" />
               ) : (
                 <div className="flex items-center gap-3">
                   <label style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>

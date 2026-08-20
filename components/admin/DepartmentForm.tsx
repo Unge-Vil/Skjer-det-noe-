@@ -199,7 +199,7 @@ export function DepartmentForm({ dept }: { dept: ProfileDetail }) {
         )}
       </section>
 
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <Button type="submit" loading={busy}>{busy ? t.orgadmin.saving : t.orgadmin.save}</Button>
@@ -291,7 +291,7 @@ function InheritToggle({
     background: "transparent",
     color: "var(--text-muted)",
   } as const;
-  const active = { background: "var(--fjord-50)", color: "var(--fjord-700)", borderColor: "var(--fjord-200, var(--border-subtle))" } as const;
+  const active = { background: "var(--surface-brand-soft)", color: "var(--text-brand)", borderColor: "var(--border-brand)" } as const;
   return (
     <div style={{ display: "inline-flex", borderRadius: "var(--radius-pill)", overflow: "hidden" }}>
       <button type="button" onClick={onInherit} aria-pressed={inherited} style={{ ...base, ...(inherited ? active : {}), borderTopLeftRadius: 999, borderBottomLeftRadius: 999 }}>

@@ -10,14 +10,25 @@ export function SettingsMenu() {
   const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  const close = (restoreFocus = true) => {
+    setOpen(false);
+    if (restoreFocus) requestAnimationFrame(() => triggerRef.current?.focus());
+  };
 
   useEffect(() => {
     if (!open) return;
+    panelRef.current?.querySelector<HTMLElement>("button, [href], input, select, textarea")?.focus();
     const onClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) close(false);
     };
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        close();
+      }
     };
     document.addEventListener("mousedown", onClick);
     document.addEventListener("keydown", onKey);
@@ -30,10 +41,12 @@ export function SettingsMenu() {
   return (
     <div ref={ref} style={{ position: "relative" }}>
       <button
+        ref={triggerRef}
         type="button"
         aria-label={t.nav.settings}
         aria-expanded={open}
-        aria-haspopup="menu"
+        aria-haspopup="dialog"
+        aria-controls="settings-menu"
         onClick={() => setOpen((v) => !v)}
         style={{
           display: "inline-flex",
@@ -52,7 +65,10 @@ export function SettingsMenu() {
       </button>
       {open && (
         <div
-          role="menu"
+          ref={panelRef}
+          id="settings-menu"
+          role="dialog"
+          aria-label={t.nav.settings}
           className="sdn-pop"
           style={{
             position: "absolute",

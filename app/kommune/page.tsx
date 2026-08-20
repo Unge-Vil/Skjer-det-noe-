@@ -120,7 +120,7 @@ export default async function KommunePage() {
               <h2 id="municipality-analytics-title" style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.kommune.analyticsTitle}</h2>
               <p style={{ margin: "4px 0 16px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.analyticsSubtitle}</p>
             </div>
-            <Icon name="eye" size={22} color="var(--fjord-600)" />
+            <Icon name="eye" size={22} color="var(--icon-brand)" />
           </div>
           {analytics ? (
             <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -138,7 +138,7 @@ export default async function KommunePage() {
           <section style={cardStyle}>
             <div className="flex items-start justify-between gap-4">
               <div>
-                <Icon name="building-2" size={22} color="var(--fjord-600)" />
+                <Icon name="building-2" size={22} color="var(--icon-brand)" />
                 <h2 style={{ margin: "12px 0 4px", fontSize: "var(--fs-h3)", fontWeight: 700 }}>{approved.length}</h2>
                 <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.statApproved}</p>
               </div>
@@ -158,7 +158,7 @@ export default async function KommunePage() {
 function MiniStat({ icon, value, label }: { icon: IconName; value: number | string; label: string }) {
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
-      <Icon name={icon} size={20} color="var(--fjord-600)" />
+      <Icon name={icon} size={20} color="var(--icon-brand)" />
       <div style={{ marginTop: 8, fontSize: 24, fontWeight: 800, letterSpacing: "-0.01em" }}>{value}</div>
       <div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div>
     </div>
@@ -180,7 +180,7 @@ function PendingPreview({
           <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.kommune.pending}</h2>
           <p style={{ margin: "4px 0 16px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{orgs.length} {t.kommune.organizationCount}</p>
         </div>
-        <Icon name="clipboard-list" size={22} color="var(--fjord-600)" />
+        <Icon name="clipboard-list" size={22} color="var(--icon-brand)" />
       </div>
       {orgs.length === 0 ? (
         <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.noPending}</p>

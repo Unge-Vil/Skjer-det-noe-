@@ -143,7 +143,7 @@ function formatBytes(bytes: number) {
 function MiniStat({ icon, value, label }: { icon: IconName; value: number | string; label: string }) {
   return (
     <div style={{ ...cardStyle, padding: 16 }}>
-      <Icon name={icon} size={20} color="var(--fjord-600)" />
+      <Icon name={icon} size={20} color="var(--icon-brand)" />
       <div style={{ marginTop: 8, fontSize: 24, fontWeight: 800, letterSpacing: "-0.01em" }}>{value}</div>
       <div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div>
     </div>

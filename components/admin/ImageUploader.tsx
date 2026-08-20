@@ -133,7 +133,7 @@ export function ImageUploader({
         {recommended && ` ${t.orgadmin.imageRecommended}: ${recommended}.`}
       </p>
       {warning && <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--warning-text)" }}>{warning}</p>}
-      {error && <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--danger-text)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--danger-text)" }}>{error}</p>}
     </div>
   );
 }

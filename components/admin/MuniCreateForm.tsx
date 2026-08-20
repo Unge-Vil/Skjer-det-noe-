@@ -185,7 +185,7 @@ export function MuniCreateForm() {
         </div>
       )}
 
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" loading={busy} disabled={!selected}>{t.platform.muniCreate}</Button>

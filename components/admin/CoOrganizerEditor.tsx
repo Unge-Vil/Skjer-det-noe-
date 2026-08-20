@@ -83,8 +83,8 @@ export function CoOrganizerEditor({
                 gap: 6,
                 padding: "4px 6px 4px 12px",
                 borderRadius: "var(--radius-pill)",
-                background: "var(--fjord-50)",
-                color: "var(--fjord-700)",
+                background: "var(--surface-brand-soft)",
+                color: "var(--text-brand)",
                 fontSize: "var(--fs-sm)",
                 fontWeight: 600,
               }}

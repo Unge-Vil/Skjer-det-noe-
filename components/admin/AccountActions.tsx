@@ -87,7 +87,7 @@ export function AccountActions({ userId, email }: { userId: string; email: strin
           <h2 style={{ margin: "0 0 2px", fontSize: "var(--fs-h4)", fontWeight: 700, color: "var(--danger-text)" }}>{t.account.deleteTitle}</h2>
           <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.account.deleteBody}</p>
         </div>
-        {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+        {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
         <div>
           <Button variant="danger" loading={busy} onClick={deleteAccount}>{t.account.deleteBtn}</Button>
         </div>

@@ -40,7 +40,7 @@ export function CategoryPill({
         fontSize: dims.font,
         fontWeight: "var(--fw-semibold)",
         lineHeight: 1.1,
-        color: solid ? "#fff" : c.fg,
+        color: solid ? "var(--text-on-brand)" : c.fg,
         background: solid ? c.fg : c.bg,
         borderRadius: "var(--radius-pill)",
         whiteSpace: "nowrap",

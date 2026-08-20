@@ -28,7 +28,7 @@ export function McpConnectionGuide({ scope }: { scope: "organization" | "municip
         <div role="tablist" aria-label="Velg AI-verktøy" style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
           {(Object.keys(clientLabels) as Client[]).map((item) => {
             const active = client === item;
-            return <button key={item} type="button" role="tab" aria-selected={active} onClick={() => setClient(item)} style={{ padding: "8px 11px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", background: active ? "var(--fjord-50)" : "var(--surface-card)", color: active ? "var(--fjord-700)" : "var(--text-body)", fontSize: "var(--fs-sm)", fontWeight: active ? 700 : 600, cursor: "pointer" }}>{clientLabels[item]}</button>;
+            return <button key={item} type="button" role="tab" aria-selected={active} onClick={() => setClient(item)} style={{ padding: "8px 11px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", background: active ? "var(--surface-brand-soft)" : "var(--surface-card)", color: active ? "var(--text-brand)" : "var(--text-body)", fontSize: "var(--fs-sm)", fontWeight: active ? 700 : 600, cursor: "pointer" }}>{clientLabels[item]}</button>;
           })}
         </div>
         <div role="tabpanel" style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: 16, marginTop: 16, color: "var(--text-body)", fontSize: "var(--fs-sm)", lineHeight: 1.6 }}>

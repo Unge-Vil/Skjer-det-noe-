@@ -29,11 +29,11 @@ const PRESETS: Record<StatusKind, { icon: IconName; tone: Tone }> = {
 };
 
 const TONES: Record<Tone, { bg: string; fg: string }> = {
-  sol: { bg: "var(--sol-200)", fg: "#6b4e00" },
-  brand: { bg: "var(--fjord-50)", fg: "var(--fjord-700)" },
-  neutral: { bg: "var(--stone-100)", fg: "var(--stone-700)" },
-  success: { bg: "var(--success-50)", fg: "var(--success-600)" },
-  danger: { bg: "var(--danger-50)", fg: "var(--danger-600)" },
+  sol: { bg: "var(--status-sol-bg)", fg: "var(--status-sol-text)" },
+  brand: { bg: "var(--status-brand-bg)", fg: "var(--status-brand-text)" },
+  neutral: { bg: "var(--status-neutral-bg)", fg: "var(--status-neutral-text)" },
+  success: { bg: "var(--status-success-bg)", fg: "var(--status-success-text)" },
+  danger: { bg: "var(--status-danger-bg)", fg: "var(--status-danger-text)" },
 };
 
 /** Accessible status pill — always icon + text, never colour alone. */

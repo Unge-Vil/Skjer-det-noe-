@@ -20,7 +20,7 @@ export function IntegrationNav() {
     <nav aria-label={t.integrations.title} style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 20 }}>
       {items.map((item) => {
         const active = pathname === item.href;
-        return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 11px", borderRadius: "var(--radius-md)", textDecoration: "none", background: active ? "var(--fjord-50)" : "transparent", color: active ? "var(--fjord-700)" : "var(--text-body)", fontSize: "var(--fs-sm)", fontWeight: active ? 700 : 600 }}><Icon name={item.icon} size={16} />{item.label}</Link>;
+        return <Link key={item.href} href={item.href} aria-current={active ? "page" : undefined} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "8px 11px", borderRadius: "var(--radius-md)", textDecoration: "none", background: active ? "var(--surface-brand-soft)" : "transparent", color: active ? "var(--text-brand)" : "var(--text-body)", fontSize: "var(--fs-sm)", fontWeight: active ? 700 : 600 }}><Icon name={item.icon} size={16} />{item.label}</Link>;
       })}
     </nav>
   );

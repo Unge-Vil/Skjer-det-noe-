@@ -103,15 +103,38 @@
   --text-muted:    var(--stone-500);
   --text-on-brand: #FFFFFF;
   --text-on-coral: #FFFFFF;
+   --text-on-accent: #FFFFFF;
   --text-link:     var(--fjord-700);
+   --icon-brand:    var(--fjord-600);
+   --icon-muted:    var(--stone-500);
+   --icon-nav:      var(--fjord-500);
 
   --border-subtle: var(--stone-200);
-  --border-strong: var(--stone-300);
+   --border-strong: var(--stone-400);
   --border-brand:  var(--fjord-600);
 
   --accent:        var(--coral-600);
   --accent-soft:   var(--coral-50);
   --highlight:     var(--sol-400);
+
+  /* Disabled controls retain a distinct, readable state without dimming their
+     content through opacity. */
+  --control-disabled-bg:     var(--stone-100);
+  --control-disabled-text:   var(--stone-600);
+  --control-disabled-border: var(--stone-200);
+
+  /* Status chips use semantic pairs so their contrast can be verified per
+     theme without exposing raw palette values to components. */
+  --status-sol-bg:     var(--sol-200);
+  --status-sol-text:   #6B4E00;
+  --status-brand-bg:   var(--fjord-50);
+  --status-brand-text: var(--fjord-700);
+  --status-neutral-bg: var(--stone-100);
+  --status-neutral-text: var(--stone-700);
+  --status-success-bg: var(--success-50);
+  --status-success-text: var(--success-600);
+  --status-danger-bg:  var(--danger-50);
+  --status-danger-text: var(--danger-600);
 
   /* Status TEXT on the page/card surface. The -600 steps are tuned for light
      surfaces; dark mode flips these to lighter tints so AA holds on dark. */
@@ -154,15 +177,34 @@
   --text-muted:    #9DABA6;            /* ≈ 6.6:1 on cards */
   --text-on-brand: #FFFFFF;
   --text-on-coral: #FFFFFF;
+   --text-on-accent: var(--ink-900);
   --text-link:     var(--fjord-300);
+   --icon-brand:    var(--fjord-300);
+   --icon-muted:    var(--text-muted);
+   --icon-nav:      var(--fjord-300);
 
   --border-subtle: #2B3035;
-  --border-strong: #3C4248;
+   --border-strong: #69727A;
   --border-brand:  var(--fjord-400);
 
   --accent:        var(--coral-400);   /* brighter coral pops on dark */
   --accent-soft:   #3A1A12;
   --highlight:     var(--sol-400);
+
+   --control-disabled-bg:     #2B3035;
+   --control-disabled-text:   #D4DDDA;
+   --control-disabled-border: #3C4248;
+
+   --status-sol-bg:     #4A3500;
+   --status-sol-text:   #FFE299;
+   --status-brand-bg:   #163230;
+   --status-brand-text: var(--fjord-300);
+   --status-neutral-bg: #2B3035;
+   --status-neutral-text: #D4DDDA;
+   --status-success-bg: #173A29;
+   --status-success-text: #5FCF92;
+   --status-danger-bg:  #421F1B;
+   --status-danger-text: #FF8A7A;
 
   /* Lighter status text so it reads on dark surfaces (≥4.5:1). */
   --danger-text:   #FF8A7A;
@@ -199,12 +241,29 @@
     --text-strong:   #F2F5F3;
     --text-body:     #D4DDDA;
     --text-muted:    #9DABA6;
+   --text-on-accent: var(--ink-900);
     --text-link:     var(--fjord-300);
+   --icon-brand:    var(--fjord-300);
+   --icon-muted:    var(--text-muted);
+   --icon-nav:      var(--fjord-300);
     --border-subtle: #2B3035;
-    --border-strong: #3C4248;
+   --border-strong: #69727A;
     --border-brand:  var(--fjord-400);
     --accent:        var(--coral-400);
     --accent-soft:   #3A1A12;
+   --control-disabled-bg:     #2B3035;
+   --control-disabled-text:   #D4DDDA;
+   --control-disabled-border: #3C4248;
+   --status-sol-bg:     #4A3500;
+   --status-sol-text:   #FFE299;
+   --status-brand-bg:   #163230;
+   --status-brand-text: var(--fjord-300);
+   --status-neutral-bg: #2B3035;
+   --status-neutral-text: #D4DDDA;
+   --status-success-bg: #173A29;
+   --status-success-text: #5FCF92;
+   --status-danger-bg:  #421F1B;
+   --status-danger-text: #FF8A7A;
     --danger-text:   #FF8A7A;
     --success-text:  #5FCF92;
     --warning-text:  #E6B450;

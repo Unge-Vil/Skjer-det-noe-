@@ -144,7 +144,7 @@ export function Icon({
   size = 20,
   className,
   color,
-  fill,
+  fill = "none",
   strokeWidth = 2,
 }: {
   name: IconName;

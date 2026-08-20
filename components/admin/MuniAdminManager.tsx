@@ -82,7 +82,7 @@ export function MuniAdminManager({
         />
         <Button type="submit" loading={busy}>{t.platform.add}</Button>
       </form>
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       {admins.length === 0 ? (
         <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.platform.noAdmins}</p>

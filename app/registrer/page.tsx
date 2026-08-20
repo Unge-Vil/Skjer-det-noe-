@@ -191,7 +191,7 @@ export default function RegisterPage() {
               <label htmlFor="password" style={labelStyle}>{t.auth.password}</label>
               <input id="password" type="password" autoComplete="new-password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} style={inputStyle} />
             </div>
-            {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+            {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
             <Button type="submit" fullWidth loading={busy}>{t.register.createAccount}</Button>
             <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>
               {t.auth.haveAccount}{" "}
@@ -226,7 +226,7 @@ export default function RegisterPage() {
                   <input id="orgnr" inputMode="numeric" value={orgNumber} onChange={(e) => setOrgNumber(e.target.value)} style={inputStyle} placeholder="9 siffer" />
                   <Button variant="secondary" onClick={runLookup} loading={busy}>{t.register.lookup}</Button>
                 </div>
-                {lookupMsg && <p style={{ margin: "8px 0 0", fontSize: "var(--fs-sm)", color: "var(--text-brand)" }}>{lookupMsg}</p>}
+                {lookupMsg && <p role="status" style={{ margin: "8px 0 0", fontSize: "var(--fs-sm)", color: "var(--text-brand)" }}>{lookupMsg}</p>}
               </div>
             )}
             <div>
@@ -260,7 +260,7 @@ export default function RegisterPage() {
                 </label>
               ))}
             </div>
-            {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+            {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
             <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
               <Button variant="ghost" onClick={() => setStep("details")}>{t.register.back}</Button>
               <Button onClick={submit} loading={busy} disabled={selected.size === 0}>{t.register.submit}</Button>

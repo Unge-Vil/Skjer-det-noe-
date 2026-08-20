@@ -146,7 +146,7 @@ export function CalendarFeedsManager({
           <Button type="submit" loading={busy} leadingIcon="plus">{t.integrations.addFeed}</Button>
         </div>
       </form>
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       {initial.length === 0 ? (
         <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.integrations.noFeeds}</p>

@@ -53,6 +53,8 @@ export function RichTextEditor({
 function Toolbar({ editor }: { editor: Editor }) {
   return (
     <div
+      role="toolbar"
+      aria-label="Formater tekst"
       style={{
         display: "flex",
         flexWrap: "wrap",
@@ -98,8 +100,8 @@ function Btn({ icon, active, onClick, label }: { icon: IconName; active: boolean
         height: 32,
         border: "none",
         borderRadius: "var(--radius-sm)",
-        background: active ? "var(--fjord-100)" : "transparent",
-        color: active ? "var(--fjord-700)" : "var(--text-body)",
+        background: active ? "var(--surface-brand-soft)" : "transparent",
+        color: active ? "var(--text-brand)" : "var(--text-body)",
         cursor: "pointer",
       }}
     >

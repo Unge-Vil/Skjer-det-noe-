@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
+import { StatusLabel } from "@/components/ds/StatusLabel";
 import { CATEGORIES } from "@/components/ds/categories";
 import {
   embedIframeSnippet,
@@ -258,7 +259,7 @@ export function EmbedsManager({ owner, initial }: { owner: EmbedOwner; initial: 
           </div>
 
           <div><Button type="submit" loading={busy} leadingIcon="plus">Lag widget</Button></div>
-          {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+          {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
         </form>
       </section>
 
@@ -272,13 +273,21 @@ export function EmbedsManager({ owner, initial }: { owner: EmbedOwner; initial: 
             : embedSnippet(baseUrl, embed.public_id);
           const rssUrl = `${baseUrl}/api/public/v1/feeds/${embed.public_id}/rss`;
           return (
-            <section key={embed.id} style={{ ...card, display: "flex", flexDirection: "column", gap: 12, opacity: embed.active ? 1 : 0.6 }}>
+            <section key={embed.id} style={{ ...card, display: "flex", flexDirection: "column", gap: 12 }}>
               <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
                 <div>
                   <h3 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
                     <Icon name="monitor" size={18} />
                     {embed.label || kindLabel}
                   </h3>
+                  <div style={{ marginTop: 6 }}>
+                    <StatusLabel
+                      label={embed.active ? "Aktiv" : "Deaktivert"}
+                      icon={embed.active ? "check" : "ban"}
+                      tone={embed.active ? "success" : "danger"}
+                      size="sm"
+                    />
+                  </div>
                   <p style={{ margin: "2px 0 0", fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>
                     {kindLabel} · {embed.item_limit} elementer · {embed.allowed_origins.length > 0 ? embed.allowed_origins.join(", ") : "alle nettsteder"}
                   </p>

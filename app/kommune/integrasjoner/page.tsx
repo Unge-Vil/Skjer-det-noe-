@@ -81,7 +81,7 @@ export default async function MunicipalityIntegrationsPage() {
                 textDecoration: "none",
               }}
             >
-              <Icon name={card.icon} size={24} color="var(--fjord-600)" />
+              <Icon name={card.icon} size={24} color="var(--icon-brand)" />
               <div>
                 <h2 style={{ margin: "0 0 6px", fontSize: "var(--fs-h4)", fontWeight: 700 }}>{card.title}</h2>
                 <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)", lineHeight: 1.5 }}>

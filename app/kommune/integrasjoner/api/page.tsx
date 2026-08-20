@@ -38,7 +38,7 @@ export default async function MunicipalityApiIntegrationPage() {
         <MunicipalityIntegrationNav />
         <div style={{ maxWidth: 760 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-            <Icon name="key" size={24} color="var(--fjord-600)" />
+            <Icon name="key" size={24} color="var(--icon-brand)" />
             <h1 style={{ margin: 0, fontSize: "var(--fs-h2)", fontWeight: 800 }}>API</h1>
           </div>
           <p style={{ margin: "0 0 20px", lineHeight: 1.6, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>Bruk Kommune-API for å hente publiserte aktiviteter og arrangementer fra kommunen i egne tjenester.</p>

@@ -204,7 +204,7 @@ export function DirectoryForm({
         </select>
       </div>
 
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       <div>
         <Button type="submit" loading={busy}>{busy ? t.form.saving : t.form.save}</Button>

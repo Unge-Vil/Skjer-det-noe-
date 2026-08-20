@@ -51,8 +51,9 @@ export default async function OmPage() {
 
           <h2>Tilgjengelig for alle</h2>
           <p>
-            Tjenesten er universelt utformet og følger WCAG 2.2 AA, slik at flest mulig kan bruke den – uansett
-            forutsetninger.
+            Tjenesten er utviklet med universell utforming som utgangspunkt, og vi arbeider mot WCAG 2.2 AA,
+            slik at flest mulig kan bruke den – uansett forutsetninger. Les mer om{" "}
+            <Link href="/tilgjengelighet">tilgjengelighetsarbeidet vårt</Link>.
           </p>
         </div>
       </main>

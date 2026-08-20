@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
+import { StatusLabel } from "@/components/ds/StatusLabel";
 import { generateKey, hashKey, keyPrefix } from "@/lib/apiKeys";
 import { inputStyle, labelStyle } from "./formStyles";
 
@@ -99,19 +100,19 @@ export function MunicipalityApiKeysManager({ municipalityId, initial }: { munici
         </div>
         <Button type="submit" loading={busy} leadingIcon="plus">Lag nøkkel</Button>
       </form>
-      {error && <p style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
+      {error && <p role="alert" style={{ margin: 0, color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>}
 
       {initial.length === 0 ? (
         <p style={{ margin: 0, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>Ingen nøkler ennå.</p>
       ) : (
         <div className="flex flex-col gap-2">
           {initial.map((key) => (
-            <div key={key.id} className="flex flex-wrap items-center justify-between gap-3" style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)", opacity: key.revoked_at ? 0.55 : 1 }}>
+            <div key={key.id} className="flex flex-wrap items-center justify-between gap-3" style={{ padding: "10px 14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
               <div className="min-w-0">
                 <p style={{ margin: 0, fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}><Icon name="key" size={14} />{key.label || key.key_prefix}<code style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{key.key_prefix}</code></p>
                 <p style={{ margin: 0, fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>Opprettet: {formatDate(key.created_at)} · Sist brukt: {formatDate(key.last_used_at)}</p>
               </div>
-              {key.revoked_at ? <span style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)", fontWeight: 600 }}>Tilbaketrukket</span> : <Button variant="ghost" size="sm" onClick={() => revoke(key.id)}>Trekk tilbake</Button>}
+              {key.revoked_at ? <StatusLabel label="Tilbaketrukket" icon="ban" tone="danger" size="sm" /> : <Button variant="ghost" size="sm" onClick={() => revoke(key.id)}>Trekk tilbake</Button>}
             </div>
           ))}
         </div>

@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "pnpm test:unit",
+    "test:a11y": "pnpm test:a11y:tokens && pnpm test:a11y:routes",
+    "test:a11y:tokens": "node --test lib/design-tokens-a11y.test.mjs",
+    "test:a11y:routes": "playwright test --config=playwright.a11y.config.ts",
     "test:unit": "pnpm test:security:feeds && pnpm test:security:service-worker && pnpm test:api:validation",
     "test:integration": "pnpm test:security:profiles && pnpm test:security:organizations && pnpm test:security:roles && pnpm test:security:media && pnpm test:security:integrity:audit && pnpm test:security:integrity && pnpm test:sync:lock && pnpm test:performance:nearby",
     "test:security:profiles": "node --env-file=.env scripts/test-profile-security.mjs",
@@ -48,8 +51,10 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@capacitor/cli": "^8.4.1",
     "@opennextjs/cloudflare": "^1.19.11",
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^20",
@@ -57,6 +62,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "tailwindcss": "^4",
     "typescript": "^5",
     "wrangler": "^4.104.0"

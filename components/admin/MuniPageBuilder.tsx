@@ -83,7 +83,7 @@ export function MuniPageBuilder({
       }}
     >
       {error && (
-        <p style={{ margin: 0, padding: "8px 16px", color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>
+        <p role="alert" style={{ margin: 0, padding: "8px 16px", color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>{error}</p>
       )}
       <div style={{ flex: 1, minHeight: 0 }}>
         <Puck

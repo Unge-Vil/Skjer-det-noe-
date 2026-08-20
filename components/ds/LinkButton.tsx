@@ -6,11 +6,11 @@ import { BUTTON_SIZES, type ButtonSize, type ButtonVariant } from "./Button";
 import { Icon, type IconName } from "./Icon";
 
 const VARIANTS: Record<ButtonVariant, { background: string; color: string; border: string; hoverBg: string }> = {
-  primary: { background: "var(--surface-brand-strong)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
-  coral: { background: "var(--coral-600)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--coral-700)" },
+  primary: { background: "var(--surface-brand-strong)", color: "var(--text-on-brand)", border: "1px solid transparent", hoverBg: "var(--surface-brand-strong-hover)" },
+  coral: { background: "var(--coral-600)", color: "var(--text-on-coral)", border: "1px solid transparent", hoverBg: "var(--coral-700)" },
   secondary: { background: "var(--surface-card)", color: "var(--text-brand)", border: "1.5px solid var(--border-strong)", hoverBg: "var(--brand-hover-soft)" },
   ghost: { background: "transparent", color: "var(--text-brand)", border: "1px solid transparent", hoverBg: "var(--brand-hover-soft)" },
-  danger: { background: "var(--danger-500)", color: "#fff", border: "1px solid transparent", hoverBg: "var(--danger-600)" },
+  danger: { background: "var(--danger-500)", color: "var(--text-on-brand)", border: "1px solid transparent", hoverBg: "var(--danger-600)" },
 };
 
 interface LinkButtonProps extends Omit<ComponentProps<typeof Link>, "style"> {

@@ -88,7 +88,7 @@ export default async function PlatformPage() {
             <h2 id="platform-analytics-title" style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.platform.analyticsTitle}</h2>
             <p style={{ margin: "4px 0 16px", color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.platform.analyticsSubtitle}</p>
           </div>
-          <Icon name="eye" size={22} color="var(--fjord-600)" />
+          <Icon name="eye" size={22} color="var(--icon-brand)" />
         </div>
         {analytics ? (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -153,5 +153,5 @@ export default async function PlatformPage() {
 }
 
 function MiniStat({ icon, value, label }: { icon: NavItem["icon"]; value: number | string; label: string }) {
-  return <div style={{ ...cardStyle, padding: 16 }}><Icon name={icon} size={20} color="var(--fjord-600)" /><div style={{ marginTop: 8, fontSize: 24, fontWeight: 800 }}>{value}</div><div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div></div>;
+  return <div style={{ ...cardStyle, padding: 16 }}><Icon name={icon} size={20} color="var(--icon-brand)" /><div style={{ marginTop: 8, fontSize: 24, fontWeight: 800 }}>{value}</div><div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div></div>;
 }

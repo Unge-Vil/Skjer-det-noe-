@@ -81,7 +81,7 @@ export default async function KommuneOrganisationsPage({
               name="q"
               defaultValue={query}
               placeholder={t.kommune.organizationsSearch}
-              style={{ width: "100%", minHeight: 42, padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}
+              style={{ width: "100%", minHeight: "var(--tap-comfy)", padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}
             />
           </label>
           <label className="flex flex-col gap-1 sm:w-52" style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--text-muted)" }}>
@@ -89,7 +89,7 @@ export default async function KommuneOrganisationsPage({
             <select
               name="status"
               defaultValue={status}
-              style={{ minHeight: 42, padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}
+              style={{ minHeight: "var(--tap-comfy)", padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}
             >
               <option value="">{t.kommune.allStatuses}</option>
               <option value="draft">{t.kommune.notApprovedFilter}</option>
@@ -98,12 +98,12 @@ export default async function KommuneOrganisationsPage({
           </label>
           <label className="flex flex-col gap-1 sm:w-44" style={{ fontSize: "var(--fs-xs)", fontWeight: 700, color: "var(--text-muted)" }}>
             Sorter etter
-            <select name="sort" defaultValue={sort} style={{ minHeight: 42, padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}>
+            <select name="sort" defaultValue={sort} style={{ minHeight: "var(--tap-comfy)", padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}>
               <option value="name">Navn</option>
               <option value="status">Status</option>
             </select>
           </label>
-          <button type="submit" style={{ minHeight: 42, padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "white", fontWeight: 700, cursor: "pointer" }}>
+          <button type="submit" style={{ minHeight: "var(--tap-comfy)", padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "var(--text-on-brand)", fontWeight: 700, cursor: "pointer" }}>
             Søk
           </button>
         </form>

@@ -32,14 +32,25 @@ export function AdminShell({
   const searchParams = useSearchParams();
   const [openNav, setOpenNav] = useState<string | null>(null);
   const navRef = useRef<HTMLElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const closeNav = (restoreFocus = true) => {
+    const trigger = navRef.current?.querySelector<HTMLButtonElement>('button[aria-expanded="true"]');
+    setOpenNav(null);
+    if (restoreFocus) requestAnimationFrame(() => trigger?.focus());
+  };
 
   useEffect(() => {
     if (!openNav) return;
+    menuRef.current?.querySelector<HTMLElement>("a, button")?.focus();
     const closeOnOutside = (event: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(event.target as Node)) setOpenNav(null);
+      if (navRef.current && !navRef.current.contains(event.target as Node)) closeNav(false);
     };
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setOpenNav(null);
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeNav();
+      }
     };
     document.addEventListener("mousedown", closeOnOutside);
     document.addEventListener("keydown", closeOnEscape);
@@ -74,20 +85,20 @@ export function AdminShell({
                 <div key={n.label} style={{ position: "relative", flex: "none" }}>
                   <button
                     type="button"
-                    aria-haspopup="menu"
+                    aria-haspopup="dialog"
                     aria-expanded={openNav === n.label}
                     onClick={() => setOpenNav((value) => value === n.label ? null : n.label)}
-                    style={{ ...navItemStyle, background: active ? "var(--fjord-50)" : "transparent", color: active ? "var(--fjord-700)" : "var(--text-body)" }}
+                    style={{ ...navItemStyle, background: active ? "var(--surface-brand-soft)" : "transparent", color: active ? "var(--text-brand)" : "var(--text-body)" }}
                   >
-                    <Icon name={n.icon} size={17} color={active ? "var(--fjord-600)" : "var(--stone-500)"} />
+                    <Icon name={n.icon} size={17} color="var(--icon-nav)" />
                     <span>{n.label}</span>
                     <Icon name="chevron-down" size={14} color="var(--text-muted)" />
                   </button>
                   {openNav === n.label && (
-                    <div role="menu" style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 40, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
+                    <div ref={menuRef} role="dialog" aria-label={n.label} style={{ position: "absolute", top: "calc(100% + 6px)", left: 0, zIndex: 40, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
                       {n.children.map((child) => {
                         const childActive = !child.href.includes("#") && isHrefActive(child.href);
-                        return <Link key={child.label} href={child.href} role="menuitem" onClick={() => setOpenNav(null)} aria-current={childActive ? "page" : undefined} style={{ ...navItemStyle, width: "100%", background: childActive ? "var(--fjord-50)" : "transparent", color: childActive ? "var(--fjord-700)" : "var(--text-body)" }}><Icon name={child.icon} size={17} color={childActive ? "var(--fjord-600)" : "var(--stone-500)"} /><span>{child.label}</span>{child.badge ? <span style={badgeStyle}>{child.badge}</span> : null}</Link>;
+                        return <Link key={child.label} href={child.href} onClick={() => closeNav(false)} aria-current={childActive ? "page" : undefined} style={{ ...navItemStyle, width: "100%", background: childActive ? "var(--surface-brand-soft)" : "transparent", color: childActive ? "var(--text-brand)" : "var(--text-body)" }}><Icon name={child.icon} size={17} color="var(--icon-nav)" /><span>{child.label}</span>{child.badge ? <span style={badgeStyle}>{child.badge}</span> : null}</Link>;
                       })}
                     </div>
                   )}
@@ -99,9 +110,9 @@ export function AdminShell({
                 key={n.label}
                 href={n.href}
                 aria-current={active ? "page" : undefined}
-                style={{ ...navItemStyle, background: active ? "var(--fjord-50)" : "transparent", color: active ? "var(--fjord-700)" : "var(--text-body)" }}
+                style={{ ...navItemStyle, background: active ? "var(--surface-brand-soft)" : "transparent", color: active ? "var(--text-brand)" : "var(--text-body)" }}
               >
-                <Icon name={n.icon} size={17} color={active ? "var(--fjord-600)" : "var(--stone-500)"} />
+                <Icon name={n.icon} size={17} color="var(--icon-nav)" />
                 <span>{n.label}</span>
                 {n.badge ? <span style={badgeStyle}>{n.badge}</span> : null}
               </Link>

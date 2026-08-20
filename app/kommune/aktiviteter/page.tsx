@@ -82,9 +82,9 @@ export default async function KommuneActivitiesPage({
             defaultValue={params.q ?? ""}
             placeholder={t.kommune.organizationsSearch}
             aria-label={t.kommune.organizationsSearch}
-            style={{ flex: 1, minWidth: 0, minHeight: 42, padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}
+            style={{ flex: 1, minWidth: 0, minHeight: "var(--tap-comfy)", padding: "9px 12px", border: "1px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-body)", fontSize: "var(--fs-sm)" }}
           />
-          <button type="submit" style={{ minHeight: 42, padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "white", fontWeight: 700, cursor: "pointer" }}>
+          <button type="submit" style={{ minHeight: "var(--tap-comfy)", padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "var(--text-on-brand)", fontWeight: 700, cursor: "pointer" }}>
             Søk
           </button>
         </form>

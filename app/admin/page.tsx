@@ -177,11 +177,11 @@ export default async function AdminPage() {
     >
       <div style={{ padding: 24, display: "flex", flexDirection: "column", gap: 20 }} className="mx-auto w-full max-w-5xl">
         {org.status === "draft" && (
-          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", background: "var(--sol-100)", border: "1px solid var(--sol-300)", borderRadius: "var(--radius-lg)" }}>
-            <Icon name="bell-ring" size={24} color="#6b4e00" />
+          <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 18px", background: "var(--status-sol-bg)", border: "1px solid var(--highlight)", borderRadius: "var(--radius-lg)" }}>
+            <Icon name="bell-ring" size={24} color="var(--status-sol-text)" />
             <div style={{ flex: 1 }}>
-              <div style={{ fontSize: "var(--fs-body)", fontWeight: 700, color: "#5a4200" }}>{t.admin.pendingTitle}</div>
-              <div style={{ fontSize: "var(--fs-sm)", color: "#6b4e00" }}>{t.admin.pendingBody}</div>
+              <div style={{ fontSize: "var(--fs-body)", fontWeight: 700, color: "var(--status-sol-text)" }}>{t.admin.pendingTitle}</div>
+              <div style={{ fontSize: "var(--fs-sm)", color: "var(--status-sol-text)" }}>{t.admin.pendingBody}</div>
             </div>
           </div>
         )}
@@ -351,7 +351,7 @@ function DirectorySection({
 function MiniStat({ icon, value, label }: { icon: "repeat" | "calendar-days" | "eye"; value: number | string; label: string }) {
   return (
     <div style={{ ...card, padding: 16 }}>
-      <Icon name={icon} size={20} color="var(--fjord-600)" />
+      <Icon name={icon} size={20} color="var(--icon-brand)" />
       <div style={{ marginTop: 8, fontSize: 24, fontWeight: 800, letterSpacing: "-0.01em" }}>{value}</div>
       <div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div>
     </div>

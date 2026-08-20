@@ -12,7 +12,7 @@ const features: { icon: IconName; title: string; body: string }[] = [
   { icon: "map-pin", title: "Egen lokal portal", body: "Én oversikt over fritidstilbud, arrangementer og frivillighet i kommunen." },
   { icon: "file-text", title: "Infosider", body: "Bygg egne informasjonssider med en enkel drag-and-drop-editor." },
   { icon: "layout-dashboard", title: "Oversikt og nøkkeltall", body: "Godkjenn organisasjoner og følg med på aktivitet i kommunen." },
-  { icon: "accessibility", title: "Universelt utformet", body: "Følger WCAG 2.2 AA, så tjenesten er tilgjengelig for alle innbyggere." },
+  { icon: "accessibility", title: "Tilgjengelighetsarbeid", body: "Vi arbeider mot WCAG 2.2 AA og tester sentrale flater kontinuerlig." },
   { icon: "map", title: "Kart og søk", body: "Innbyggerne finner raskt tilbud i sitt eget nærområde." },
   { icon: "users-round", title: "Administrer tilgang", body: "Gi lokale lag og foreninger tilgang til å legge ut selv." },
 ];

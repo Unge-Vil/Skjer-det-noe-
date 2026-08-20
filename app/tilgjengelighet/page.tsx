@@ -24,16 +24,16 @@ export default async function TilgjengelighetPage() {
         <div className="sdn-richtext" style={{ minHeight: 0, padding: 0 }}>
           <p>
             «Skjer det noe?» skal kunne brukes av alle, uansett forutsetninger. Tjenesten er utviklet med
-            universell utforming som utgangspunkt og følger kravene i WCAG 2.1 og 2.2 på nivå AA.
+            universell utforming som utgangspunkt. Vi arbeider mot WCAG 2.2 på nivå AA.
           </p>
 
           <h2>Hva vi har gjort</h2>
           <ul>
-            <li>Tekst og bakgrunn har tilstrekkelig kontrast i både lyst og mørkt tema.</li>
-            <li>Alt innhold kan brukes med tastatur, og synlig fokusmarkering er ivaretatt.</li>
+            <li>Vi kontrollerer sentrale tekst-, kontroll- og fokusfarger automatisk i lyst og mørkt tema.</li>
+            <li>Vi tester de viktigste offentlige sidene automatisk for WCAG A- og AA-brudd.</li>
+            <li>De sentrale kontrollene kan brukes med tastatur og har synlig fokusmarkering.</li>
             <li>Farge brukes aldri alene – status og kategorier har alltid ikon og tekst.</li>
-            <li>Sidene fungerer med skjermleser, forstørring og redusert bevegelse.</li>
-            <li>Brødtekst er aldri mindre enn 16px, og layouten tåler zoom og små skjermer.</li>
+            <li>Redusert bevegelse er støttet, og brødtekst er aldri mindre enn 16px.</li>
           </ul>
 
           <h2>Kjente begrensninger</h2>
@@ -41,6 +41,11 @@ export default async function TilgjengelighetPage() {
             Innhold som legges ut av kommuner og organisasjoner (for eksempel bilder og innebygde skjemaer)
             kan variere i kvalitet. Vi veileder om alt-tekst og god praksis, men kan ikke garantere at alt
             tredjepartsinnhold er fullt tilgjengelig til enhver tid.
+          </p>
+          <p>
+            Vi gjennomfører fortsatt manuelle tester med skjermleser, 200 % tekstforstørring, 400 % reflow og
+            native app-teknologi. Tilgjengelighetstester av innloggede administrasjonsflater krever testkonto og
+            kjøres separat.
           </p>
 
           <h2>Meld fra om problemer</h2>

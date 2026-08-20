@@ -32,8 +32,8 @@ export function MunicipalityIntegrationNav() {
               padding: "8px 11px",
               borderRadius: "var(--radius-md)",
               textDecoration: "none",
-              background: active ? "var(--fjord-50)" : "transparent",
-              color: active ? "var(--fjord-700)" : "var(--text-body)",
+              background: active ? "var(--surface-brand-soft)" : "transparent",
+              color: active ? "var(--text-brand)" : "var(--text-body)",
               fontSize: "var(--fs-sm)",
               fontWeight: active ? 700 : 600,
             }}
