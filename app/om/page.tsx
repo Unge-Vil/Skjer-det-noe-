@@ -29,11 +29,11 @@ export default async function OmPage() {
             Målet er å gjøre det enklere å finne noe å gjøre i nærområdet – uten innlogging og uten terskel.
           </p>
 
-          <h2>Et initiativ fra Unge Vil</h2>
+          <h2>Laget og driftet av J&amp;N Solutions</h2>
           <p>
-            Tjenesten er et initiativ fra Unge Vil, som jobber for at flere barn og unge skal finne meningsfulle
-            fritidstilbud og møteplasser. Vi tror at det å vite hva som skjer i nærmiljøet er et viktig steg på
-            veien til å delta.
+            «Skjer det noe?» er laget og driftes av J&amp;N Solutions. Konseptet har opphav i Unge Vil, som jobber
+            for at flere barn og unge skal finne meningsfulle fritidstilbud og møteplasser. Vi tror at det å vite
+            hva som skjer i nærmiljøet er et viktig steg på veien til å delta.
           </p>
 
           <h2>For innbyggere</h2>

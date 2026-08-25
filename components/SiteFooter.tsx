@@ -43,13 +43,13 @@ export function SiteFooter() {
     >
       <Wordmark size={18} />
       <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)", flex: "1 1 200px" }}>
-        {t.footer.initiativeBy}{" "}
+        {t.footer.conceptBy}{" "}
         <a href="https://ungevil.no" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-link)", fontWeight: 600 }}>
           Unge Vil
         </a>
       </span>
       <nav aria-label={t.footer.about} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
-        <a href="https://unge-vil.gitbook.io/skjer-det-noe/help-center/" style={linkStyle}>Hjelp</a>
+        <Link href="/hjelp" style={linkStyle}>Hjelp</Link>
         <Link href="/om" style={linkStyle}>{t.footer.about}</Link>
         <Link href="/personvern-og-vilkar" style={linkStyle}>{t.footer.privacyTerms}</Link>
         <Link href={signedIn ? "/konto" : "/logg-inn"} style={accountLinkStyle}>

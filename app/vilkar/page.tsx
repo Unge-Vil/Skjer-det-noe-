@@ -8,7 +8,7 @@ export default function VilkarPage() {
     <LegalPage title="Vilkår for bruk" updated="29. juni 2026">
       <p>
         Disse vilkårene gjelder for bruk av «Skjer det noe?», en gratis oversikt over fritidsaktiviteter og
-        arrangementer levert av Unge Vil.
+        arrangementer levert av J&amp;N Solutions. Konseptet har opphav i Unge Vil.
       </p>
 
       <h2>Bruk av tjenesten</h2>
@@ -20,7 +20,7 @@ export default function VilkarPage() {
       <h2>Innhold fra organisasjoner og kommuner</h2>
       <p>
         Oppføringer publiseres av organisasjoner og kommuner, som selv er ansvarlige for at informasjonen er
-        korrekt og oppdatert. Unge Vil kan ikke garantere at all informasjon til enhver tid er riktig.
+        korrekt og oppdatert. J&amp;N Solutions kan ikke garantere at all informasjon til enhver tid er riktig.
       </p>
 
       <h2>Akseptabel bruk</h2>
@@ -32,7 +32,7 @@ export default function VilkarPage() {
 
       <h2>Ansvarsfraskrivelse</h2>
       <p>
-        Tjenesten leveres «som den er». Unge Vil er ikke ansvarlig for tap eller skade som følge av bruk av
+        Tjenesten leveres «som den er». J&amp;N Solutions er ikke ansvarlig for tap eller skade som følge av bruk av
         tjenesten eller deltakelse på aktiviteter og arrangementer som er oppført.
       </p>
 

@@ -20,7 +20,7 @@ Kun publisert, offentlig innhold er tilgjengelig. Utkast, kontoer, administrasjo
 - [Sitemap](${absoluteUrl("/sitemap.xml")}): Full liste over kanoniske, indekserbare URL-er.
 - [Crawler-policy](${absoluteUrl("/robots.txt")}): Regler for automatisert innhenting.
 - [Offentlig listing-feed](${absoluteUrl("/api/public/v1/listings?kind=activity")}): Publiserte oppføringer med canonical URL og oppdateringstid.
-- [API-dokumentasjon](https://unge-vil.gitbook.io/skjer-det-noe/api-reference/): Dokumentasjon for organisasjons- og kommuneintegrasjoner.
+- [API-dokumentasjon](/api-dokumentasjon/oversikt): Dokumentasjon for organisasjons- og kommuneintegrasjoner.
 `;
 
   return new Response(content, {

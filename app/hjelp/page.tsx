@@ -1,5 +1,11 @@
-import { redirect } from "next/navigation";
+import { HelpCenter } from "@/components/HelpCenter";
+import { SiteFooter } from "@/components/SiteFooter";
 
 export default function HelpPage() {
-  redirect("https://unge-vil.gitbook.io/skjer-det-noe/help-center/");
+  return (
+    <>
+      <HelpCenter />
+      <SiteFooter />
+    </>
+  );
 }

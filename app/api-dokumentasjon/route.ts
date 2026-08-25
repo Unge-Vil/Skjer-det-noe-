@@ -1,7 +1,5 @@
-import { NextResponse } from "next/server";
-
-export const dynamic = "force-dynamic";
+import { redirect } from "next/navigation";
 
 export function GET() {
-  return NextResponse.redirect("https://unge-vil.gitbook.io/skjer-det-noe/api-reference/", 308);
+  redirect("/api-dokumentasjon/oversikt");
 }

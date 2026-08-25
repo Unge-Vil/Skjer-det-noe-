@@ -8,13 +8,14 @@ export default function PersonvernOgVilkarPage() {
     <LegalPage title="Personvern og vilkår" updated="19. august 2026">
       <h2 id="personvern">Personvern</h2>
       <p>
-        «Skjer det noe?» er en tjeneste fra Unge Vil som hjelper deg å finne faste aktiviteter og
-        arrangementer i nærheten. Vi er opptatt av å samle inn så få personopplysninger som mulig.
+        «Skjer det noe?» er laget og driftes av J&amp;N Solutions. Konseptet har opphav i Unge Vil. Tjenesten
+        hjelper deg å finne faste aktiviteter og arrangementer i nærheten, og vi er opptatt av å samle inn så få
+        personopplysninger som mulig.
       </p>
 
       <h3>Behandlingsansvarlig</h3>
       <p>
-        Unge Vil er behandlingsansvarlig for personopplysningene som behandles gjennom tjenesten. Har du
+        J&amp;N Solutions er behandlingsansvarlig for personopplysningene som behandles gjennom tjenesten. Har du
         spørsmål om personvern, kontakt oss på <a href="mailto:org@ungevil.no">org@ungevil.no</a>.
       </p>
 
@@ -43,7 +44,7 @@ export default function PersonvernOgVilkarPage() {
       <h2 id="vilkar">Vilkår for bruk</h2>
       <p>
         Disse vilkårene gjelder for bruk av «Skjer det noe?», en gratis oversikt over fritidsaktiviteter og
-        arrangementer levert av Unge Vil.
+        arrangementer levert av J&amp;N Solutions.
       </p>
 
       <h3>Bruk av tjenesten</h3>
@@ -61,7 +62,7 @@ export default function PersonvernOgVilkarPage() {
 
       <h3>Ansvarsfraskrivelse og endringer</h3>
       <p>
-        Tjenesten leveres «som den er». Unge Vil er ikke ansvarlig for tap eller skade som følge av bruk av
+        Tjenesten leveres «som den er». J&amp;N Solutions er ikke ansvarlig for tap eller skade som følge av bruk av
         tjenesten eller deltakelse på aktiviteter og arrangementer som er oppført. Vi kan oppdatere disse
         vilkårene. Fortsatt bruk av tjenesten innebærer at du aksepterer oppdaterte vilkår.
       </p>

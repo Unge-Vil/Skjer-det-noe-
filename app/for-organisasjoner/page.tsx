@@ -77,7 +77,7 @@ export default async function ForOrganisasjonerPage() {
             <LinkButton href="/registrer" leadingIcon="sparkles">{content.ctaPrimary}</LinkButton>
             <LinkButton href="/logg-inn" variant="secondary">{content.ctaSecondary}</LinkButton>
             <Link
-              href="https://unge-vil.gitbook.io/skjer-det-noe/api-reference/"
+              href="/api-dokumentasjon/oversikt"
               style={{ color: "var(--text-link)", fontSize: "var(--fs-sm)", fontWeight: 600, textDecoration: "none" }}
             >
               {content.docsLink}

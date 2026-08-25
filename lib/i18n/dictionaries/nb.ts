@@ -193,8 +193,9 @@ export const nb = {
     },
   },
   footer: {
-    tagline: "Et initiativ fra Unge Vil",
-    initiativeBy: "Et initiativ fra",
+    tagline: "Konsept fra Unge Vil. Laget og driftet av J&N Solutions.",
+    conceptBy: "Konsept fra",
+    operatedBy: "Laget og driftet av",
     about: "Om",
     privacy: "Personvern",
     terms: "Vilkår",

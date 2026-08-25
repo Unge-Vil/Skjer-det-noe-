@@ -195,8 +195,9 @@ export const en: Dictionary = {
     },
   },
   footer: {
-    tagline: "An initiative from Unge Vil",
-    initiativeBy: "An initiative from",
+    tagline: "Concept by Unge Vil. Made and operated by J&N Solutions.",
+    conceptBy: "Concept by",
+    operatedBy: "Made and operated by",
     about: "About",
     privacy: "Privacy",
     terms: "Terms",
