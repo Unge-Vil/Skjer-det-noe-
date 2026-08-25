@@ -62,6 +62,20 @@ export function AdminShell({
       if (event.key === "Escape") {
         event.preventDefault();
         closeNav();
+        return;
+      }
+      if (event.key === "Tab" && menuRef.current) {
+        const focusable = Array.from(menuRef.current.querySelectorAll<HTMLElement>("a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex=\"-1\"])")).filter((element) => element.offsetParent !== null);
+        if (!focusable.length) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     };
     const closeOnShift = () => closeNav(false);
@@ -112,7 +126,7 @@ export function AdminShell({
                     <Icon name="chevron-down" size={14} color="var(--text-muted)" />
                   </button>
                   {openNav === n.label && (
-                    <div ref={menuRef} role="dialog" aria-label={n.label} style={{ position: "fixed", top: menuPos?.top ?? 0, left: menuPos?.left ?? 0, zIndex: 50, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
+                    <div ref={menuRef} role="dialog" aria-modal="true" aria-label={n.label} style={{ position: "fixed", top: menuPos?.top ?? 0, left: menuPos?.left ?? 0, zIndex: 50, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
                       {n.children.map((child) => {
                         const childActive = !child.href.includes("#") && isHrefActive(child.href);
                         return <Link key={child.label} href={child.href} onClick={() => closeNav(false)} aria-current={childActive ? "page" : undefined} style={{ ...navItemStyle, width: "100%", background: childActive ? "var(--surface-brand-soft)" : "transparent", color: childActive ? "var(--text-brand)" : "var(--text-body)" }}><Icon name={child.icon} size={17} color="var(--icon-nav)" /><span>{child.label}</span>{child.badge ? <span style={badgeStyle}>{child.badge}</span> : null}</Link>;

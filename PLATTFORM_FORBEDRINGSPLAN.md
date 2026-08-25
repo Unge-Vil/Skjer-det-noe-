@@ -266,6 +266,25 @@ OpenStreetMap-valget beholdes (billigere og mer fleksibelt enn Mapbox).
   (MapTiler, Stadia eller selvhostet Protomaps) før nasjonal skala — Leaflet
   beholdes uendret.
 
+### Mobil/app-discovery (vurdert mot Kulby-appen 25. august 2026)
+
+Utgangspunkt: mesteparten av trafikken vil være mobil nettside og app, så
+discovery må utnytte liten skjermflate godt og gi en god opplevelse der først.
+Behold vårt designspråk (ingen emoji, WCAG-fokus, Swipe/Oppdag) og la gratis
+fritidstilbud være like synlig som billetterte arrangementer — ikke bare
+kultur/arrangører slik Kulby vekter det.
+
+- [ ] **Horisontale hyller på mobil.** Grupper innhold i skumbare rader (per
+  arrangør/sted og per kategori/aktivitetstype) med tellebadge («7 denne uke»),
+  i stedet for tunge vertikale band. Skalerer bedre når event-volumet vokser.
+- [ ] **Tidsbaserte innganger + datofilter.** Legg til fremtredende «I dag / I
+  helgen / Velg dato»-innganger. Tid er den viktigste filterdimensjonen for
+  arrangementer og voksenretningen; i dag finnes bare «Skjer denne uka».
+- [ ] **Følg arrangør/sted + «For deg» med begrunnelse.** La brukere følge et
+  sted/arrangør; bruk det til en personlig rad med begrunnelse («Fordi du følger
+  …»). Dette er den manglende brikken som gjør konto/favoritter/varsler/
+  anbefalinger levende, og henger sammen med gruppe- og anbefalingspunktene over.
+
 ## Fase 0: Sikkerhet før lansering
 
 Disse punktene bør behandles som lanseringsblokkere.
@@ -592,7 +611,8 @@ skjermleseratferd.
 ### [ ] 3.2 Gjør dialoger og drawers tastaturkomplette
 
 **Status:** Mobilinnstillinger har fokus inn, fokusfelle, Escape og fokusretur.
-Adminmenyer, desktopinnstillinger og øvrige overlays gjenstår.
+Adminmenyer er tastaturkomplette. Desktopinnstillinger og øvrige overlays
+gjenstår.
 
 **Tiltak:**
 
