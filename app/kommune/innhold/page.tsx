@@ -118,7 +118,7 @@ export default async function KommuneContentPage({
                   <div key={item.id} style={cardStyle}>
                     <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
                       <div style={{ minWidth: 0 }}>
-                        <Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>{item.title}</Link>
+                        <Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "underline", fontWeight: 700 }}>{item.title}</Link>
                         {item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>{item.detail}</div>}
                       </div>
                       <span style={{ flex: "none", padding: "2px 10px", borderRadius: "var(--radius-pill)", fontSize: "var(--fs-xs)", fontWeight: 700, background: item.status === "published" ? "var(--surface-brand-soft)" : "var(--stone-100)", color: item.status === "published" ? "var(--text-brand)" : "var(--stone-700)" }}>
@@ -139,7 +139,7 @@ export default async function KommuneContentPage({
                 <thead><tr><th style={th}>Tittel</th><th style={th}>{t.kommune.contentType}</th><th style={th}>Organisasjon</th><th style={th}>Status</th><th style={{ ...th, textAlign: "right" }}>Handling</th></tr></thead>
                 <tbody>{rows.map((item) => (
                   <tr key={item.id} style={tr}>
-                    <td style={{ ...td, fontWeight: 700 }}><Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "none" }}>{item.title}</Link>{item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 400 }}>{item.detail}</div>}</td>
+                    <td style={{ ...td, fontWeight: 700 }}><Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "underline" }}>{item.title}</Link>{item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 400 }}>{item.detail}</div>}</td>
                     <td style={td}>{item.type === "activity" ? t.kommune.activities : item.type === "event" ? "Arrangement" : item.type === "service" ? t.kommune.serviceContent : t.kommune.volunteerContent}</td>
                     <td style={{ ...td, color: "var(--text-muted)" }}>{item.organisation || "–"}</td>
                     <td style={td}>{item.status === "published" ? t.kommune.approvedFilter : t.kommune.notApprovedFilter}</td>

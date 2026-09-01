@@ -120,7 +120,7 @@ export default async function KommuneOrganisationsPage({
               <li key={org.id} style={{ border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)", padding: 14, display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", gap: 10, alignItems: "flex-start" }}>
                   <span style={{ minWidth: 0 }}>
-                    <Link href={`/organisasjon/${org.slug}`} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>{org.name}</Link>
+                    <Link href={`/organisasjon/${org.slug}`} style={{ color: "var(--text-link)", textDecoration: "underline", fontWeight: 700 }}>{org.name}</Link>
                     {org.is_volunteer && (
                       <span style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 500 }}>
                         <Icon name="sparkles" size={12} /> {t.kommune.volunteer}
@@ -150,7 +150,7 @@ export default async function KommuneOrganisationsPage({
                 {organisations.map((org) => (
                   <tr key={org.id} style={{ borderBottom: "1px solid var(--border-subtle)" }}>
                     <td style={{ padding: "13px 16px", fontWeight: 700 }}>
-                      <Link href={`/organisasjon/${org.slug}`} style={{ color: "var(--text-link)", textDecoration: "none" }}>{org.name}</Link>
+                      <Link href={`/organisasjon/${org.slug}`} style={{ color: "var(--text-link)", textDecoration: "underline" }}>{org.name}</Link>
                       {org.is_volunteer && (
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 500 }}>
                           <Icon name="sparkles" size={12} /> {t.kommune.volunteer}

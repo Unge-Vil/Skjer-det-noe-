@@ -23,6 +23,8 @@ export function RichTextEditor({
     editorProps: {
       attributes: {
         class: "sdn-richtext",
+        role: "textbox",
+        "aria-multiline": "true",
         ...(ariaLabel ? { "aria-label": ariaLabel } : {}),
       },
     },
