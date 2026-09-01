@@ -109,20 +109,46 @@ export default async function KommuneContentPage({
 
         <div style={{ marginBottom: 10, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{rows.length} treff</div>
         {rows.length === 0 ? <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.noContent}</p> : (
-          <div style={tableWrap}>
-            <table style={tableStyle}>
-              <thead><tr><th style={th}>Tittel</th><th style={th}>{t.kommune.contentType}</th><th style={th}>Organisasjon</th><th style={th}>Status</th><th style={{ ...th, textAlign: "right" }}>Handling</th></tr></thead>
-              <tbody>{rows.map((item) => (
-                <tr key={item.id} style={tr}>
-                  <td style={{ ...td, fontWeight: 700 }}><Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "none" }}>{item.title}</Link>{item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 400 }}>{item.detail}</div>}</td>
-                  <td style={td}>{item.type === "activity" ? t.kommune.activities : item.type === "event" ? "Arrangement" : item.type === "service" ? t.kommune.serviceContent : t.kommune.volunteerContent}</td>
-                  <td style={{ ...td, color: "var(--text-muted)" }}>{item.organisation || "–"}</td>
-                  <td style={td}>{item.status === "published" ? t.kommune.approvedFilter : t.kommune.notApprovedFilter}</td>
-                  <td style={{ ...td, textAlign: "right" }}>{item.type === "service" || item.type === "volunteer" ? <DirectoryStatusButton id={item.id} status={item.status} /> : "–"}</td>
-                </tr>
-              ))}</tbody>
-            </table>
-          </div>
+          <>
+            {/* Mobile: card list — the desktop table (minWidth 760) overflows a phone. */}
+            <div className="flex flex-col gap-2 sm:hidden">
+              {rows.map((item) => {
+                const typeLabel = item.type === "activity" ? t.kommune.activities : item.type === "event" ? "Arrangement" : item.type === "service" ? t.kommune.serviceContent : t.kommune.volunteerContent;
+                return (
+                  <div key={item.id} style={cardStyle}>
+                    <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>{item.title}</Link>
+                        {item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>{item.detail}</div>}
+                      </div>
+                      <span style={{ flex: "none", padding: "2px 10px", borderRadius: "var(--radius-pill)", fontSize: "var(--fs-xs)", fontWeight: 700, background: item.status === "published" ? "var(--surface-brand-soft)" : "var(--stone-100)", color: item.status === "published" ? "var(--text-brand)" : "var(--stone-700)" }}>
+                        {item.status === "published" ? t.kommune.approvedFilter : t.kommune.notApprovedFilter}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+                      <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 600, minWidth: 0 }}>{typeLabel}{item.organisation ? ` · ${item.organisation}` : ""}</span>
+                      {(item.type === "service" || item.type === "volunteer") && <DirectoryStatusButton id={item.id} status={item.status} />}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {/* Desktop: full table. */}
+            <div className="hidden sm:block" style={tableWrap}>
+              <table style={tableStyle}>
+                <thead><tr><th style={th}>Tittel</th><th style={th}>{t.kommune.contentType}</th><th style={th}>Organisasjon</th><th style={th}>Status</th><th style={{ ...th, textAlign: "right" }}>Handling</th></tr></thead>
+                <tbody>{rows.map((item) => (
+                  <tr key={item.id} style={tr}>
+                    <td style={{ ...td, fontWeight: 700 }}><Link href={contentHref(item)} style={{ color: "var(--text-link)", textDecoration: "none" }}>{item.title}</Link>{item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 400 }}>{item.detail}</div>}</td>
+                    <td style={td}>{item.type === "activity" ? t.kommune.activities : item.type === "event" ? "Arrangement" : item.type === "service" ? t.kommune.serviceContent : t.kommune.volunteerContent}</td>
+                    <td style={{ ...td, color: "var(--text-muted)" }}>{item.organisation || "–"}</td>
+                    <td style={td}>{item.status === "published" ? t.kommune.approvedFilter : t.kommune.notApprovedFilter}</td>
+                    <td style={{ ...td, textAlign: "right" }}>{item.type === "service" || item.type === "volunteer" ? <DirectoryStatusButton id={item.id} status={item.status} /> : "–"}</td>
+                  </tr>
+                ))}</tbody>
+              </table>
+            </div>
+          </>
         )}
       </main>
     </AdminShell>
@@ -134,6 +160,7 @@ const inputStyle = { width: "100%", minHeight: "var(--tap-comfy)", padding: "9px
 const buttonStyle = { minHeight: "var(--tap-comfy)", padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "var(--text-on-brand)", fontWeight: 700, cursor: "pointer" } as const;
 const tableWrap = { overflowX: "auto", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)" } as const;
 const tableStyle = { width: "100%", minWidth: 760, borderCollapse: "collapse", fontSize: "var(--fs-sm)" } as const;
+const cardStyle = { border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)", padding: 14 } as const;
 const th = { padding: "11px 16px", borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", textAlign: "left", fontSize: "var(--fs-xs)" } as const;
 const td = { padding: "13px 16px" } as const;
 const tr = { borderBottom: "1px solid var(--border-subtle)" } as const;

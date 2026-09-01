@@ -222,8 +222,8 @@ export default function RegisterPage() {
             {isVolunteer && (
               <div>
                 <label htmlFor="orgnr" style={labelStyle}>{t.register.orgNumber}</label>
-                <div style={{ display: "flex", gap: 8 }}>
-                  <input id="orgnr" inputMode="numeric" value={orgNumber} onChange={(e) => setOrgNumber(e.target.value)} style={inputStyle} placeholder="9 siffer" />
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <input id="orgnr" inputMode="numeric" value={orgNumber} onChange={(e) => setOrgNumber(e.target.value)} style={{ ...inputStyle, flex: "1 1 160px" }} placeholder="9 siffer" />
                   <Button variant="secondary" onClick={runLookup} loading={busy}>{t.register.lookup}</Button>
                 </div>
                 {lookupMsg && <p role="status" style={{ margin: "8px 0 0", fontSize: "var(--fs-sm)", color: "var(--text-brand)" }}>{lookupMsg}</p>}

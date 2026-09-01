@@ -73,9 +73,35 @@ export default async function OrgContentPage({
         </form>
         <div style={{ marginBottom: 10, color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{rows.length} treff</div>
         {rows.length === 0 ? <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.kommune.noContent}</p> : (
-          <div style={tableWrap}><table style={tableStyle}><thead><tr><th style={th}>Tittel</th><th style={th}>{t.kommune.contentType}</th><th style={th}>Status</th><th style={{ ...th, textAlign: "right" }}>Handling</th></tr></thead><tbody>{rows.map((item) => (
-            <tr key={item.id} style={tr}><td style={{ ...td, fontWeight: 700 }}><Link href={publicHref(item)} style={{ color: "var(--text-link)", textDecoration: "none" }}>{item.title}</Link>{item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 400 }}>{item.detail}</div>}</td><td style={td}>{typeLabel(item, t)}</td><td style={td}>{item.status === "published" ? t.admin.statusPublished : t.admin.statusDraft}</td><td style={{ ...td, textAlign: "right" }}><Link href={editHref(item)} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>Rediger</Link>{(item.type === "service" || item.type === "volunteer") && <span style={{ marginLeft: 12 }}><DirectoryStatusButton id={item.id} status={item.status} /></span>}</td></tr>
-          ))}</tbody></table></div>
+          <>
+            {/* Mobile: card list — the desktop table (minWidth 680) overflows a phone. */}
+            <div className="flex flex-col gap-2 sm:hidden">
+              {rows.map((item) => (
+                <div key={item.id} style={cardStyle}>
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+                    <div style={{ minWidth: 0 }}>
+                      <Link href={publicHref(item)} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>{item.title}</Link>
+                      {item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>{item.detail}</div>}
+                    </div>
+                    <span style={{ flex: "none", padding: "2px 10px", borderRadius: "var(--radius-pill)", fontSize: "var(--fs-xs)", fontWeight: 700, background: item.status === "published" ? "var(--surface-brand-soft)" : "var(--stone-100)", color: item.status === "published" ? "var(--text-brand)" : "var(--stone-700)" }}>
+                      {item.status === "published" ? t.admin.statusPublished : t.admin.statusDraft}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+                    <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 600 }}>{typeLabel(item, t)}</span>
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: 14 }}>
+                      <Link href={editHref(item)} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>Rediger</Link>
+                      {(item.type === "service" || item.type === "volunteer") && <DirectoryStatusButton id={item.id} status={item.status} />}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {/* Desktop: full table. */}
+            <div className="hidden sm:block" style={tableWrap}><table style={tableStyle}><thead><tr><th style={th}>Tittel</th><th style={th}>{t.kommune.contentType}</th><th style={th}>Status</th><th style={{ ...th, textAlign: "right" }}>Handling</th></tr></thead><tbody>{rows.map((item) => (
+              <tr key={item.id} style={tr}><td style={{ ...td, fontWeight: 700 }}><Link href={publicHref(item)} style={{ color: "var(--text-link)", textDecoration: "none" }}>{item.title}</Link>{item.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 400 }}>{item.detail}</div>}</td><td style={td}>{typeLabel(item, t)}</td><td style={td}>{item.status === "published" ? t.admin.statusPublished : t.admin.statusDraft}</td><td style={{ ...td, textAlign: "right" }}><Link href={editHref(item)} style={{ color: "var(--text-link)", textDecoration: "none", fontWeight: 700 }}>Rediger</Link>{(item.type === "service" || item.type === "volunteer") && <span style={{ marginLeft: 12 }}><DirectoryStatusButton id={item.id} status={item.status} /></span>}</td></tr>
+            ))}</tbody></table></div>
+          </>
         )}
       </main>
     </AdminShell>
@@ -87,6 +113,7 @@ const inputStyle = { width: "100%", minHeight: "var(--tap-comfy)", padding: "9px
 const buttonStyle = { minHeight: "var(--tap-comfy)", padding: "9px 16px", border: "1px solid var(--fjord-700)", borderRadius: "var(--radius-md)", background: "var(--fjord-700)", color: "var(--text-on-brand)", fontWeight: 700, cursor: "pointer" } as const;
 const tableWrap = { overflowX: "auto", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)" } as const;
 const tableStyle = { width: "100%", minWidth: 680, borderCollapse: "collapse", fontSize: "var(--fs-sm)" } as const;
+const cardStyle = { border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)", padding: 14 } as const;
 const th = { padding: "11px 16px", borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", textAlign: "left", fontSize: "var(--fs-xs)" } as const;
 const td = { padding: "13px 16px" } as const;
 const tr = { borderBottom: "1px solid var(--border-subtle)" } as const;

@@ -209,7 +209,7 @@ export default async function AdminPage() {
 
           {/* Stats + approval */}
           <section style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
               <MiniStat icon="repeat" value={activities.length} label={t.admin.activities} />
               <MiniStat icon="calendar-days" value={events.length} label={t.admin.events} />
               <MiniStat icon="eye" value={analytics?.total_views ?? 0} label={t.orgadmin.views} />
@@ -350,7 +350,7 @@ function DirectorySection({
 
 function MiniStat({ icon, value, label }: { icon: "repeat" | "calendar-days" | "eye"; value: number | string; label: string }) {
   return (
-    <div style={{ ...card, padding: 16 }}>
+    <div style={{ ...card, padding: 14 }}>
       <Icon name={icon} size={20} color="var(--icon-brand)" />
       <div style={{ marginTop: 8, fontSize: 24, fontWeight: 800, letterSpacing: "-0.01em" }}>{value}</div>
       <div style={{ fontSize: "var(--fs-xs)", color: "var(--text-muted)" }}>{label}</div>

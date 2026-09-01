@@ -120,38 +120,67 @@ function matches(title: string, organisation: string | undefined, query: string)
 
 function ActivityTable({ activities, locale, empty, t }: { activities: Activity[]; locale: Locale; empty: string; t: Dictionary }) {
   if (activities.length === 0) return <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{empty}</p>;
+  const rows = activities.map((item) => ({ id: item.id, title: item.title, organisation: item.organizations?.name ?? "", detail: [weekdayName(item.weekday, locale), formatTimeRange(item.start_time, item.end_time)].filter(Boolean).join(" · "), status: item.status }));
   return (
-    <div style={tableWrap}>
-      <table style={tableStyle}>
-        <thead><tr><th style={th}>Aktivitet</th><th style={th}>{t.kommune.activityOrganisation}</th><th style={th}>{t.kommune.activitySchedule}</th><th style={{ ...th, textAlign: "right" }}>Status</th></tr></thead>
-        <tbody>{activities.map((item) => (
-          <tr key={item.id} style={tr}>
-            <td style={{ ...td, fontWeight: 700 }}>{item.title}</td>
-            <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.name ?? "–"}</td>
-            <td style={{ ...td, color: "var(--text-muted)" }}>{weekdayName(item.weekday, locale) ?? "–"}{formatTimeRange(item.start_time, item.end_time) ? ` · ${formatTimeRange(item.start_time, item.end_time)}` : ""}</td>
-            <td style={{ ...td, textAlign: "right" }}>{statusLabel(item.status, t)}</td>
-          </tr>
-        ))}</tbody>
-      </table>
-    </div>
+    <>
+      <MobileRows rows={rows} t={t} />
+      <div className="hidden sm:block" style={tableWrap}>
+        <table style={tableStyle}>
+          <thead><tr><th style={th}>Aktivitet</th><th style={th}>{t.kommune.activityOrganisation}</th><th style={th}>{t.kommune.activitySchedule}</th><th style={{ ...th, textAlign: "right" }}>Status</th></tr></thead>
+          <tbody>{activities.map((item) => (
+            <tr key={item.id} style={tr}>
+              <td style={{ ...td, fontWeight: 700 }}>{item.title}</td>
+              <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.name ?? "–"}</td>
+              <td style={{ ...td, color: "var(--text-muted)" }}>{weekdayName(item.weekday, locale) ?? "–"}{formatTimeRange(item.start_time, item.end_time) ? ` · ${formatTimeRange(item.start_time, item.end_time)}` : ""}</td>
+              <td style={{ ...td, textAlign: "right" }}>{statusLabel(item.status, t)}</td>
+            </tr>
+          ))}</tbody>
+        </table>
+      </div>
+    </>
   );
 }
 
 function EventTable({ events, locale, empty, t }: { events: Event[]; locale: Locale; empty: string; t: Dictionary }) {
   if (events.length === 0) return <p style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{empty}</p>;
+  const rows = events.map((item) => ({ id: item.id, title: item.title, organisation: item.organizations?.name ?? "", detail: formatEventDate(item.starts_at, locale), status: item.status }));
   return (
-    <div style={tableWrap}>
-      <table style={tableStyle}>
-        <thead><tr><th style={th}>Arrangement</th><th style={th}>{t.kommune.activityOrganisation}</th><th style={th}>{t.kommune.activitySchedule}</th><th style={{ ...th, textAlign: "right" }}>Status</th></tr></thead>
-        <tbody>{events.map((item) => (
-          <tr key={item.id} style={tr}>
-            <td style={{ ...td, fontWeight: 700 }}>{item.title}</td>
-            <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.name ?? "–"}</td>
-            <td style={{ ...td, color: "var(--text-muted)" }}>{formatEventDate(item.starts_at, locale)}</td>
-            <td style={{ ...td, textAlign: "right" }}>{statusLabel(item.status, t)}</td>
-          </tr>
-        ))}</tbody>
-      </table>
+    <>
+      <MobileRows rows={rows} t={t} />
+      <div className="hidden sm:block" style={tableWrap}>
+        <table style={tableStyle}>
+          <thead><tr><th style={th}>Arrangement</th><th style={th}>{t.kommune.activityOrganisation}</th><th style={th}>{t.kommune.activitySchedule}</th><th style={{ ...th, textAlign: "right" }}>Status</th></tr></thead>
+          <tbody>{events.map((item) => (
+            <tr key={item.id} style={tr}>
+              <td style={{ ...td, fontWeight: 700 }}>{item.title}</td>
+              <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.name ?? "–"}</td>
+              <td style={{ ...td, color: "var(--text-muted)" }}>{formatEventDate(item.starts_at, locale)}</td>
+              <td style={{ ...td, textAlign: "right" }}>{statusLabel(item.status, t)}</td>
+            </tr>
+          ))}</tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
+function MobileRows({ rows, t }: { rows: { id: string; title: string; organisation: string; detail: string; status: string }[]; t: Dictionary }) {
+  return (
+    <div className="flex flex-col gap-2 sm:hidden">
+      {rows.map((r) => (
+        <div key={r.id} style={cardStyle}>
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontWeight: 700 }}>{r.title}</div>
+              {r.detail && <div style={{ marginTop: 3, color: "var(--text-muted)", fontSize: "var(--fs-xs)" }}>{r.detail}</div>}
+            </div>
+            <span style={{ flex: "none", padding: "2px 10px", borderRadius: "var(--radius-pill)", fontSize: "var(--fs-xs)", fontWeight: 700, background: r.status === "published" ? "var(--surface-brand-soft)" : "var(--stone-100)", color: r.status === "published" ? "var(--text-brand)" : "var(--stone-700)" }}>
+              {statusLabel(r.status, t)}
+            </span>
+          </div>
+          {r.organisation && <div style={{ marginTop: 8, color: "var(--text-muted)", fontSize: "var(--fs-xs)", fontWeight: 600 }}>{r.organisation}</div>}
+        </div>
+      ))}
     </div>
   );
 }
@@ -162,6 +191,7 @@ function statusLabel(status: string, t: Dictionary) {
 
 const tableWrap = { overflowX: "auto", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)" } as const;
 const tableStyle = { width: "100%", minWidth: 680, borderCollapse: "collapse", fontSize: "var(--fs-sm)" } as const;
+const cardStyle = { border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-lg)", background: "var(--surface-card)", padding: 14 } as const;
 const th = { padding: "11px 16px", borderBottom: "1px solid var(--border-subtle)", color: "var(--text-muted)", textAlign: "left", fontSize: "var(--fs-xs)" } as const;
 const td = { padding: "13px 16px" } as const;
 const tr = { borderBottom: "1px solid var(--border-subtle)" } as const;
