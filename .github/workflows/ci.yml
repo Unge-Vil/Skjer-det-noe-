@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
   pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -70,3 +72,28 @@ jobs:
         run: pnpm test:a11y:routes
         env:
           NEXT_TELEMETRY_DISABLED: "1"
+
+  audit:
+    name: Dependency audit (advisory)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Advisory only: surfaces high/critical advisories without blocking merges,
+      # since most are transitive build-tooling deps. Dependabot opens fix PRs.
+      - name: Audit dependencies
+        run: pnpm audit --audit-level high
+        continue-on-error: true
+
