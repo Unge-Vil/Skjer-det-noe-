@@ -191,7 +191,7 @@ export default async function AdminPage() {
           <section style={{ ...card, padding: 20 }}>
             <div className="mb-3 flex items-center justify-between">
               <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.orgadmin.profileTitle}</h2>
-              <span style={{ fontSize: 22, fontWeight: 800, color: "var(--fjord-700)" }}>{pct}%</span>
+              <span style={{ fontSize: 22, fontWeight: 800, color: "var(--text-link)" }}>{pct}%</span>
             </div>
             <div style={{ height: 10, background: "var(--surface-sunk)", borderRadius: 999, overflow: "hidden", marginBottom: 16 }}>
               <div style={{ width: `${pct}%`, height: "100%", background: "var(--fjord-600)" }} />
