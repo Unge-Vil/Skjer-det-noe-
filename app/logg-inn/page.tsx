@@ -34,6 +34,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [magicLinkLoading, setMagicLinkLoading] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const submit = async (e: React.FormEvent) => {
@@ -50,6 +52,24 @@ export default function LoginPage() {
     const next = searchParams.get("next");
     router.push(next?.startsWith("/oauth/authorize?") ? next : "/admin");
     router.refresh();
+  };
+
+  const sendMagicLink = async () => {
+    setError(null);
+    setMagicLinkLoading(true);
+    const next = searchParams.get("next");
+    const callback = new URL("/auth/callback", window.location.origin);
+    if (next?.startsWith("/")) callback.searchParams.set("next", next);
+    const { error } = await createClient().auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: callback.toString(), shouldCreateUser: false },
+    });
+    setMagicLinkLoading(false);
+    if (error) {
+      setError(t.auth.magicLinkError);
+      return;
+    }
+    setMagicLinkSent(true);
   };
 
   return (
@@ -104,6 +124,22 @@ export default function LoginPage() {
             {loading ? t.auth.loggingIn : t.auth.login}
           </Button>
         </form>
+
+        <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
+          <span style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+          <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)" }}>{t.auth.or}</span>
+          <span style={{ flex: 1, height: 1, background: "var(--border-subtle)" }} />
+        </div>
+
+        {magicLinkSent ? (
+          <p role="status" style={{ margin: 0, color: "var(--text-body)", fontSize: "var(--fs-sm)" }}>
+            {t.auth.magicLinkSent}
+          </p>
+        ) : (
+          <Button type="button" variant="secondary" fullWidth loading={magicLinkLoading} onClick={sendMagicLink}>
+            {magicLinkLoading ? t.auth.sending : t.auth.sendMagicLink}
+          </Button>
+        )}
 
         <p style={{ margin: "16px 0 0", fontSize: "var(--fs-sm)" }}>
           <Link href="/glemt-passord" style={{ color: "var(--text-link)", fontWeight: 600 }}>

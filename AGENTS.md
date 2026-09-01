@@ -22,22 +22,19 @@ Leisure-activity directory (Unge Vil). See README.md for full overview.
   `dynamic(..., { ssr: false })` from the client `Explorer`.
 - **Hosting:** Cloudflare via `@opennextjs/cloudflare` (`pnpm cf:*`).
 - **Language:** UI copy is Norwegian (bokmål).
-- **Documentation:** GitBook is the source of truth for public help, guides,
-  product information, changelog and API documentation. When a change affects
-  user workflows, admin workflows, municipal or organisation features, public
-  content, integrations or API contracts, update the relevant GitBook pages in
-  the same work item through a GitBook change request. Keep guides, links,
-  examples and API documentation aligned with the implemented behaviour; remove
-  template or outdated content when it no longer describes the product. Keep
-  both Norwegian and English variants documented when both are published; the
-  Norwegian variant is the default, while English variants are maintained
-  manually and must stay aligned with the Norwegian content and API behaviour.
-  GitBook content is always customer-facing: never publish internal notes,
-  implementation details, agent instructions, speculative roadmap items,
-  security-team language, or references to private systems. Rewrite technical
-  constraints as clear user guidance with a purpose, practical steps and
-  customer-relevant limitations. Keep internal engineering decisions in the
-  repository or private project documentation instead.
+- **Documentation:** The local help centre in `app/hjelp/` and API documentation
+  in `app/api-dokumentasjon/` are the source of truth for customer-facing help,
+  guides, product information and API documentation. When a change affects user
+  workflows, admin workflows, municipal or organisation features, public
+  content, integrations or API contracts, update the relevant local pages in
+  the same work item. Keep guides, links, examples and API documentation aligned
+  with the implemented behaviour; remove template or outdated content when it
+  no longer describes the product. Keep both Norwegian and English variants
+  documented when both are published; Norwegian is the default. Customer-facing
+  pages must not include internal notes, implementation details, agent
+  instructions, speculative roadmap items, security-team language or references
+  to private systems. Rewrite technical constraints as clear user guidance with
+  a purpose, practical steps and customer-relevant limitations.
 - **Design system:** "Skjer det noe?" tokens in `app/ds-tokens/*.css` (imported
   by `globals.css`); primitives in `components/ds/`. Use CSS vars (`--fjord-*`,
   `--accent`, `--surface-card`, `--text-*`) — never invent brand colours. Icons
