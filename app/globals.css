@@ -66,6 +66,17 @@
   }
 }
 
+/* Loading placeholder blocks. */
+@keyframes sdn-skeleton-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.sdn-skeleton {
+  background: var(--surface-sunk);
+  border-radius: var(--radius-md);
+  animation: sdn-skeleton-pulse 1.4s var(--ease-soft) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sdn-skeleton { animation: none; }
+}
+
 /* Keep Leaflet tiles below sticky UI; match the app's rounded, calm chrome. */
 .leaflet-container {
   font: inherit;
