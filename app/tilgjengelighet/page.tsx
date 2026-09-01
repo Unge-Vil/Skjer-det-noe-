@@ -31,7 +31,9 @@ export default async function TilgjengelighetPage() {
           <ul>
             <li>Vi kontrollerer sentrale tekst-, kontroll- og fokusfarger automatisk i lyst og mørkt tema.</li>
             <li>Vi tester de viktigste offentlige sidene automatisk for WCAG A- og AA-brudd.</li>
+            <li>Innloggede administrasjonsflater kontrolleres også automatisk for de samme bruddene.</li>
             <li>De sentrale kontrollene kan brukes med tastatur og har synlig fokusmarkering.</li>
+            <li>Dialoger og menyer flytter fokus inn, kan lukkes med Escape og holder fokus mens de er åpne.</li>
             <li>Farge brukes aldri alene – status og kategorier har alltid ikon og tekst.</li>
             <li>Redusert bevegelse er støttet, og brødtekst er aldri mindre enn 16px.</li>
           </ul>
@@ -44,8 +46,7 @@ export default async function TilgjengelighetPage() {
           </p>
           <p>
             Vi gjennomfører fortsatt manuelle tester med skjermleser, 200 % tekstforstørring, 400 % reflow og
-            native app-teknologi. Tilgjengelighetstester av innloggede administrasjonsflater krever testkonto og
-            kjøres separat.
+            native app-teknologi.
           </p>
 
           <h2>Meld fra om problemer</h2>
