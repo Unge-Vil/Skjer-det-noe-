@@ -577,6 +577,13 @@ Start med grensene som kan gi størst skade:
 
 ### [ ] 2.2 Legg til CI
 
+**Status:** GitHub Actions-workflow (`.github/workflows/ci.yml`) kjører lint,
+TypeScript-sjekk, enhetstester, tilgjengelighetskontroll (token-kontrast +
+axe-ruter) og produksjonsbuild på push til `main` og alle pull requests.
+Gjenstår: isolerte database-/RLS-tester (krever Supabase-hemmeligheter),
+periodisk avhengighets-/sårbarhetsskann, og å slå på påkrevde kontroller
+(branch protection) i repoinnstillingene.
+
 **Tiltak:**
 
 - Kjør lint, TypeScript-sjekk, tester og produksjonsbuild på pull requests.
