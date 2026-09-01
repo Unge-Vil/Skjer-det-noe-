@@ -7,6 +7,7 @@ import { makeSlug } from "@/lib/slug";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { LanguageFields } from "./LanguageFields";
+import { ImageUploader } from "./ImageUploader";
 import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
 
 type Option = { id: string; name: string };
@@ -195,6 +196,8 @@ export function DirectoryForm({
         <label htmlFor="img" style={labelStyle}>{t.form.imageUrl}</label>
         <input id="img" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} style={inputStyle} />
       </div>
+
+      {initial && <ImageUploader rowId={initial.id} table="directory_listings" pathPrefix={`org/${orgId}/directory/${initial.id}`} column="image_url" currentUrl={imageUrl || null} onUrlChange={(url) => setImageUrl(url ?? "")} aspect="3 / 2" expectedRatio={1.5} />}
 
       <div>
         <label htmlFor="status" style={labelStyle}>{t.form.status}</label>

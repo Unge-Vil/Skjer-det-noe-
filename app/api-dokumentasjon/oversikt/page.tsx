@@ -300,6 +300,10 @@ export default function ApiDocumentationPage() {
           <Endpoint verb="POST" path="/api/v1/events">Oppretter et arrangement, eller oppdaterer et eksisterende med samme <Mono>external_ref</Mono>. Krever <Mono>starts_at</Mono>.</Endpoint>
           <Endpoint verb="GET" path="/api/v1/events?limit=50">Lister organisasjonens arrangementer, nyeste først. <Mono>limit</Mono> er 1–100 (standard 50).</Endpoint>
 
+          <h3>Bilder</h3>
+          <p>Last opp et bilde og bruk URL-en i <Mono>image_url</Mono> når du oppretter eller oppdaterer en aktivitet eller et arrangement.</p>
+          <Endpoint verb="POST" path="/api/v1/media">Tar imot <Mono>multipart/form-data</Mono> med ett <Mono>file</Mono>-felt og returnerer <Mono>{'{ url }'}</Mono>. Godtar PNG, JPEG og WebP opptil 5 MB.</Endpoint>
+
           <h3>Endringsmeldinger</h3>
           <p>
             Marker at en enkelt forekomst av en aktivitet eller et arrangement er avlyst, stengt, endret eller har en beskjed – uten å endre selve
@@ -334,7 +338,7 @@ export default function ApiDocumentationPage() {
               { name: "age_max", type: "integer 0–120", note: <>Høyeste anbefalte alder (≥ <Mono>age_min</Mono>).</> },
               { name: "price", type: "string, ≤255", note: <>Pris som tekst, for eksempel «Gratis» eller «50 kr».</> },
               { name: "url", type: "http(s) URL", note: <>Lenke til påmelding eller mer informasjon.</> },
-              { name: "image_url", type: "http(s) URL", note: <>Lenke til et bilde.</> },
+              { name: "image_url", type: "http(s) URL", note: <>Lenke til et bilde. Last opp via <Mono>POST /api/v1/media</Mono>, eller bruk en offentlig ekstern bilde-URL.</> },
               { name: "external_ref", type: "string, ≤255", note: <>Din egen ID for idempotent oppdatering.</> },
             ]}
           />

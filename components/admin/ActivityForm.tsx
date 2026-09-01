@@ -11,6 +11,7 @@ import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
 import { CoOrganizerEditor, type CoOrg } from "./CoOrganizerEditor";
 import { LanguageFields } from "./LanguageFields";
+import { ImageUploader } from "./ImageUploader";
 import { syncCoOrganizers } from "@/lib/coOrganizers";
 import { inputStyle, labelStyle, textareaStyle } from "./formStyles";
 
@@ -353,6 +354,8 @@ export function ActivityForm({
         <label htmlFor="img" style={labelStyle}>{t.form.imageUrl}</label>
         <input id="img" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} style={inputStyle} />
       </div>
+
+      {initial && <ImageUploader rowId={initial.id} table="activities" pathPrefix={`org/${orgId}/activities/${initial.id}`} column="image_url" currentUrl={imageUrl || null} onUrlChange={(url) => setImageUrl(url ?? "")} aspect="3 / 2" expectedRatio={1.5} />}
 
       <div>
         <label htmlFor="status" style={labelStyle}>{t.form.status}</label>

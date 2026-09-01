@@ -14,18 +14,20 @@ export function ImageUploader({
   column,
   label,
   currentUrl,
+  onUrlChange,
   aspect = "1 / 1",
   recommended,
   expectedRatio,
 }: {
   rowId: string;
   /** Table whose row holds the image column. Defaults to organizations. */
-  table?: "organizations" | "organization_municipalities" | "org_profiles";
+  table?: "organizations" | "organization_municipalities" | "org_profiles" | "activities" | "events" | "directory_listings";
   /** Storage path prefix; defaults to `org/<rowId>`. */
   pathPrefix?: string;
-  column: "logo_url" | "banner_url";
+  column: "logo_url" | "banner_url" | "image_url";
   label?: string;
   currentUrl: string | null;
+  onUrlChange?: (url: string | null) => void;
   aspect?: string;
   /** Display string for recommended pixel size, e.g. "1200 × 400 px". */
   recommended?: string;
@@ -81,6 +83,7 @@ export function ImageUploader({
       const { data } = supabase.storage.from("media").getPublicUrl(path);
       const { error } = await supabase.from(table).update({ [column]: data.publicUrl }).eq("id", rowId);
       if (error) throw error;
+      onUrlChange?.(data.publicUrl);
       router.refresh();
     } catch {
       setError(t.orgadmin.uploadError);
@@ -91,7 +94,13 @@ export function ImageUploader({
 
   const removeImage = async () => {
     setBusy(true);
-    await supabase.from(table).update({ [column]: null }).eq("id", rowId);
+    const { error } = await supabase.from(table).update({ [column]: null }).eq("id", rowId);
+    if (error) {
+      setError(t.orgadmin.uploadError);
+      setBusy(false);
+      return;
+    }
+    onUrlChange?.(null);
     setBusy(false);
     router.refresh();
   };
