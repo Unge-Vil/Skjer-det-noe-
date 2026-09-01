@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { makeSlug, pointEwkt } from "@/lib/slug";
+import { geocodeAddress } from "@/lib/geocode";
 import { weekdayName } from "@/lib/format";
 import { Button } from "@/components/ds/Button";
 import { useI18n } from "@/components/i18n/LocaleProvider";
@@ -94,6 +95,27 @@ export function ActivityForm({
   const [imageUrl, setImageUrl] = useState(initial?.image_url ?? "");
   const [status, setStatus] = useState(initial?.status ?? "draft");
   const [loc, setLoc] = useState<{ lat: number; lng: number } | null>(null);
+  const [flyTo, setFlyTo] = useState<{ lat: number; lng: number } | null>(null);
+  const [geoBusy, setGeoBusy] = useState(false);
+  const [geoMsg, setGeoMsg] = useState<string | null>(null);
+
+  const findOnMap = async () => {
+    setGeoMsg(null);
+    const q = address.trim();
+    if (!q) {
+      setGeoMsg(t.form.geocodeNoAddress);
+      return;
+    }
+    setGeoBusy(true);
+    const coords = await geocodeAddress(q);
+    setGeoBusy(false);
+    if (!coords) {
+      setGeoMsg(t.form.geocodeNotFound);
+      return;
+    }
+    setLoc(coords);
+    setFlyTo(coords);
+  };
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -311,9 +333,20 @@ export function ActivityForm({
       </div>
 
       <div>
-        <label style={labelStyle}>{t.form.location}</label>
+        <label style={labelStyle}>
+          {t.form.location}
+          <span style={{ marginLeft: 8, fontSize: "var(--fs-xs)", fontWeight: 600, color: "var(--coral-600)" }}>· {t.form.requiredMark}</span>
+        </label>
         <p style={{ margin: "0 0 8px", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.form.locationHint}</p>
-        <LocationPicker value={loc} center={defaultCenter} onChange={(lat, lng) => setLoc({ lat, lng })} />
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 8 }}>
+          <Button type="button" variant="secondary" size="sm" leadingIcon="search" onClick={findOnMap} loading={geoBusy} disabled={!address.trim()}>
+            {t.form.geocode}
+          </Button>
+          {geoMsg && (
+            <span role="status" style={{ alignSelf: "center", fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{geoMsg}</span>
+          )}
+        </div>
+        <LocationPicker value={loc} center={defaultCenter} flyTo={flyTo} onChange={(lat, lng) => setLoc({ lat, lng })} />
       </div>
 
       <div>

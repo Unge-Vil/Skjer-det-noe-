@@ -20,14 +20,15 @@
   --fw-black:    800; /* @kind other */
   --fw-display:  900; /* @kind other */
 
-  /* Type scale (rem, 1rem = 16px base). Fluid display sizes clamp on small screens. */
+  /* Type scale (rem, 1rem = 16px base). Fluid sizes step down on small screens
+     so headings feel app-tight on phones while body stays ≥16px for WCAG. */
   --fs-display-xl: clamp(2.75rem, 1.6rem + 5.2vw, 5rem); /* @kind other */
   --fs-display-lg: clamp(2.25rem, 1.5rem + 3.4vw, 3.5rem); /* @kind other */
   --fs-display-md: clamp(1.85rem, 1.35rem + 2.2vw, 2.5rem); /* @kind other */
-  --fs-h1: 2rem;       /* 32 */
-  --fs-h2: 1.5rem;     /* 24 */
-  --fs-h3: 1.25rem;    /* 20 */
-  --fs-h4: 1.125rem;   /* 18 */
+  --fs-h1: clamp(1.625rem, 1.1rem + 2.6vw, 2rem);       /* 26 → 32 */
+  --fs-h2: clamp(1.3125rem, 1.0rem + 1.55vw, 1.5rem);   /* 21 → 24 */
+  --fs-h3: clamp(1.125rem, 1.0rem + 0.6vw, 1.25rem);    /* 18 → 20 */
+  --fs-h4: clamp(1.0625rem, 1.0rem + 0.3vw, 1.125rem);  /* 17 → 18 */
   --fs-body-lg: 1.125rem; /* 18 */
   --fs-body:    1rem;     /* 16 — minimum body size */
   --fs-sm:      0.9375rem;/* 15 — supporting text (still ≥ AA at our contrasts) */

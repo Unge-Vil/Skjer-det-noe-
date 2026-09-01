@@ -4,8 +4,8 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
-  type CSSProperties,
 } from "react";
 import Link from "next/link";
 import { createPortal } from "react-dom";
@@ -13,7 +13,6 @@ import dynamic from "next/dynamic";
 import { createClient } from "@/lib/supabase/client";
 import {
   DEFAULT_CENTER,
-  DEFAULT_RADIUS_M,
   fetchNearbyListings,
 } from "@/lib/listings";
 import type { Category, Listing, ListingKind, Municipality } from "@/lib/types";
@@ -40,23 +39,7 @@ const ListingMap = dynamic(() => import("./ListingMap"), {
   ),
 });
 
-const RADIUS_OPTIONS = [5000, 10000, 15000, 30000, 50000];
 const SAVED_KEY = "sdn-saved";
-
-const selectStyle: CSSProperties = {
-  appearance: "none",
-  minHeight: 44,
-  padding: "0 38px 0 16px",
-  background:
-    "var(--surface-card) url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='none' stroke='%236B6456' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E\") no-repeat right 14px center",
-  border: "1.5px solid var(--border-strong)",
-  borderRadius: "var(--radius-pill)",
-  fontFamily: "var(--font-sans)",
-  fontSize: "var(--fs-sm)",
-  fontWeight: 600,
-  color: "var(--text-strong)",
-  cursor: "pointer",
-};
 
 export function Explorer({
   initialListings,
@@ -72,6 +55,7 @@ export function Explorer({
   showDirectoryShortcuts = false,
   showMap = true,
   listVariant = "card",
+  mobileMapOnly = false,
 }: {
   initialListings: Listing[];
   categories: Category[];
@@ -86,6 +70,7 @@ export function Explorer({
   showDirectoryShortcuts?: boolean;
   showMap?: boolean;
   listVariant?: "card" | "row";
+  mobileMapOnly?: boolean;
 }) {
   const { t, locale } = useI18n();
   const location = useLocation();
@@ -97,7 +82,7 @@ export function Explorer({
     return m?.lat != null && m?.lng != null ? { lat: m.lat, lng: m.lng } : DEFAULT_CENTER;
   }, [municipalities, initialMunicipality]);
 
-  const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
+  const radiusM = location.radiusM;
   const [category, setCategory] = useState<string | null>(initialCategory);
   const [kind, setKind] = useState<ListingKind | null>(initialKind);
   const [query, setQuery] = useState(initialQuery);
@@ -153,11 +138,16 @@ export function Explorer({
     });
   }, []);
 
+  // Seed the client location from the server/URL municipality once per distinct
+  // value (mount or ?kommune deep link). Must NOT depend on the live selection,
+  // or it would snap the user's manual kommune change back to the initial one.
+  const seededMunicipality = useRef<string | null>(null);
   useEffect(() => {
-    if (initialMunicipality && location.selectedMunicipality !== initialMunicipality) {
+    if (initialMunicipality && seededMunicipality.current !== initialMunicipality) {
+      seededMunicipality.current = initialMunicipality;
       selectMunicipality(initialMunicipality);
     }
-  }, [initialMunicipality, location.selectedMunicipality, selectMunicipality]);
+  }, [initialMunicipality, selectMunicipality]);
 
   useEffect(() => {
     if (!supabase) return;
@@ -203,8 +193,9 @@ export function Explorer({
   return (
     <main id="main" className="flex min-h-0 flex-1 flex-col">
       {/* Hero — the big title is marketing chrome; hide it on mobile so the map
-          can take over, keep it on desktop. */}
-      <section className="mx-auto w-full max-w-6xl px-4 pt-3 pb-2 lg:pt-6">
+          can take over, keep it on desktop. The search moves to the header
+          toggle on mobile, so the whole block is desktop-only. */}
+      <section className="mx-auto hidden w-full max-w-6xl px-4 lg:block lg:pt-6 lg:pb-2">
         <div className="hidden lg:block">
           <p
             style={{
@@ -243,7 +234,7 @@ export function Explorer({
 
       <div
         className="mx-auto w-full max-w-6xl"
-        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "6px 16px", scrollbarWidth: "none" }}
+        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "3px 16px", scrollbarWidth: "none" }}
       >
         <FilterChip selected={kind === "activity"} onClick={() => setKind("activity")}>
           {t.explorer.activities}
@@ -298,7 +289,7 @@ export function Explorer({
       {/* Category chips */}
       <div
         className="sdn-horizontal-scroll mx-auto w-full max-w-6xl"
-        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "8px 16px", scrollbarWidth: "thin" }}
+        style={{ display: "flex", gap: 8, overflowX: "auto", padding: "4px 16px", scrollbarWidth: "thin" }}
       >
         <FilterChip selected={category === null} onClick={() => setCategory(null)}>
           {t.explorer.all}
@@ -319,9 +310,9 @@ export function Explorer({
         })}
       </div>
 
-        {/* Controls — a single clean filter row (scrolls horizontally on mobile,
-          wraps on desktop). */}
-      <div className="mx-auto w-full max-w-6xl px-3 py-2 lg:px-4">
+        {/* Controls — location + radius. Desktop-only; on mobile the area lives
+          under "More", so both map and explore stay uncluttered. */}
+      <div className="mx-auto hidden w-full max-w-6xl lg:block lg:px-4 lg:py-2">
         <div
           className="sdn-horizontal-scroll flex items-center gap-2 overflow-x-auto lg:flex-wrap"
           style={{ scrollbarWidth: "thin" }}
@@ -330,22 +321,6 @@ export function Explorer({
             <Icon name={location.mode === "nearby" ? "locate-fixed" : "map-pin"} size={16} />
             {location.mode === "nearby" ? location.currentMunicipality?.name ?? t.location.nearMe : municipalityName ?? t.location.chooseMunicipality}
           </span>
-
-          {location.mode === "nearby" && (
-            <select
-              value={radiusM}
-              onChange={(e) => setRadiusM(Number(e.target.value))}
-              style={selectStyle}
-              className="shrink-0"
-              aria-label={fmt(t.explorer.within, { km: "" }).trim()}
-            >
-              {RADIUS_OPTIONS.map((v) => (
-                <option key={v} value={v}>
-                  {fmt(t.explorer.within, { km: v / 1000 })}
-                </option>
-              ))}
-            </select>
-          )}
 
           <span className="ml-auto hidden lg:inline" style={{ fontSize: "var(--fs-sm)", color: "var(--text-muted)", fontWeight: 600 }}>
             {loading ? t.explorer.loading : plural(locale, visible.length, t.explorer.results)}
@@ -361,7 +336,7 @@ export function Explorer({
         className={`mx-auto grid w-full max-w-6xl flex-1 grid-cols-1 gap-0 px-0 pb-0 ${showMap ? "lg:grid-cols-[minmax(0,440px)_1fr] lg:gap-4" : ""} lg:px-4 lg:pb-6`}
       >
         <div
-          className={`sdn-stagger ${showMap && view === "map" ? "hidden" : "block"} space-y-3 px-3 py-2 lg:block ${showMap ? "lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto" : ""} lg:p-2`}
+          className={`sdn-stagger ${mobileMapOnly || (showMap && view === "map") ? "hidden" : "block"} space-y-3 px-3 py-2 lg:block ${showMap ? "lg:max-h-[calc(100vh-120px)] lg:overflow-y-auto" : ""} lg:p-2`}
         >
           {loadError ? (
             <p role="alert" style={{ color: "var(--danger-text)", fontSize: "var(--fs-sm)" }}>
@@ -394,7 +369,7 @@ export function Explorer({
               }}
             >
               <Icon name="search" size={28} color="var(--stone-300)" />
-              <p style={{ margin: "8px 0 0" }}>{t.explorer.empty}</p>
+              <p style={{ margin: "8px 0 0" }}>{location.mode === "municipality" ? t.explorer.emptyMunicipality : t.explorer.empty}</p>
             </div>
           )}
           {visible.map((l) => (
@@ -413,7 +388,11 @@ export function Explorer({
 
         {showMap && (
           <div
-            className={`${view === "list" ? "hidden" : "block"} h-[calc(100dvh-208px)] min-h-[340px] overflow-hidden p-0 lg:block lg:h-auto lg:min-h-[70vh] lg:p-0`}
+            className={`${
+              mobileMapOnly
+                ? "block h-[calc(100dvh-233px)] min-h-[360px]"
+                : `${view === "list" ? "hidden" : "block"} h-[calc(100dvh-208px)] min-h-[340px]`
+            } overflow-hidden p-0 lg:block lg:h-auto lg:min-h-[70vh] lg:p-0`}
           >
             <div
               className="h-full w-full overflow-hidden lg:[border:1px_solid_var(--border-subtle)] lg:[border-radius:var(--radius-lg)]"
@@ -434,6 +413,7 @@ export function Explorer({
       {/* Floating list/map toggle over the map (mobile only). Portalled to body
           so it stays viewport-fixed despite the page-transition transform. */}
       {showMap &&
+        !mobileMapOnly &&
         mounted &&
         createPortal(
           <div

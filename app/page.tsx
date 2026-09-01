@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import {
   DEFAULT_CENTER,
   fetchNearbyListings,
 } from "@/lib/listings";
+import { LOCATION_COOKIE, parseLocationPreferences } from "@/lib/location";
 import type { Category, Listing } from "@/lib/types";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
 import { plural } from "@/lib/i18n/config";
@@ -14,12 +16,19 @@ import { LandingHero } from "@/components/LandingHero";
 import { LandingSections } from "@/components/LandingSections";
 import { OrganisationCard } from "@/components/OrganisationCard";
 import { LocationPrimer } from "@/components/location/LocationPrimer";
+import { LocationRefresh } from "@/components/location/LocationRefresh";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const locale = await getLocale();
   const t = getDictionary(locale);
+
+  const preferences = parseLocationPreferences((await cookies()).get(LOCATION_COOKIE)?.value);
+  const municipality =
+    preferences.mode === "municipality"
+      ? preferences.selectedMunicipality ?? preferences.defaultMunicipality
+      : null;
 
   const configured = Boolean(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
@@ -34,14 +43,24 @@ export default async function Home() {
   if (configured) {
     try {
       const supabase = await createClient();
+      let center = DEFAULT_CENTER;
+      if (municipality) {
+        const { data: m } = await supabase
+          .from("municipalities_view")
+          .select("lat,lng")
+          .eq("kommunenummer", municipality)
+          .maybeSingle();
+        if (m?.lat != null && m?.lng != null) center = { lat: m.lat, lng: m.lng };
+      }
       const [catRes, listings, orgs] = await Promise.all([
         supabase.from("categories").select("*").order("sort_order"),
         fetchNearbyListings(
           supabase,
           {
-            lat: DEFAULT_CENTER.lat,
-            lng: DEFAULT_CENTER.lng,
+            lat: center.lat,
+            lng: center.lng,
             radiusM: 50000,
+            municipality,
             activityLimit: 6,
             eventLimit: 3,
           },
@@ -63,43 +82,48 @@ export default async function Home() {
   return (
     <main id="main" className="flex flex-1 flex-col pb-12">
       <LocationPrimer />
+      <LocationRefresh />
       {/* Hero */}
       <section style={{ background: "linear-gradient(180deg, var(--surface-brand-soft), var(--bg-app))" }}>
-        <div className="mx-auto max-w-6xl px-4 py-12 text-center sm:py-16">
-          <p
-            style={{
-              margin: "0 0 10px",
-              fontSize: "var(--fs-sm)",
-              fontWeight: 700,
-              letterSpacing: "0.05em",
-              textTransform: "uppercase",
-              color: "var(--accent)",
-            }}
-          >
-            {t.hero.eyebrowNear}
-          </p>
-          <h1
-            style={{
-              margin: "0 0 14px",
-              fontSize: "var(--fs-display-lg)",
-              fontWeight: 900,
-              letterSpacing: "-0.02em",
-              lineHeight: 1.02,
-            }}
-          >
-            Skjer det noe<span style={{ color: "var(--accent)" }}>?</span>
-          </h1>
-          <p
-            style={{
-              margin: "0 auto 24px",
-              maxWidth: 560,
-              fontSize: "var(--fs-body-lg)",
-              color: "var(--text-body)",
-              lineHeight: 1.5,
-            }}
-          >
-            {t.hero.tagline}
-          </p>
+        <div className="mx-auto max-w-6xl px-4 py-5 text-center sm:py-16">
+          {/* Marketing headline is desktop-only; on mobile the search leads so
+              the fold shows content sooner. */}
+          <div className="hidden sm:block">
+            <p
+              style={{
+                margin: "0 0 10px",
+                fontSize: "var(--fs-sm)",
+                fontWeight: 700,
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                color: "var(--accent)",
+              }}
+            >
+              {t.hero.eyebrowNear}
+            </p>
+            <h1
+              style={{
+                margin: "0 0 14px",
+                fontSize: "var(--fs-display-lg)",
+                fontWeight: 900,
+                letterSpacing: "-0.02em",
+                lineHeight: 1.02,
+              }}
+            >
+              Skjer det noe<span style={{ color: "var(--accent)" }}>?</span>
+            </h1>
+            <p
+              style={{
+                margin: "0 auto 24px",
+                maxWidth: 560,
+                fontSize: "var(--fs-body-lg)",
+                color: "var(--text-body)",
+                lineHeight: 1.5,
+              }}
+            >
+              {t.hero.tagline}
+            </p>
+          </div>
           <LandingHero categories={categories} />
         </div>
       </section>
@@ -141,8 +165,9 @@ export default async function Home() {
         </section>
       )}
 
-      {/* For municipalities / organisations CTA */}
-      <section className="mx-auto mt-10 w-full max-w-6xl px-4">
+      {/* For municipalities / organisations CTA — B2B, so desktop/web only;
+          the mobile app keeps the resident experience uncluttered. */}
+      <section className="mx-auto mt-10 hidden w-full max-w-6xl px-4 sm:block">
         <div
           className="flex flex-wrap items-center justify-between gap-6"
           style={{ padding: "32px 36px", background: "var(--fjord-800)", borderRadius: "var(--radius-2xl)" }}

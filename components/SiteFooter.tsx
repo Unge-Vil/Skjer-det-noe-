@@ -38,21 +38,23 @@ export function SiteFooter() {
 
   return (
     <footer
-      className="mx-auto mt-10 flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-4 py-6"
+      className="mx-auto mt-10 flex w-full max-w-6xl flex-wrap items-center justify-center gap-4 px-4 py-6 sm:justify-between"
       style={{ borderTop: "1px solid var(--border-subtle)" }}
     >
-      <Wordmark size={18} />
-      <span style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)", flex: "1 1 200px" }}>
+      <span className="hidden sm:block">
+        <Wordmark size={18} />
+      </span>
+      <span className="hidden sm:block" style={{ color: "var(--text-muted)", fontSize: "var(--fs-sm)", flex: "1 1 200px" }}>
         {t.footer.conceptBy}{" "}
         <a href="https://ungevil.no" target="_blank" rel="noopener noreferrer" style={{ color: "var(--text-link)", fontWeight: 600 }}>
           Unge Vil
         </a>
       </span>
-      <nav aria-label={t.footer.about} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 16 }}>
+      <nav aria-label={t.footer.about} style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 16 }}>
         <Link href="/hjelp" style={linkStyle}>Hjelp</Link>
         <Link href="/om" style={linkStyle}>{t.footer.about}</Link>
         <Link href="/personvern-og-vilkar" style={linkStyle}>{t.footer.privacyTerms}</Link>
-        <Link href={signedIn ? "/konto" : "/logg-inn"} style={accountLinkStyle}>
+        <Link href={signedIn ? "/konto" : "/logg-inn"} className="hidden sm:inline-flex" style={accountLinkStyle}>
           {signedIn ? t.account.title : t.nav.login}
         </Link>
       </nav>

@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Button } from "@/components/ds/Button";
 import { Icon } from "@/components/ds/Icon";
 import { useI18n } from "@/components/i18n/LocaleProvider";
+import { fmt } from "@/lib/i18n/config";
+import { RADIUS_OPTIONS } from "@/lib/listings";
 import { findMunicipality } from "@/lib/location";
 import { useLocation } from "./LocationProvider";
 
@@ -98,7 +100,7 @@ export function LocationMenu() {
                 type="button"
                 aria-label={t.nav.close}
                 onClick={close}
-                style={{ width: 40, height: 40, borderRadius: "var(--radius-pill)", border: "1px solid var(--border-subtle)", background: "transparent", color: "var(--text-muted)", cursor: "pointer" }}
+                style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", flex: "none", width: 40, height: 40, padding: 0, borderRadius: "var(--radius-pill)", border: "1px solid var(--border-subtle)", background: "transparent", color: "var(--text-muted)", cursor: "pointer" }}
               >
                 <Icon name="x" size={18} />
               </button>
@@ -130,34 +132,53 @@ export function LocationMenu() {
               </p>
             )}
 
-            <label className="mt-4 block" style={{ fontSize: "var(--fs-sm)", fontWeight: 650 }}>
-              {t.location.chooseMunicipality}
-              <select
-                value={location.selectedMunicipality ?? ""}
-                onChange={(event) => location.selectMunicipality(event.target.value)}
-                style={{ width: "100%", minHeight: 44, marginTop: 6, padding: "0 12px", border: "1.5px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-strong)" }}
-              >
-                <option value="" disabled>{t.location.chooseMunicipality}</option>
-                {location.municipalities.map((municipality) => (
-                  <option key={municipality.id} value={municipality.kommunenummer}>{municipality.name}</option>
-                ))}
-              </select>
-            </label>
-
-            {selected && (
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <Button
-                  size="sm"
-                  variant={location.defaultMunicipality === selected.kommunenummer ? "ghost" : "secondary"}
-                  onClick={() => location.setDefaultMunicipality(selected.kommunenummer)}
-                  disabled={location.defaultMunicipality === selected.kommunenummer}
+            {location.mode === "nearby" && (
+              <label className="mt-4 block" style={{ fontSize: "var(--fs-sm)", fontWeight: 650 }}>
+                {t.location.radius}
+                <select
+                  value={location.radiusM}
+                  onChange={(event) => location.setRadiusM(Number(event.target.value))}
+                  style={{ width: "100%", minHeight: 44, marginTop: 6, padding: "0 12px", border: "1.5px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-strong)" }}
                 >
-                  {location.defaultMunicipality === selected.kommunenummer ? t.location.isDefault : t.location.setDefault}
-                </Button>
-                <Link href={`/kommune/${selected.slug}`} onClick={close} style={{ color: "var(--text-link)", fontSize: "var(--fs-sm)", fontWeight: 650 }}>
-                  {t.location.openMunicipality}
-                </Link>
-              </div>
+                  {RADIUS_OPTIONS.map((meters) => (
+                    <option key={meters} value={meters}>{fmt(t.explorer.within, { km: meters / 1000 })}</option>
+                  ))}
+                </select>
+              </label>
+            )}
+
+            {location.mode === "municipality" && (
+              <>
+                <label className="mt-4 block" style={{ fontSize: "var(--fs-sm)", fontWeight: 650 }}>
+                  {t.location.chooseMunicipality}
+                  <select
+                    value={location.selectedMunicipality ?? ""}
+                    onChange={(event) => location.selectMunicipality(event.target.value)}
+                    style={{ width: "100%", minHeight: 44, marginTop: 6, padding: "0 12px", border: "1.5px solid var(--border-strong)", borderRadius: "var(--radius-md)", background: "var(--surface-card)", color: "var(--text-strong)" }}
+                  >
+                    <option value="" disabled>{t.location.chooseMunicipality}</option>
+                    {location.municipalities.map((municipality) => (
+                      <option key={municipality.id} value={municipality.kommunenummer}>{municipality.name}</option>
+                    ))}
+                  </select>
+                </label>
+
+                {selected && (
+                  <div className="mt-3 flex flex-wrap items-center gap-2">
+                    <Button
+                      size="sm"
+                      variant={location.defaultMunicipality === selected.kommunenummer ? "ghost" : "secondary"}
+                      onClick={() => location.setDefaultMunicipality(selected.kommunenummer)}
+                      disabled={location.defaultMunicipality === selected.kommunenummer}
+                    >
+                      {location.defaultMunicipality === selected.kommunenummer ? t.location.isDefault : t.location.setDefault}
+                    </Button>
+                    <Link href={`/kommune/${selected.slug}`} onClick={close} style={{ color: "var(--text-link)", fontSize: "var(--fs-sm)", fontWeight: 650 }}>
+                      {t.location.openMunicipality}
+                    </Link>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>,

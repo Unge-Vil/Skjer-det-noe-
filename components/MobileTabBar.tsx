@@ -11,15 +11,12 @@ import { findMunicipality } from "@/lib/location";
 import { useLocation } from "@/components/location/LocationProvider";
 import { isAdminArea } from "@/lib/adminPaths";
 
-const SAVED_KEY = "sdn-saved";
-
 export function MobileTabBar() {
   const { t } = useI18n();
   const pathname = usePathname();
   const location = useLocation();
   const defaultMunicipality = findMunicipality(location.municipalities, location.defaultMunicipality);
   const myMunicipalityHref = defaultMunicipality?.slug ? `/kommune/${defaultMunicipality.slug}` : "/kommuner";
-  const [savedCount, setSavedCount] = useState(0);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [signedIn, setSignedIn] = useState(false);
   const settingsTriggerRef = useRef<HTMLButtonElement>(null);
@@ -29,18 +26,6 @@ export function MobileTabBar() {
     setSettingsOpen(false);
     requestAnimationFrame(() => settingsTriggerRef.current?.focus());
   };
-
-  // Refresh the saved badge on navigation (favourites live in localStorage).
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(SAVED_KEY);
-      const n = raw ? (JSON.parse(raw) as string[]).length : 0;
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setSavedCount(n);
-    } catch {
-      // ignore
-    }
-  }, [pathname]);
 
   // Close the settings sheet on Escape (keyboard parity).
   useEffect(() => {
@@ -83,11 +68,11 @@ export function MobileTabBar() {
   // Hide the tab bar inside the admin areas (own chrome).
   if (isAdminArea(pathname)) return null;
 
-  const tabs: { href: string; label: string; icon: IconName; badge?: number }[] = [
+  const tabs: { href: string; label: string; icon: IconName }[] = [
     { href: "/", label: t.nav.home, icon: "house" },
     { href: "/utforsk", label: t.nav.explore, icon: "sparkles" },
     { href: "/swipe", label: t.nav.swipe, icon: "repeat" },
-    { href: "/lagret", label: t.nav.saved, icon: "heart", badge: savedCount },
+    { href: "/kart", label: t.nav.map, icon: "map" },
   ];
 
   return (
@@ -96,7 +81,7 @@ export function MobileTabBar() {
         <div className="sm:hidden" role="dialog" aria-modal="true" aria-label={t.nav.more}>
           <button
             type="button"
-            aria-label={t.nav.closeSettings}
+            aria-label={t.nav.close}
             onClick={closeSettings}
             className="sdn-backdrop"
             style={{
@@ -129,7 +114,7 @@ export function MobileTabBar() {
               <h2 style={{ margin: 0, fontSize: "var(--fs-h4)", fontWeight: 700 }}>{t.nav.more}</h2>
               <button
                 type="button"
-                aria-label={t.nav.closeSettings}
+                aria-label={t.nav.close}
                 onClick={closeSettings}
                 style={{
                   display: "inline-flex",
@@ -148,6 +133,32 @@ export function MobileTabBar() {
               </button>
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 18 }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setSettingsOpen(false);
+                  location.openMenu();
+                }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 10,
+                  minHeight: 44,
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--border-subtle)",
+                  padding: "0 12px",
+                  background: "var(--surface-card)",
+                  color: "var(--text-body)",
+                  fontWeight: 600,
+                  cursor: "pointer",
+                }}
+              >
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 8 }}>
+                  <Icon name={location.mode === "nearby" ? "locate-fixed" : "map-pin"} size={16} /> {t.location.title}
+                </span>
+                <Icon name="arrow-right" size={15} />
+              </button>
               <Link
                 href={myMunicipalityHref}
                 onClick={closeSettings}
@@ -237,6 +248,35 @@ export function MobileTabBar() {
                 <Icon name="arrow-right" size={15} />
               </Link>
             </div>
+
+            {/* Discovery path for orgs — the B2B landing CTA is desktop-only. */}
+            <Link
+              href="/for-organisasjoner"
+              onClick={closeSettings}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                gap: 10,
+                minHeight: 48,
+                marginBottom: 18,
+                borderRadius: "var(--radius-md)",
+                border: "1px solid var(--border-subtle)",
+                background: "var(--surface-brand-soft)",
+                padding: "10px 14px",
+                textDecoration: "none",
+                color: "var(--text-brand)",
+              }}
+            >
+              <span style={{ display: "inline-flex", alignItems: "center", gap: 10, minWidth: 0 }}>
+                <Icon name="building-2" size={18} />
+                <span style={{ display: "flex", flexDirection: "column", minWidth: 0 }}>
+                  <span style={{ fontWeight: 700 }}>{t.cta.moreTitle}</span>
+                  <span style={{ fontSize: "var(--fs-xs)", fontWeight: 500, color: "var(--text-muted)" }}>{t.cta.moreBody}</span>
+                </span>
+              </span>
+              <Icon name="arrow-right" size={15} />
+            </Link>
             <SettingsContent />
           </div>
         </div>
@@ -276,29 +316,7 @@ export function MobileTabBar() {
               }}
             >
               <span style={{ position: "relative" }}>
-                <Icon name={tab.icon} size={23} fill={active && tab.icon === "heart" ? "currentColor" : "none"} />
-                {tab.badge ? (
-                  <span
-                    style={{
-                      position: "absolute",
-                      top: -6,
-                      right: -10,
-                      minWidth: 16,
-                      height: 16,
-                      padding: "0 4px",
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      background: "var(--accent)",
-                      color: "#fff",
-                      fontSize: 10,
-                      fontWeight: 700,
-                      borderRadius: 999,
-                    }}
-                  >
-                    {tab.badge}
-                  </span>
-                ) : null}
+                <Icon name={tab.icon} size={23} />
               </span>
               <span style={{ fontFamily: "var(--font-sans)", fontSize: 11, fontWeight: active ? 700 : 500 }}>
                 {tab.label}

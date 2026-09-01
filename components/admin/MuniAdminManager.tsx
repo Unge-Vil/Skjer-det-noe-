@@ -29,7 +29,7 @@ export function MuniAdminManager({
   const router = useRouter();
   const supabase = createClient();
 
-  const [municipalityId, setMunicipalityId] = useState(municipalities[0]?.id ?? "");
+  const [municipalityId, setMunicipalityId] = useState("");
   const [email, setEmail] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +37,7 @@ export function MuniAdminManager({
   const add = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+    if (!municipalityId) return;
     setBusy(true);
     const { error } = await supabase.rpc("add_municipality_admin", {
       p_municipality_id: municipalityId,
@@ -68,6 +69,7 @@ export function MuniAdminManager({
           style={{ ...inputStyle, width: "auto", minWidth: 160 }}
           aria-label={t.form.municipality}
         >
+          <option value="" disabled>{t.location.chooseMunicipality}</option>
           {municipalities.map((m) => (
             <option key={m.id} value={m.id}>{m.name}</option>
           ))}

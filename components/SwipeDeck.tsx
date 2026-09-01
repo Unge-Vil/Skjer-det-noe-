@@ -226,7 +226,7 @@ export function SwipeDeck({ listings }: { listings: Listing[] }) {
     : `translateX(${dragX}px) rotate(${rotation}deg)`;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
       <div style={{ textAlign: "center" }}>
         <h1 style={{ margin: "0 0 2px", fontSize: "var(--fs-h2)", fontWeight: 800 }}>{t.swipe.title}</h1>
         <p style={{ margin: 0, fontSize: "var(--fs-sm)", color: "var(--text-muted)" }}>{t.swipe.subtitle}</p>

@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import L from "leaflet";
-import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMap, useMapEvents } from "react-leaflet";
 
 const pin = L.divIcon({
   className: "",
@@ -19,13 +20,30 @@ function ClickHandler({ onPick }: { onPick: (lat: number, lng: number) => void }
   return null;
 }
 
+// Recenter the map only when an external target (e.g. a geocoded address)
+// changes — not on every map click.
+function Recenter({ target }: { target: { lat: number; lng: number } | null }) {
+  const map = useMap();
+  const previous = useRef<string | null>(null);
+  useEffect(() => {
+    if (!target) return;
+    const key = `${target.lat},${target.lng}`;
+    if (previous.current === key) return;
+    previous.current = key;
+    map.setView([target.lat, target.lng], Math.max(map.getZoom(), 15));
+  }, [target, map]);
+  return null;
+}
+
 export default function LocationPicker({
   value,
   center,
+  flyTo = null,
   onChange,
 }: {
   value: { lat: number; lng: number } | null;
   center: { lat: number; lng: number };
+  flyTo?: { lat: number; lng: number } | null;
   onChange: (lat: number, lng: number) => void;
 }) {
   return (
@@ -40,6 +58,7 @@ export default function LocationPicker({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <ClickHandler onPick={onChange} />
+      <Recenter target={flyTo} />
       {value && <Marker position={[value.lat, value.lng]} icon={pin} />}
     </MapContainer>
   );

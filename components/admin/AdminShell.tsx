@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Icon, type IconName } from "@/components/ds/Icon";
@@ -34,6 +35,7 @@ export function AdminShell({
   const [menuPos, setMenuPos] = useState<{ top: number; left: number } | null>(null);
   const navRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const openedViaKeyboardRef = useRef(false);
 
   const closeNav = (restoreFocus = true) => {
     const trigger = navRef.current?.querySelector<HTMLButtonElement>('button[aria-expanded="true"]');
@@ -42,19 +44,22 @@ export function AdminShell({
   };
 
   // Anchor the fixed-positioned menu to its trigger, clamped to the viewport.
-  const toggleNav = (label: string, trigger: HTMLElement) => {
-    setOpenNav((value) => {
-      if (value === label) return null;
-      const rect = trigger.getBoundingClientRect();
-      const width = 220;
-      setMenuPos({ top: rect.bottom + 6, left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)) });
-      return label;
-    });
+  const toggleNav = (label: string, trigger: HTMLElement, viaKeyboard: boolean) => {
+    if (openNav === label) {
+      setOpenNav(null);
+      return;
+    }
+    openedViaKeyboardRef.current = viaKeyboard;
+    const rect = trigger.getBoundingClientRect();
+    const width = 220;
+    setMenuPos({ top: rect.bottom + 6, left: Math.max(8, Math.min(rect.left, window.innerWidth - width - 8)) });
+    setOpenNav(label);
   };
 
   useEffect(() => {
     if (!openNav) return;
-    menuRef.current?.querySelector<HTMLElement>("a, button")?.focus();
+    // Only pull focus into the menu for keyboard users; a mouse click shouldn't paint a focus ring.
+    if (openedViaKeyboardRef.current) menuRef.current?.querySelector<HTMLElement>("a, button")?.focus();
     const closeOnOutside = (event: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(event.target as Node) && menuRef.current && !menuRef.current.contains(event.target as Node)) closeNav(false);
     };
@@ -118,20 +123,21 @@ export function AdminShell({
                     type="button"
                     aria-haspopup="dialog"
                     aria-expanded={openNav === n.label}
-                    onClick={(event) => toggleNav(n.label, event.currentTarget)}
+                    onClick={(event) => toggleNav(n.label, event.currentTarget, event.detail === 0)}
                     style={{ ...navItemStyle, background: active ? "var(--surface-brand-soft)" : "transparent", color: active ? "var(--text-brand)" : "var(--text-body)" }}
                   >
                     <Icon name={n.icon} size={17} color="var(--icon-nav)" />
                     <span>{n.label}</span>
                     <Icon name="chevron-down" size={14} color="var(--text-muted)" />
                   </button>
-                  {openNav === n.label && (
+                  {openNav === n.label && typeof document !== "undefined" && createPortal(
                     <div ref={menuRef} role="dialog" aria-modal="true" aria-label={n.label} style={{ position: "fixed", top: menuPos?.top ?? 0, left: menuPos?.left ?? 0, zIndex: 50, minWidth: 220, padding: 4, background: "var(--surface-card)", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-md)", boxShadow: "var(--shadow-md)" }}>
                       {n.children.map((child) => {
                         const childActive = !child.href.includes("#") && isHrefActive(child.href);
                         return <Link key={child.label} href={child.href} onClick={() => closeNav(false)} aria-current={childActive ? "page" : undefined} style={{ ...navItemStyle, width: "100%", background: childActive ? "var(--surface-brand-soft)" : "transparent", color: childActive ? "var(--text-brand)" : "var(--text-body)" }}><Icon name={child.icon} size={17} color="var(--icon-nav)" /><span>{child.label}</span>{child.badge ? <span style={badgeStyle}>{child.badge}</span> : null}</Link>;
                       })}
-                    </div>
+                    </div>,
+                    document.body,
                   )}
                 </div>
               );

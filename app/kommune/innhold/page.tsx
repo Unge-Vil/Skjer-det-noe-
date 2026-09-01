@@ -19,11 +19,11 @@ type DirectoryListing = {
   title: string;
   status: string;
   area: string | null;
-  organizations: { name: string }[] | null;
+  organizations: { name: string } | null;
 };
 
-type Activity = { id: string; slug: string; title: string; status: string; weekday: number | null; start_time: string | null; end_time: string | null; organizations: { name: string }[] | null };
-type Event = { id: string; slug: string; title: string; status: string; starts_at: string; organizations: { name: string }[] | null };
+type Activity = { id: string; slug: string; title: string; status: string; weekday: number | null; start_time: string | null; end_time: string | null; organizations: { name: string } | null };
+type Event = { id: string; slug: string; title: string; status: string; starts_at: string; organizations: { name: string } | null };
 type ContentRow = { id: string; slug: string; title: string; type: "activity" | "event" | "service" | "volunteer"; status: string; organisation: string; detail: string };
 
 export default async function KommuneContentPage({
@@ -48,20 +48,20 @@ export default async function KommuneContentPage({
   const [directoryRes, activitiesRes, eventsRes] = await Promise.all([
     supabase
     .from("directory_listings")
-    .select("id,kind,slug,title,status,area,organizations(name)")
+    .select("id,kind,slug,title,status,area,organizations!directory_listings_organization_id_fkey(name)")
     .eq("municipality_id", active.id)
     .order("updated_at", { ascending: false }),
-    supabase.from("activities").select("id,slug,title,status,weekday,start_time,end_time,organizations(name)").eq("municipality_id", active.id),
-    supabase.from("events").select("id,slug,title,status,starts_at,organizations(name)").eq("municipality_id", active.id),
+    supabase.from("activities").select("id,slug,title,status,weekday,start_time,end_time,organizations!activities_organization_id_fkey(name)").eq("municipality_id", active.id),
+    supabase.from("events").select("id,slug,title,status,starts_at,organizations!events_organization_id_fkey(name)").eq("municipality_id", active.id),
   ]);
 
   const directory = (directoryRes.data as unknown as DirectoryListing[]) ?? [];
   const activities = (activitiesRes.data as unknown as Activity[]) ?? [];
   const events = (eventsRes.data as unknown as Event[]) ?? [];
   const rows: ContentRow[] = [
-    ...activities.map((item) => ({ id: item.id, slug: item.slug, title: item.title, type: "activity" as const, status: item.status, organisation: item.organizations?.[0]?.name ?? "", detail: `${weekdayName(item.weekday, locale) ?? ""}${formatTimeRange(item.start_time, item.end_time) ? ` · ${formatTimeRange(item.start_time, item.end_time)}` : ""}` })),
-    ...events.map((item) => ({ id: item.id, slug: item.slug, title: item.title, type: "event" as const, status: item.status, organisation: item.organizations?.[0]?.name ?? "", detail: formatEventDate(item.starts_at, locale) })),
-    ...directory.map((item) => ({ id: item.id, slug: item.slug, title: item.title, type: item.kind, status: item.status, organisation: item.organizations?.[0]?.name ?? "", detail: item.area ?? "" })),
+    ...activities.map((item) => ({ id: item.id, slug: item.slug, title: item.title, type: "activity" as const, status: item.status, organisation: item.organizations?.name ?? "", detail: `${weekdayName(item.weekday, locale) ?? ""}${formatTimeRange(item.start_time, item.end_time) ? ` · ${formatTimeRange(item.start_time, item.end_time)}` : ""}` })),
+    ...events.map((item) => ({ id: item.id, slug: item.slug, title: item.title, type: "event" as const, status: item.status, organisation: item.organizations?.name ?? "", detail: formatEventDate(item.starts_at, locale) })),
+    ...directory.map((item) => ({ id: item.id, slug: item.slug, title: item.title, type: item.kind, status: item.status, organisation: item.organizations?.name ?? "", detail: item.area ?? "" })),
   ].filter((item) => (!kind || item.type === kind) && (!status || item.status === status) && (!query || `${item.title} ${item.organisation} ${item.detail}`.toLocaleLowerCase().includes(query)))
     .sort((a, b) => sort === "status" ? a.status.localeCompare(b.status) || a.title.localeCompare(b.title) : sort === "organisation" ? a.organisation.localeCompare(b.organisation) || a.title.localeCompare(b.title) : a.title.localeCompare(b.title));
 

@@ -17,6 +17,7 @@ export function listingHref(kind: ListingKind, slug: string): string {
 /** Default map center: Karmøy. */
 export const DEFAULT_CENTER = { lat: 59.2792, lng: 5.3015 };
 export const DEFAULT_RADIUS_M = 15000;
+export const RADIUS_OPTIONS = [5000, 10000, 15000, 30000, 50000];
 
 export interface NearbyFilters {
   lat: number;

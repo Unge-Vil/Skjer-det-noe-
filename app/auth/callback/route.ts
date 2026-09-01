@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const isRecovery = url.searchParams.get("type") === "recovery";
   const next = url.searchParams.get("next");
   const isSafeNext = next?.startsWith("/") && new URL(next, url.origin).origin === url.origin;
-  const destination = new URL(isRecovery ? "/oppdater-passord" : isSafeNext ? next : "/admin", url.origin);
+  const destination = new URL(isRecovery ? "/oppdater-passord" : isSafeNext && next ? next : "/admin", url.origin);
 
   if (!code) {
     destination.searchParams.set("error", "auth_callback");

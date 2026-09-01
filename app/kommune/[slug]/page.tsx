@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { getDictionary, getLocale } from "@/lib/i18n/server";
-import { loc } from "@/lib/i18n/config";
+import { loc, fmt } from "@/lib/i18n/config";
 import { Icon } from "@/components/ds/Icon";
 import { SocialLinksBar } from "@/components/SocialLinksBar";
 import { RichTextContent } from "@/components/RichTextContent";
@@ -17,7 +17,7 @@ async function fetchMuni(slug: string) {
   const { data: muni } = await supabase
     .from("municipalities")
     .select(
-      "id,name,slug,county,description,description_en,description_doc,description_doc_en,website,email,phone,address,accessibility_url,social_links",
+      "id,name,slug,county,kommunenummer,description,description_en,description_doc,description_doc_en,website,email,phone,address,accessibility_url,social_links",
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -111,6 +111,29 @@ export default async function MunicipalityPage({
             {descPlain}
           </p>
         )
+      )}
+
+      {m.kommunenummer && (
+        <a
+          href={`/utforsk?kommune=${m.kommunenummer}`}
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            minHeight: "var(--tap-comfy)",
+            padding: "0 20px",
+            marginBottom: 24,
+            borderRadius: "var(--radius-md)",
+            background: "var(--surface-brand-strong)",
+            color: "var(--text-on-brand)",
+            fontWeight: 700,
+            fontSize: "var(--fs-body)",
+            textDecoration: "none",
+          }}
+        >
+          <Icon name="search" size={18} />
+          {fmt(t.location.exploreActivities, { place: muni.name })}
+        </a>
       )}
 
       {contact.length > 0 && (

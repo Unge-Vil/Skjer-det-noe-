@@ -31,7 +31,7 @@ export default async function SwipePage() {
   }
 
   return (
-    <main id="main" className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-6">
+    <main id="main" className="mx-auto flex w-full max-w-md flex-1 flex-col px-4 py-4 sm:py-6">
       <div className="sm:hidden">
         <SwipeDeck listings={listings} />
       </div>

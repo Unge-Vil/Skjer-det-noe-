@@ -9,6 +9,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Municipality } from "@/lib/types";
+import { DEFAULT_RADIUS_M } from "@/lib/listings";
 import {
   LOCATION_COOKIE,
   LOCATION_COOKIE_MAX_AGE,
@@ -23,6 +24,8 @@ interface LocationValue extends LocationPreferences {
   currentMunicipality: Municipality | null;
   locating: boolean;
   error: string | null;
+  radiusM: number;
+  setRadiusM: (meters: number) => void;
   menuOpen: boolean;
   openMenu: () => void;
   closeMenu: () => void;
@@ -53,6 +56,7 @@ export function LocationProvider({
   const [currentMunicipality, setCurrentMunicipality] = useState<Municipality | null>(null);
   const [locating, setLocating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [radiusM, setRadiusM] = useState(DEFAULT_RADIUS_M);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const updatePreferences = useCallback((update: (current: LocationPreferences) => LocationPreferences) => {
@@ -149,6 +153,8 @@ export function LocationProvider({
         currentMunicipality,
         locating,
         error,
+        radiusM,
+        setRadiusM,
         menuOpen,
         openMenu: () => setMenuOpen(true),
         closeMenu: () => setMenuOpen(false),

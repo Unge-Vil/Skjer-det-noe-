@@ -19,7 +19,7 @@ type Activity = {
   weekday: number | null;
   start_time: string | null;
   end_time: string | null;
-  organizations: { name: string }[] | null;
+  organizations: { name: string } | null;
 };
 
 type Event = {
@@ -27,7 +27,7 @@ type Event = {
   title: string;
   status: string;
   starts_at: string;
-  organizations: { name: string }[] | null;
+  organizations: { name: string } | null;
 };
 
 export default async function KommuneActivitiesPage({
@@ -50,18 +50,18 @@ export default async function KommuneActivitiesPage({
   const [activitiesRes, eventsRes] = await Promise.all([
     supabase
       .from("activities")
-      .select("id,title,status,weekday,start_time,end_time,organizations(name)")
+      .select("id,title,status,weekday,start_time,end_time,organizations!activities_organization_id_fkey(name)")
       .eq("municipality_id", active.id)
       .order("title"),
     supabase
       .from("events")
-      .select("id,title,status,starts_at,organizations(name)")
+      .select("id,title,status,starts_at,organizations!events_organization_id_fkey(name)")
       .eq("municipality_id", active.id)
       .order("starts_at", { ascending: true }),
   ]);
 
-  const activities = ((activitiesRes.data as unknown as Activity[]) ?? []).filter((item) => matches(item.title, item.organizations?.[0]?.name, query));
-  const events = ((eventsRes.data as unknown as Event[]) ?? []).filter((item) => matches(item.title, item.organizations?.[0]?.name, query));
+  const activities = ((activitiesRes.data as unknown as Activity[]) ?? []).filter((item) => matches(item.title, item.organizations?.name, query));
+  const events = ((eventsRes.data as unknown as Event[]) ?? []).filter((item) => matches(item.title, item.organizations?.name, query));
 
   return (
     <AdminShell
@@ -127,7 +127,7 @@ function ActivityTable({ activities, locale, empty, t }: { activities: Activity[
         <tbody>{activities.map((item) => (
           <tr key={item.id} style={tr}>
             <td style={{ ...td, fontWeight: 700 }}>{item.title}</td>
-            <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.[0]?.name ?? "–"}</td>
+            <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.name ?? "–"}</td>
             <td style={{ ...td, color: "var(--text-muted)" }}>{weekdayName(item.weekday, locale) ?? "–"}{formatTimeRange(item.start_time, item.end_time) ? ` · ${formatTimeRange(item.start_time, item.end_time)}` : ""}</td>
             <td style={{ ...td, textAlign: "right" }}>{statusLabel(item.status, t)}</td>
           </tr>
@@ -146,7 +146,7 @@ function EventTable({ events, locale, empty, t }: { events: Event[]; locale: Loc
         <tbody>{events.map((item) => (
           <tr key={item.id} style={tr}>
             <td style={{ ...td, fontWeight: 700 }}>{item.title}</td>
-            <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.[0]?.name ?? "–"}</td>
+            <td style={{ ...td, color: "var(--text-muted)" }}>{item.organizations?.name ?? "–"}</td>
             <td style={{ ...td, color: "var(--text-muted)" }}>{formatEventDate(item.starts_at, locale)}</td>
             <td style={{ ...td, textAlign: "right" }}>{statusLabel(item.status, t)}</td>
           </tr>

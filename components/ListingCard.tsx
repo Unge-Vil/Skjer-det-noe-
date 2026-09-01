@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import type { Listing } from "@/lib/types";
 import { listingHref } from "@/lib/listings";
 import { formatDistance, formatTimeRange, weekdayName } from "@/lib/format";
@@ -109,7 +109,6 @@ export function ListingCard({
   onToggleSave?: (id: string) => void;
 }) {
   const { t, locale } = useI18n();
-  const router = useRouter();
   const href = listingHref(listing.kind, listing.slug);
   const [hover, setHover] = useState(false);
   const cat = categoryDef(listing.categorySlug);
@@ -133,11 +132,14 @@ export function ListingCard({
     transition:
       "box-shadow var(--dur-base) var(--ease-soft), transform var(--dur-base) var(--ease-soft), border-color var(--dur-base)",
     cursor: "pointer",
+    textDecoration: "none",
+    color: "inherit",
   };
 
+  // Real anchor so cards can be opened in a new tab / middle-clicked and are
+  // crawlable; the save button stops propagation to avoid navigating.
   const handlers = {
-    role: "link",
-    tabIndex: 0,
+    href,
     onMouseEnter: () => {
       setHover(true);
       onHover?.(listing.id);
@@ -145,10 +147,6 @@ export function ListingCard({
     onMouseLeave: () => {
       setHover(false);
       onHover?.(null);
-    },
-    onClick: () => router.push(href),
-    onKeyDown: (e: React.KeyboardEvent) => {
-      if (e.key === "Enter") router.push(href);
     },
   };
 
@@ -167,7 +165,7 @@ export function ListingCard({
             .join(" · ") || listing.recurrenceNote;
 
     return (
-      <article
+      <Link
         {...handlers}
         style={{
           ...cardShell,
@@ -221,7 +219,7 @@ export function ListingCard({
             {showDistance && <span>{distance}</span>}
           </p>
         </div>
-      </article>
+      </Link>
     );
   }
 
@@ -237,7 +235,7 @@ export function ListingCard({
     const time = d.toLocaleTimeString(intl, { hour: "2-digit", minute: "2-digit" });
 
     return (
-      <article {...handlers} style={{ ...cardShell, display: "flex", gap: 14, padding: 14 }}>
+      <Link {...handlers} style={{ ...cardShell, display: "flex", gap: 14, padding: 14 }}>
         <div
           style={{
             flex: "none",
@@ -280,7 +278,7 @@ export function ListingCard({
         </div>
 
         {onToggleSave && <SaveButton saved={saved} onToggle={() => onToggleSave(listing.id)} />}
-      </article>
+      </Link>
     );
   }
 
@@ -294,7 +292,7 @@ export function ListingCard({
   const scheduleText = schedule || listing.recurrenceNote || null;
 
   return (
-    <article {...handlers} style={{ ...cardShell, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+    <Link {...handlers} style={{ ...cardShell, display: "flex", flexDirection: "column", overflow: "hidden" }}>
       <div style={{ position: "relative", aspectRatio: "16 / 10", background: cat.bg, overflow: "hidden" }}>
         {listing.imageUrl ? (
           <Image src={listing.imageUrl} alt="" fill style={{ objectFit: "cover" }} sizes="420px" />
@@ -344,6 +342,6 @@ export function ListingCard({
           </div>
         )}
       </div>
-    </article>
+    </Link>
   );
 }

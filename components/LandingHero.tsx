@@ -21,7 +21,8 @@ export function LandingHero({ categories }: { categories: Category[] }) {
 
   return (
     <>
-      <div style={{ maxWidth: 620, margin: "0 auto 20px" }}>
+      {/* Search lives in the header on mobile; keep the hero search on desktop. */}
+      <div className="hidden sm:block" style={{ maxWidth: 620, margin: "0 auto 20px" }}>
         <SearchBar
           value={query}
           onChange={setQuery}

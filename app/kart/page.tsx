@@ -74,6 +74,7 @@ export default async function MapPage({
       initialCategory={category}
       initialMunicipality={municipality}
       initialView="map"
+      mobileMapOnly
     />
   );
 }
